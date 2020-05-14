@@ -11,23 +11,31 @@ import {MatButtonModule} from '@angular/material/button';
 import { TasksComponent } from './tasks/tasks.component';
 import { ReviewComponent } from './review/review.component';
 import {MatListModule} from '@angular/material/list';
+import {MatIconModule} from '@angular/material/icon';
+import {MatCheckboxModule} from '@angular/material/checkbox';
+import { TaskDialogComponent } from './tasks/task-dialog/task-dialog.component';
+import {MatDialogModule} from '@angular/material/dialog';
 
 @NgModule({
   declarations: [
     AppComponent,
     DashboardComponent,
     TasksComponent,
-    ReviewComponent
+    ReviewComponent,
+    TaskDialogComponent
   ],
-    imports: [
-        BrowserModule,
-        AppRoutingModule,
-        BrowserAnimationsModule,
-        MatToolbarModule,
-        MatTabsModule,
-        MatButtonModule,
-        MatListModule
-    ],
+  imports: [
+    BrowserModule,
+    AppRoutingModule,
+    BrowserAnimationsModule,
+    MatToolbarModule,
+    MatTabsModule,
+    MatButtonModule,
+    MatListModule,
+    MatIconModule,
+    MatCheckboxModule,
+    MatDialogModule
+  ],
   providers: [],
   bootstrap: [AppComponent]
 })

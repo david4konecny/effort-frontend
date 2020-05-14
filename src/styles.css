@@ -12,6 +12,11 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 .mx-3 { margin-left: 1rem; margin-right: 1rem; }
 .mx-auto { margin: auto; }
 
+.p-3 { padding: 1rem; }
+.px-3 { padding-left: 1rem; padding-right: 1rem; }
+
+.text-center { text-align: center; }
+
 @media (min-width: 576px) {
   .container {
     width: 540px;

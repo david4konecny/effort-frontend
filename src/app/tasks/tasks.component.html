@@ -1,5 +1,15 @@
-<mat-selection-list #taskList class="tasks-list mx-auto">
-  <mat-list-option *ngFor="let task of tasks" [selected]="task.finished">
-    {{task.todo}}
-  </mat-list-option>
-</mat-selection-list>
+<mat-list #taskList class="tasks-list mx-auto">
+  <mat-list-item *ngFor="let task of tasks">
+    <mat-checkbox>{{task.todo}}</mat-checkbox>
+    <button mat-icon-button style="margin-left: auto;" (click)="openDialog('edit')">
+      <mat-icon>edit</mat-icon>
+    </button>
+  </mat-list-item>
+</mat-list>
+
+<div style="text-align: center">
+  <button mat-stroked-button (click)="openDialog('add')">
+    <mat-icon>add</mat-icon>
+    Add new task
+  </button>
+</div>
