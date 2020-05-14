@@ -1,1 +1,5 @@
-<p>tasks works!</p>
+<mat-selection-list #taskList class="tasks-list mx-auto">
+  <mat-list-option *ngFor="let task of tasks" [selected]="task.finished">
+    {{task.todo}}
+  </mat-list-option>
+</mat-selection-list>

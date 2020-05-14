@@ -10,6 +10,7 @@ import {MatTabsModule} from '@angular/material/tabs';
 import {MatButtonModule} from '@angular/material/button';
 import { TasksComponent } from './tasks/tasks.component';
 import { ReviewComponent } from './review/review.component';
+import {MatListModule} from '@angular/material/list';
 
 @NgModule({
   declarations: [
@@ -18,14 +19,15 @@ import { ReviewComponent } from './review/review.component';
     TasksComponent,
     ReviewComponent
   ],
-  imports: [
-    BrowserModule,
-    AppRoutingModule,
-    BrowserAnimationsModule,
-    MatToolbarModule,
-    MatTabsModule,
-    MatButtonModule
-  ],
+    imports: [
+        BrowserModule,
+        AppRoutingModule,
+        BrowserAnimationsModule,
+        MatToolbarModule,
+        MatTabsModule,
+        MatButtonModule,
+        MatListModule
+    ],
   providers: [],
   bootstrap: [AppComponent]
 })
