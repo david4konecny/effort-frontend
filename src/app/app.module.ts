@@ -8,11 +8,15 @@ import { DashboardComponent } from './dashboard/dashboard.component';
 import {MatToolbarModule} from '@angular/material/toolbar';
 import {MatTabsModule} from '@angular/material/tabs';
 import {MatButtonModule} from '@angular/material/button';
+import { TasksComponent } from './tasks/tasks.component';
+import { ReviewComponent } from './review/review.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    DashboardComponent
+    DashboardComponent,
+    TasksComponent,
+    ReviewComponent
   ],
   imports: [
     BrowserModule,
