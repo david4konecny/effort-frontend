@@ -26,6 +26,11 @@ export class TaskService {
     this.tasks.splice(idx, 1);
   }
 
+  editTask(id: number, todo: string) {
+    const task = this.tasks.find(it => it.id === id);
+    task.todo = todo;
+  }
+
   private genId(): number {
     return this.tasks.length > 0 ? Math.max(...this.tasks.map(task => task.id)) + 1 : 1;
   }

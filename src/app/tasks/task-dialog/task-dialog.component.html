@@ -9,7 +9,7 @@
   </mat-form-field>
   <br>
   <div *ngIf="data.action === 'edit'" style="text-align: right;">
-    <button mat-button (click)="onDeleteTask()">Delete task</button>
+    <button mat-button tabindex="-1" (click)="onDeleteTask()">Delete task</button>
   </div>
   <mat-dialog-actions align="center">
     <button type="submit" [disabled]="!taskForm.valid" (click)="onSubmit()" mat-button color="primary">Save</button>

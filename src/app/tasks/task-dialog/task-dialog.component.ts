@@ -32,7 +32,7 @@ export class TaskDialogComponent implements OnInit {
     if (this.data.action === 'add') {
       this.taskService.addTask(this.taskForm.value.todo, new Date());
     } else {
-      this.data.task.todo = this.taskForm.value.todo;
+      this.taskService.editTask(this.data.task.id, this.taskForm.value.todo);
     }
     this.dialogRef.close();
   }
