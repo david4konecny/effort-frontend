@@ -17,15 +17,24 @@ export class TaskService {
   }
 
   addTask(todo: string, date: Date) {
-    const task = { todo, date, finished: false } as Task;
+    const task = { id: this.genId(), todo, date, finished: false } as Task;
     this.tasks.push(task);
+  }
+
+  deleteTask(id: number) {
+    const idx = this.tasks.findIndex(task => task.id === id);
+    this.tasks.splice(idx, 1);
+  }
+
+  private genId(): number {
+    return this.tasks.length > 0 ? Math.max(...this.tasks.map(task => task.id)) + 1 : 1;
   }
 
   private populateSampleData() {
     this.tasks = [
-      { todo: 'run', date: new Date(), finished: false },
-      { todo: 'walk', date: new Date(), finished: false },
-      { todo: 'gym', date: new Date(), finished: true },
+      { id: 1, todo: 'run', date: new Date(), finished: false },
+      { id: 2, todo: 'walk', date: new Date(), finished: false },
+      { id: 3, todo: 'gym', date: new Date(), finished: true },
     ];
   }
 }

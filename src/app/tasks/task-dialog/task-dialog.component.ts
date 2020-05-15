@@ -1,7 +1,6 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { Task } from '../../task';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { TaskService } from '../../task.service';
 
 @Component({
@@ -38,4 +37,8 @@ export class TaskDialogComponent implements OnInit {
     this.dialogRef.close();
   }
 
+  onDeleteTask() {
+    this.taskService.deleteTask(this.data.task.id);
+    this.dialogRef.close();
+  }
 }
