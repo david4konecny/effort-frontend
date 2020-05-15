@@ -23,9 +23,10 @@ export class TasksComponent implements OnInit, OnDestroy {
     this.loadTasks();
   }
 
-  openDialog(perform: string) {
-    const dialogRef = this.dialog
-      .open(TaskDialogComponent, { height: '400px', width: '600px', data: { action: perform }});
+  openDialog(perform: string, selectedTask?: Task) {
+    const dialogRef = this.dialog.open(
+      TaskDialogComponent,
+      { height: '300px', width: '350px', data: { action: perform, task: selectedTask }});
   }
 
   private loadTasks() {

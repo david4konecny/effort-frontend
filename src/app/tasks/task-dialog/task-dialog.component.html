@@ -1,3 +1,15 @@
 <div class="text-center px-3">
-  <h2>{{data.action === 'add' ? 'Add' : 'Edit'}} task</h2>
+  <h2 mat-dialog-title>{{data.action === 'add' ? 'Add' : 'Edit'}} task</h2>
 </div>
+
+<form class="text-center" [formGroup]="taskForm">
+  <mat-form-field>
+    <mat-label>Task</mat-label>
+    <input matInput formControlName="todo" required>
+  </mat-form-field>
+  <br>
+  <mat-dialog-actions align="center">
+    <button type="submit" (click)="onSubmit()" mat-button color="primary">Save</button>
+    <button mat-button mat-dialog-close color="warn">Cancel</button>
+  </mat-dialog-actions>
+</form>
