@@ -21,6 +21,8 @@ import { ReactiveFormsModule } from '@angular/forms';
 import {MatSliderModule} from '@angular/material/slider';
 import { LogComponent } from './log/log.component';
 import { TimeComponent } from './time/time.component';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { TimePipe } from './time.pipe';
 
 @NgModule({
   declarations: [
@@ -30,7 +32,8 @@ import { TimeComponent } from './time/time.component';
     ReviewComponent,
     TaskDialogComponent,
     LogComponent,
-    TimeComponent
+    TimeComponent,
+    TimePipe
   ],
   imports: [
     BrowserModule,
@@ -47,6 +50,7 @@ import { TimeComponent } from './time/time.component';
     MatFormFieldModule,
     MatInputModule,
     MatSliderModule,
+    MatSnackBarModule,
   ],
   providers: [],
   bootstrap: [AppComponent]

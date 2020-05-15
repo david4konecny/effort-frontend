@@ -1,7 +1,13 @@
-<div class="text-center">
-  <p>{{time}}</p>
-  <button mat-stroked-button (click)="onButtonClick()">
+<div class="text-center mt-5">
+  <p style="font-size: x-large">{{time | time}}</p>
+  <button mat-stroked-button style="margin-right: 0.5rem;">
+    {{category}}
+  </button>
+  <button mat-flat-button (click)="onTimeClick()" style="margin-left: 0.5rem;"
+          [color]="isTrackingTime ? 'warn' : 'primary'">
     <mat-icon>{{isTrackingTime ? 'stop' : 'play_arrow'}}</mat-icon>
     {{isTrackingTime ? 'Stop' : 'Start'}}
   </button>
+  <br>
+  <button mat-button (click)="onCategoryClick()">Today's log</button>
 </div>

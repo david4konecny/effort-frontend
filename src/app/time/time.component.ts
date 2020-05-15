@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Observable, Subscription, timer} from 'rxjs';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-time',
@@ -8,18 +9,22 @@ import { Observable, Subscription, timer} from 'rxjs';
 })
 export class TimeComponent implements OnInit {
   isTrackingTime: boolean;
-  time: string;
+  time: number;
+  category: string;
   timer: Observable<number>;
   sub: Subscription;
 
-  constructor() { }
+  constructor(
+    private snackBar: MatSnackBar
+  ) { }
 
   ngOnInit(): void {
     this.isTrackingTime = false;
-    this.updateCurrentTime(0);
+    this.time = 0;
+    this.category = 'programming';
   }
 
-  onButtonClick() {
+  onTimeClick() {
     if (this.isTrackingTime) {
       this.stopTime();
     } else {
@@ -28,20 +33,27 @@ export class TimeComponent implements OnInit {
     this.isTrackingTime = !this.isTrackingTime;
   }
 
+  onCategoryClick() {
+
+  }
+
   startTime() {
     this.timer = timer(0, 1000);
-    this.sub = this.timer.subscribe(it => this.updateCurrentTime(it));
+    this.sub = this.timer.subscribe(it => this.time = it);
   }
 
   stopTime() {
+    if (this.time < 60) {
+      this.displayMessage('Minimum length: 1m');
+    } else {
+      this.displayMessage('Session saved');
+    }
+    this.time = 0;
     this.sub.unsubscribe();
   }
 
-  updateCurrentTime(seconds: number) {
-    const hours = Math.floor(seconds / 3600);
-    const min = Math.floor(seconds / 60) % 60;
-    const sec = Math.floor(seconds % 60);
-    this.time = `${hours}:${min}:${sec}`;
+  displayMessage(msg: string) {
+    this.snackBar.open(msg, '', {duration: 2000} );
   }
 
 }
