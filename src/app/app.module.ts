@@ -19,6 +19,7 @@ import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatInputModule} from '@angular/material/input';
 import { ReactiveFormsModule } from '@angular/forms';
 import {MatSliderModule} from '@angular/material/slider';
+import { LogComponent } from './log/log.component';
 
 @NgModule({
   declarations: [
@@ -26,24 +27,25 @@ import {MatSliderModule} from '@angular/material/slider';
     DashboardComponent,
     TasksComponent,
     ReviewComponent,
-    TaskDialogComponent
+    TaskDialogComponent,
+    LogComponent
   ],
-    imports: [
-        BrowserModule,
-        AppRoutingModule,
-        BrowserAnimationsModule,
-        ReactiveFormsModule,
-        MatToolbarModule,
-        MatTabsModule,
-        MatButtonModule,
-        MatListModule,
-        MatIconModule,
-        MatCheckboxModule,
-        MatDialogModule,
-        MatFormFieldModule,
-        MatInputModule,
-        MatSliderModule
-    ],
+  imports: [
+    BrowserModule,
+    AppRoutingModule,
+    BrowserAnimationsModule,
+    ReactiveFormsModule,
+    MatToolbarModule,
+    MatTabsModule,
+    MatButtonModule,
+    MatListModule,
+    MatIconModule,
+    MatCheckboxModule,
+    MatDialogModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatSliderModule,
+  ],
   providers: [],
   bootstrap: [AppComponent]
 })
