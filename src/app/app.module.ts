@@ -18,6 +18,7 @@ import {MatDialogModule} from '@angular/material/dialog';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatInputModule} from '@angular/material/input';
 import { ReactiveFormsModule } from '@angular/forms';
+import {MatSliderModule} from '@angular/material/slider';
 
 @NgModule({
   declarations: [
@@ -27,21 +28,22 @@ import { ReactiveFormsModule } from '@angular/forms';
     ReviewComponent,
     TaskDialogComponent
   ],
-  imports: [
-    BrowserModule,
-    AppRoutingModule,
-    BrowserAnimationsModule,
-    ReactiveFormsModule,
-    MatToolbarModule,
-    MatTabsModule,
-    MatButtonModule,
-    MatListModule,
-    MatIconModule,
-    MatCheckboxModule,
-    MatDialogModule,
-    MatFormFieldModule,
-    MatInputModule
-  ],
+    imports: [
+        BrowserModule,
+        AppRoutingModule,
+        BrowserAnimationsModule,
+        ReactiveFormsModule,
+        MatToolbarModule,
+        MatTabsModule,
+        MatButtonModule,
+        MatListModule,
+        MatIconModule,
+        MatCheckboxModule,
+        MatDialogModule,
+        MatFormFieldModule,
+        MatInputModule,
+        MatSliderModule
+    ],
   providers: [],
   bootstrap: [AppComponent]
 })

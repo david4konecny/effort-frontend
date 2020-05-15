@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import { ReviewService } from '../review.service';
 
 @Component({
   selector: 'app-review',
@@ -6,10 +8,24 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./review.component.css']
 })
 export class ReviewComponent implements OnInit {
+  reviewForm: FormGroup;
 
-  constructor() { }
+  constructor(
+    private reviewService: ReviewService,
+    private formBuilder: FormBuilder
+  ) { }
 
   ngOnInit(): void {
+    this.reviewForm = this.formBuilder.group(
+      {
+        rating: [3],
+        description: ['', Validators.required]
+      }
+    );
+  }
+
+  onSave() {
+
   }
 
 }
