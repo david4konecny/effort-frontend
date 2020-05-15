@@ -14,7 +14,5 @@
     <textarea matInput formControlName="description"></textarea>
   </mat-form-field>
   <br>
-  <mat-dialog-actions>
-    <button type="submit" [disabled]="!reviewForm.valid" (click)="onSave()" mat-stroked-button>Save</button>
-  </mat-dialog-actions>
+  <button type="submit" [disabled]="!reviewForm.valid || reviewForm.pristine" (click)="onSave()" mat-stroked-button>Save</button>
 </form>
