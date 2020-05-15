@@ -1,0 +1,7 @@
+<div class="text-center">
+  <p>{{time}}</p>
+  <button mat-stroked-button (click)="onButtonClick()">
+    <mat-icon>{{isTrackingTime ? 'stop' : 'play_arrow'}}</mat-icon>
+    {{isTrackingTime ? 'Stop' : 'Start'}}
+  </button>
+</div>

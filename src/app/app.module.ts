@@ -20,6 +20,7 @@ import {MatInputModule} from '@angular/material/input';
 import { ReactiveFormsModule } from '@angular/forms';
 import {MatSliderModule} from '@angular/material/slider';
 import { LogComponent } from './log/log.component';
+import { TimeComponent } from './time/time.component';
 
 @NgModule({
   declarations: [
@@ -28,7 +29,8 @@ import { LogComponent } from './log/log.component';
     TasksComponent,
     ReviewComponent,
     TaskDialogComponent,
-    LogComponent
+    LogComponent,
+    TimeComponent
   ],
   imports: [
     BrowserModule,
