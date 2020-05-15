@@ -1,6 +1,8 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { Task } from '../../task';
+import { TaskService } from '../../task.service';
 
 @Component({
   selector: 'app-task-dialog',
@@ -12,11 +14,12 @@ export class TaskDialogComponent implements OnInit {
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: any,
-    private formBuilder: FormBuilder
+    private formBuilder: FormBuilder,
+    private dialogRef: MatDialogRef<TaskDialogComponent>,
+    private taskService: TaskService
   ) { }
 
   ngOnInit(): void {
-    console.log(this.data);
     let value = '';
     if (this.data.task) {
       value = this.data.task.todo;
@@ -27,6 +30,12 @@ export class TaskDialogComponent implements OnInit {
   }
 
   onSubmit() {
+    if (this.data.action === 'add') {
+      this.taskService.addTask(this.taskForm.value.todo, new Date());
+    } else {
+      this.data.task.todo = this.taskForm.value.todo;
+    }
+    this.dialogRef.close();
   }
 
 }

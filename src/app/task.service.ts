@@ -16,6 +16,11 @@ export class TaskService {
     return of(this.tasks);
   }
 
+  addTask(todo: string, date: Date) {
+    const task = { todo, date, finished: false } as Task;
+    this.tasks.push(task);
+  }
+
   private populateSampleData() {
     this.tasks = [
       { todo: 'run', date: new Date(), finished: false },
