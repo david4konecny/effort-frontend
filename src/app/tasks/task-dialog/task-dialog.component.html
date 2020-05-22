@@ -5,7 +5,7 @@
 <form class="text-center" [formGroup]="taskForm">
   <mat-form-field>
     <mat-label>Task</mat-label>
-    <input matInput formControlName="todo" required>
+    <input matInput formControlName="description" required>
   </mat-form-field>
   <br>
   <div *ngIf="data.action === 'edit'" style="text-align: right;">

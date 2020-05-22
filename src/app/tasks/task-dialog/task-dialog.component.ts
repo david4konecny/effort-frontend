@@ -21,18 +21,18 @@ export class TaskDialogComponent implements OnInit {
   ngOnInit(): void {
     let value = '';
     if (this.data.task) {
-      value = this.data.task.todo;
+      value = this.data.task.description;
     }
     this.taskForm = this.formBuilder.group(
-      {todo: [value, Validators.required]}
+      {description: [value, Validators.required]}
       );
   }
 
   onSubmit() {
     if (this.data.action === 'add') {
-      this.taskService.addTask(this.taskForm.value.todo, new Date());
+      this.taskService.addTask(this.taskForm.value.description, new Date().toDateString());
     } else {
-      this.taskService.editTask(this.data.task.id, this.taskForm.value.todo);
+      this.taskService.editTask(this.data.task.id, this.taskForm.value.description);
     }
     this.dialogRef.close();
   }
