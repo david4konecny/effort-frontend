@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import {Task} from './task';
 import {Observable, of} from 'rxjs';
-import {HttpClient} from '@angular/common/http';
+import {HttpClient, HttpParams} from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root'
@@ -14,7 +14,12 @@ export class TaskService {
   }
 
   getTasks(): Observable<Task[]> {
-    return this.http.get<Task[]>(this.url);
+    const date = new Date();
+    const years = date.getFullYear();
+    const months = `${date.getMonth() + 1}`.padStart(2, '0');
+    const days = `${date.getDate()}`.padStart(2, '0');
+    const options = { params: new HttpParams().set('date', `${years}-${months}-${days}`) };
+    return this.http.get<Task[]>(this.url, options);
   }
 
   addTask(todo: string, date: string) {
@@ -22,9 +27,8 @@ export class TaskService {
     this.tasks.push(task);
   }
 
-  deleteTask(id: number) {
-    const idx = this.tasks.findIndex(task => task.id === id);
-    this.tasks.splice(idx, 1);
+  deleteTask(id: number): Observable<any> {
+    return this.http.delete(`${this.url}/${id}`);
   }
 
   editTask(id: number, todo: string) {
