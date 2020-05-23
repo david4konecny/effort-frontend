@@ -2,6 +2,7 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { TaskService } from '../../task.service';
+import {TimeService} from '../../services/time.service';
 
 @Component({
   selector: 'app-task-dialog',
@@ -15,7 +16,8 @@ export class TaskDialogComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) public data: any,
     private formBuilder: FormBuilder,
     private dialogRef: MatDialogRef<TaskDialogComponent>,
-    private taskService: TaskService
+    private taskService: TaskService,
+    private timeService: TimeService
   ) { }
 
   ngOnInit(): void {
@@ -30,7 +32,9 @@ export class TaskDialogComponent implements OnInit {
 
   onSubmit() {
     if (this.data.action === 'add') {
-      this.taskService.addTask(this.taskForm.value.description, new Date().toDateString());
+      this.taskService.addTask(
+        this.taskForm.value.description, this.timeService.toDateString(new Date())
+      ).subscribe();
     } else {
       this.taskService.editTask(this.data.task.id, this.taskForm.value.description);
     }

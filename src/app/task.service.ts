@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import {Task} from './task';
 import {Observable, of} from 'rxjs';
 import {HttpClient, HttpParams} from '@angular/common/http';
+import {TimeService} from './services/time.service';
 
 @Injectable({
   providedIn: 'root'
@@ -10,21 +11,19 @@ export class TaskService {
   private url = 'http://localhost:8080/tasks';
   private tasks: Task[];
 
-  constructor(private http: HttpClient) {
+  constructor(
+    private http: HttpClient,
+    private timeService: TimeService) {
   }
 
   getTasks(): Observable<Task[]> {
-    const date = new Date();
-    const years = date.getFullYear();
-    const months = `${date.getMonth() + 1}`.padStart(2, '0');
-    const days = `${date.getDate()}`.padStart(2, '0');
-    const options = { params: new HttpParams().set('date', `${years}-${months}-${days}`) };
+    const options = { params: new HttpParams().set('date', this.timeService.toDateString(new Date())) };
     return this.http.get<Task[]>(this.url, options);
   }
 
-  addTask(todo: string, date: string) {
-    const task = { id: this.genId(), description: todo, date, finished: false } as Task;
-    this.tasks.push(task);
+  addTask(description: string, date: string): Observable<Task> {
+    const task = { id: 0, description, date, finished: false } as Task;
+    return this.http.post<Task>(this.url, task);
   }
 
   deleteTask(id: number): Observable<any> {
