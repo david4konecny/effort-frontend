@@ -30,9 +30,8 @@ export class TaskService {
     return this.http.delete(`${this.url}/${id}`);
   }
 
-  editTask(id: number, todo: string) {
-    const task = this.tasks.find(it => it.id === id);
-    task.description = todo;
+  editTask(task: Task): Observable<Task> {
+    return this.http.put<Task>(this.url, task);
   }
 
   private genId(): number {
