@@ -1,9 +1,7 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { TaskService } from '../../task.service';
 import { TimeService } from '../../services/time.service';
-import { Task } from '../../task';
 
 @Component({
   selector: 'app-task-dialog',
@@ -17,18 +15,24 @@ export class TaskDialogComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) public data: any,
     private formBuilder: FormBuilder,
     private dialogRef: MatDialogRef<TaskDialogComponent>,
-    private taskService: TaskService,
     private timeService: TimeService
   ) { }
 
   ngOnInit(): void {
-    const value = this.data.task.description;
-    this.taskForm = this.formBuilder.group(
-      {description: [value, Validators.required]}
-      );
+    this.setUpForm();
+  }
+
+  private setUpForm() {
+    this.taskForm = this.formBuilder.group({
+      date: [this.data.task.date],
+      description: [this.data.task.description, Validators.required]
+    });
   }
 
   onSubmit() {
+    if (typeof this.taskForm.value.date === 'object') {
+      this.data.task.date = this.timeService.toDateString(this.taskForm.value.date);
+    }
     this.data.task.description = this.taskForm.value.description;
     this.dialogRef.close(this.data.task);
   }

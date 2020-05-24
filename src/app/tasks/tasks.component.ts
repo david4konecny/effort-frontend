@@ -61,18 +61,32 @@ export class TasksComponent implements OnInit, OnDestroy {
 
   private deleteTask(task: Task) {
     this.taskService.deleteTask(task.id).subscribe();
-    const idx = this.tasks.findIndex(it => task === it);
-    this.tasks.splice(idx, 1);
+    this.removeTaskFromList(task);
   }
 
   private addTask(task: Task) {
     this.taskService.addTask(task).subscribe(
-      next => this.tasks.push(next)
+      next => {
+        if (task.date === this.timeService.toDateString(new Date())) {
+          this.tasks.push(next);
+        }
+      }
     );
   }
 
   private editTask(task: Task) {
-    this.taskService.editTask(task).subscribe();
+    this.taskService.editTask(task).subscribe(
+      next => {
+        if (task.date !== this.timeService.toDateString(new Date())) {
+          this.removeTaskFromList(task);
+        }
+      }
+    );
+  }
+
+  private removeTaskFromList(task: Task) {
+    const idx = this.tasks.findIndex(it => task === it);
+    this.tasks.splice(idx, 1);
   }
 
   ngOnDestroy() {

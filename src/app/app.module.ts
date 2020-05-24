@@ -24,6 +24,8 @@ import { LogComponent } from './log/log.component';
 import { TimeComponent } from './time/time.component';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { TimePipe } from './time.pipe';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatNativeDateModule } from '@angular/material/core';
 
 @NgModule({
   declarations: [
@@ -53,6 +55,8 @@ import { TimePipe } from './time.pipe';
     MatInputModule,
     MatSliderModule,
     MatSnackBarModule,
+    MatDatepickerModule,
+    MatNativeDateModule,
   ],
   providers: [],
   bootstrap: [AppComponent]

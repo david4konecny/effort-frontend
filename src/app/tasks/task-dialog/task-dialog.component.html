@@ -8,6 +8,13 @@
     <input matInput formControlName="description" required>
   </mat-form-field>
   <br>
+  <mat-form-field>
+    <mat-label>Date</mat-label>
+    <input matInput [matDatepicker]="picker" formControlName="date">
+    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+    <mat-datepicker #picker></mat-datepicker>
+  </mat-form-field>
+  <br>
   <div *ngIf="data.action === 'edit'" style="text-align: right;">
     <button mat-button tabindex="-1" (click)="onDeleteTask()">Delete task</button>
   </div>
