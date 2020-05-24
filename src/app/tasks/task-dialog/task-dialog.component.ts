@@ -22,34 +22,18 @@ export class TaskDialogComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    let value = '';
-    if (this.data.task) {
-      value = this.data.task.description;
-    }
+    const value = this.data.task.description;
     this.taskForm = this.formBuilder.group(
       {description: [value, Validators.required]}
       );
   }
 
   onSubmit() {
-    if (this.data.action === 'add') {
-      this.taskService.addTask(
-        this.taskForm.value.description, this.timeService.toDateString(new Date())
-      ).subscribe();
-    } else {
-      const task = {
-        id: this.data.task.id,
-        description: this.taskForm.value.description,
-        date: this.data.task.date,
-        finished: this.data.task.finished
-      } as Task;
-      this.taskService.editTask(task).subscribe();
-    }
-    this.dialogRef.close();
+    this.data.task.description = this.taskForm.value.description;
+    this.dialogRef.close(this.data.task);
   }
 
   onDeleteTask() {
-    this.taskService.deleteTask(this.data.task.id).subscribe();
-    this.dialogRef.close();
+    this.dialogRef.close('delete');
   }
 }

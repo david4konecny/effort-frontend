@@ -21,8 +21,7 @@ export class TaskService {
     return this.http.get<Task[]>(this.url, options);
   }
 
-  addTask(description: string, date: string): Observable<Task> {
-    const task = { id: 0, description, date, finished: false } as Task;
+  addTask(task: Task): Observable<Task> {
     return this.http.post<Task>(this.url, task);
   }
 
