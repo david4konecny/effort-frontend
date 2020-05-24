@@ -1,6 +1,8 @@
 <mat-list #taskList class="tasks-list mx-auto">
   <mat-list-item *ngFor="let task of tasks">
-    <mat-checkbox>{{task.description}}</mat-checkbox>
+    <mat-checkbox [checked]="task.finished" (change)="onItemCheck($event, task)">
+      {{task.description}}
+    </mat-checkbox>
     <button mat-icon-button style="margin-left: auto;"
             title="edit" (click)="openDialog('edit', task)">
       <mat-icon>edit</mat-icon>

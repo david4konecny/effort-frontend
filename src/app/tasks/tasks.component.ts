@@ -4,6 +4,7 @@ import {Task} from '../task';
 import {Subscription} from 'rxjs';
 import {MatDialog} from '@angular/material/dialog';
 import {TaskDialogComponent} from './task-dialog/task-dialog.component';
+import {MatCheckboxChange} from '@angular/material/checkbox';
 
 @Component({
   selector: 'app-tasks',
@@ -33,6 +34,11 @@ export class TasksComponent implements OnInit, OnDestroy {
     this.sub = this.taskService.getTasks().subscribe(
       next => this.tasks = next
     );
+  }
+
+  onItemCheck(change: MatCheckboxChange, task: Task) {
+    task.finished = change.checked;
+    this.taskService.editTask(task).subscribe();
   }
 
   ngOnDestroy() {
