@@ -15,6 +15,7 @@ import {TimeService} from '../services/time.service';
 export class TasksComponent implements OnInit, OnDestroy {
   tasks: Task[];
   sub: Subscription;
+  tasksFinished = 0;
 
   constructor(
     private taskService: TaskService,
@@ -50,18 +51,27 @@ export class TasksComponent implements OnInit, OnDestroy {
 
   private loadTasks() {
     this.sub = this.taskService.getTasks().subscribe(
-      next => this.tasks = next
+      next => {
+        this.tasks = next;
+        this.updateNumOfTasksFinished();
+      }
     );
+  }
+
+  private updateNumOfTasksFinished() {
+    this.tasksFinished = this.tasks.filter(it => it.finished).length;
   }
 
   onItemCheck(change: MatCheckboxChange, task: Task) {
     task.finished = change.checked;
     this.taskService.editTask(task).subscribe();
+    this.updateNumOfTasksFinished();
   }
 
   private deleteTask(task: Task) {
     this.taskService.deleteTask(task.id).subscribe();
     this.removeTaskFromList(task);
+    this.updateNumOfTasksFinished();
   }
 
   private addTask(task: Task) {

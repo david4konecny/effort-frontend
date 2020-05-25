@@ -24,7 +24,7 @@ export class TaskDialogComponent implements OnInit {
 
   private setUpForm() {
     this.taskForm = this.formBuilder.group({
-      date: [this.data.task.date],
+      date: [this.data.task.date, Validators.required],
       description: [this.data.task.description, Validators.required]
     });
   }

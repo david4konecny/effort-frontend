@@ -18,6 +18,7 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 .px-3 { padding-left: 1rem; padding-right: 1rem; }
 
 .text-center { text-align: center; }
+.text-right { text-align: right; }
 
 @media (min-width: 576px) {
   .container {

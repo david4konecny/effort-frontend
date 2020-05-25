@@ -1,4 +1,7 @@
 <mat-list #taskList class="tasks-list mx-auto">
+  <p class="text-right" *ngIf="tasks.length">{{tasksFinished}} / {{tasks.length}}</p>
+  <mat-progress-bar
+    *ngIf="tasks.length" [value]="(tasksFinished / tasks.length) * 100"></mat-progress-bar>
   <mat-list-item *ngFor="let task of tasks">
     <mat-checkbox [checked]="task.finished" (change)="onItemCheck($event, task)">
       {{task.description}}

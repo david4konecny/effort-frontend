@@ -26,6 +26,7 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { TimePipe } from './time.pipe';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
 
 @NgModule({
   declarations: [
@@ -57,6 +58,7 @@ import { MatNativeDateModule } from '@angular/material/core';
     MatSnackBarModule,
     MatDatepickerModule,
     MatNativeDateModule,
+    MatProgressBarModule,
   ],
   providers: [],
   bootstrap: [AppComponent]
