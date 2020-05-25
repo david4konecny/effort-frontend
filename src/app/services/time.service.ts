@@ -22,6 +22,10 @@ export class TimeService {
     console.log(this.getTodayTotal());
   }
 
+  addTimeSession(timeSession: TimeSession) {
+    this.sessions.push(timeSession);
+  }
+
   getTodayTotal() {
     return this.sessions.map(s => this.getDuration(s)).reduce((a, b) => a + b, 0);
   }
@@ -41,4 +45,18 @@ export class TimeService {
     const day = `${date.getDate()}`.padStart(2, '0');
     return `${year}-${month}-${day}`;
   }
+
+  toTimeString(timeInMillis: number) {
+    const time = new Date(timeInMillis);
+    const h = `${time.getHours()}`.padStart(2, '0');
+    const m = `${time.getMinutes()}`.padStart(2, '0');
+    return `${h}:${m}`;
+  }
+
+  toMilliseconds(time: string) {
+    const h = +time.slice(0, 2);
+    const m = +time.slice(3);
+    return (h * 3600 + m * 60) * 1000;
+  }
+
 }

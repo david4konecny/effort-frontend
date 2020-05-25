@@ -27,6 +27,7 @@ import { TimePipe } from './time.pipe';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { TimeDialogComponent } from './time/time-dialog/time-dialog.component';
 
 @NgModule({
   declarations: [
@@ -37,7 +38,8 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
     TaskDialogComponent,
     LogComponent,
     TimeComponent,
-    TimePipe
+    TimePipe,
+    TimeDialogComponent
   ],
   imports: [
     BrowserModule,

@@ -20,6 +20,9 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 .text-center { text-align: center; }
 .text-right { text-align: right; }
 
+.font-large { font-size: large; }
+.font-larger { font-size: larger; }
+
 @media (min-width: 576px) {
   .container {
     width: 540px;

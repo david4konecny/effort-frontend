@@ -6,6 +6,7 @@ import {MatDialog} from '@angular/material/dialog';
 import {TaskDialogComponent} from './task-dialog/task-dialog.component';
 import {MatCheckboxChange} from '@angular/material/checkbox';
 import {TimeService} from '../services/time.service';
+import {Intent} from '../intent.enum';
 
 @Component({
   selector: 'app-tasks',
@@ -13,9 +14,11 @@ import {TimeService} from '../services/time.service';
   styleUrls: ['./tasks.component.css']
 })
 export class TasksComponent implements OnInit, OnDestroy {
-  tasks: Task[];
+  tasks: Task[] = [];
   sub: Subscription;
   tasksFinished = 0;
+  add = Intent.add;
+  edit = Intent.edit;
 
   constructor(
     private taskService: TaskService,
@@ -27,7 +30,7 @@ export class TasksComponent implements OnInit, OnDestroy {
     this.loadTasks();
   }
 
-  openDialog(action: string, task?: Task) {
+  openDialog(action: Intent, task?: Task) {
     if (!task) {
       task = { id: 0, date: this.timeService.toDateString(new Date()), description: '', finished: false} as Task;
     }
@@ -37,13 +40,13 @@ export class TasksComponent implements OnInit, OnDestroy {
     dialogRef.afterClosed().subscribe(result => this.onDialogClosed(result, action, task));
   }
 
-  private onDialogClosed(result: any, action: string, task: Task) {
+  private onDialogClosed(result: any, action: Intent, task: Task) {
     if (result === 'delete') {
       this.deleteTask(task);
     } else if (result) {
-      if (action === 'edit') {
+      if (action === Intent.edit) {
         this.editTask(result);
-      } else if (action === 'add') {
+      } else if (action === Intent.add) {
         this.addTask(result);
       }
     }

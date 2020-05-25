@@ -2,6 +2,10 @@ import { Component, OnInit } from '@angular/core';
 import { Observable, Subscription, timer} from 'rxjs';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { TimeService } from '../services/time.service';
+import { MatDialog } from '@angular/material/dialog';
+import {TimeDialogComponent} from './time-dialog/time-dialog.component';
+import {Intent} from '../intent.enum';
+import {TimeSession} from '../model/time-session';
 
 @Component({
   selector: 'app-time',
@@ -15,9 +19,12 @@ export class TimeComponent implements OnInit {
   chronometer: Observable<number>;
   todayTotal = 0;
   sub: Subscription;
+  add = Intent.add;
+  edit = Intent.edit;
 
   constructor(
     private timeService: TimeService,
+    public dialog: MatDialog,
     private snackBar: MatSnackBar
   ) { }
 
@@ -47,7 +54,7 @@ export class TimeComponent implements OnInit {
     this.sub = this.chronometer.subscribe(it => {
       session.endTime = new Date().getTime();
       this.timeDisplay = it;
-      this.todayTotal = this.timeService.getTodayTotal();
+      this.updateTodayTotal();
     });
   }
 
@@ -60,6 +67,26 @@ export class TimeComponent implements OnInit {
     }
     this.timeDisplay = 0;
     this.sub.unsubscribe();
+  }
+
+  openDialog(action: Intent) {
+    const timeSession = this.timeService.getNewTimeSession();
+    const dialog = this.dialog.open(
+      TimeDialogComponent,
+      { height: '350px', width: '400px', data: { action, timeSession }}
+    );
+    dialog.afterClosed().subscribe(
+      result => {
+        if (result) {
+          this.timeService.addTimeSession(result as TimeSession);
+          this.updateTodayTotal();
+        }
+      }
+    );
+  }
+
+  private updateTodayTotal() {
+    this.todayTotal = this.timeService.getTodayTotal();
   }
 
   displayMessage(msg: string) {
