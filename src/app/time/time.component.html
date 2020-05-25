@@ -1,5 +1,5 @@
 <div class="text-center mt-5">
-  <p style="font-size: x-large">{{time | time}}</p>
+  <p style="font-size: x-large">{{timeDisplay | time}}</p>
   <button mat-stroked-button style="margin-right: 0.5rem;">
     {{category}}
   </button>
@@ -10,4 +10,6 @@
   </button>
   <br>
   <button mat-button (click)="onCategoryClick()">Today's log</button>
+  <br>
+  <p>Today total: {{todayTotal | time:true}}</p>
 </div>

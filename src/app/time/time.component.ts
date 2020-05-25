@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Observable, Subscription, timer} from 'rxjs';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { TimeService } from '../services/time.service';
 
 @Component({
   selector: 'app-time',
@@ -9,18 +10,20 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 })
 export class TimeComponent implements OnInit {
   isTrackingTime: boolean;
-  time: number;
+  timeDisplay: number;
   category: string;
-  timer: Observable<number>;
+  chronometer: Observable<number>;
+  todayTotal = 0;
   sub: Subscription;
 
   constructor(
+    private timeService: TimeService,
     private snackBar: MatSnackBar
   ) { }
 
   ngOnInit(): void {
     this.isTrackingTime = false;
-    this.time = 0;
+    this.timeDisplay = 0;
     this.category = 'programming';
   }
 
@@ -38,17 +41,24 @@ export class TimeComponent implements OnInit {
   }
 
   startTime() {
-    this.timer = timer(0, 1000);
-    this.sub = this.timer.subscribe(it => this.time = it);
+    const session = this.timeService.getNewTimeSession();
+    this.timeService.startTimeSession(session);
+    this.chronometer = timer(0, 1000);
+    this.sub = this.chronometer.subscribe(it => {
+      session.endTime = new Date().getTime();
+      this.timeDisplay = it;
+      this.todayTotal = this.timeService.getTodayTotal();
+    });
   }
 
   stopTime() {
-    if (this.time < 60) {
-      this.displayMessage('Minimum length: 1m');
+    this.timeService.stopTimeSession();
+    if (this.timeDisplay < 5) {
+      this.displayMessage('Minimum length: 5s');
     } else {
       this.displayMessage('Session saved');
     }
-    this.time = 0;
+    this.timeDisplay = 0;
     this.sub.unsubscribe();
   }
 
