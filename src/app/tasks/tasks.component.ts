@@ -7,6 +7,7 @@ import {TaskDialogComponent} from './task-dialog/task-dialog.component';
 import {MatCheckboxChange} from '@angular/material/checkbox';
 import {TimeService} from '../services/time.service';
 import {Intent} from '../intent.enum';
+import {MatDatepickerInputEvent} from '@angular/material/datepicker';
 
 @Component({
   selector: 'app-tasks',
@@ -101,6 +102,11 @@ export class TasksComponent implements OnInit, OnDestroy {
   private removeTaskFromList(task: Task) {
     const idx = this.tasks.findIndex(it => task === it);
     this.tasks.splice(idx, 1);
+  }
+
+  onDateChanged(change: MatDatepickerInputEvent<Date>) {
+    this.date = change.value;
+    this.reloadTasks();
   }
 
   getTasksForNextDay() {

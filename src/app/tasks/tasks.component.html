@@ -1,6 +1,11 @@
 <div class="text-center mt-3">
   <button mat-icon-button (click)="getTasksForPreviousDay()"><mat-icon>chevron_left</mat-icon></button>
-  <button mat-button>{{date | date: 'dd MMM, yyyy'}}</button>
+  <div style="display: inline-block; width: 5px; visibility: hidden;">
+    <input (dateChange)="onDateChanged($event)" [matDatepicker]="picker">
+  </div>
+  <mat-datepicker #picker></mat-datepicker>
+  <button (click)="picker.open()" mat-button>{{date | date: 'dd MMM, yyyy'}}</button>
+  <div style="display: inline-block; width: 5px;"></div>
   <button mat-icon-button (click)="getTasksForNextDay()"><mat-icon>chevron_right</mat-icon></button>
 </div>
 
