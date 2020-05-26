@@ -1,3 +1,13 @@
+<div class="text-center mt-3">
+  <button mat-icon-button (click)="getTasksForPreviousDay()"><mat-icon>chevron_left</mat-icon></button>
+  <button mat-button>{{date | date: 'dd MMM, yyyy'}}</button>
+  <button mat-icon-button (click)="getTasksForNextDay()"><mat-icon>chevron_right</mat-icon></button>
+</div>
+
+<div *ngIf="!tasks.length" class="text-center mt-3">
+  <h1 class="text-muted">No tasks for this day</h1>
+</div>
+
 <mat-list #taskList class="tasks-list mx-auto">
   <p class="text-right" *ngIf="tasks.length">{{tasksFinished}} / {{tasks.length}}</p>
   <mat-progress-bar

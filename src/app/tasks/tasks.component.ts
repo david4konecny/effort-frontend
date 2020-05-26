@@ -17,6 +17,7 @@ export class TasksComponent implements OnInit, OnDestroy {
   tasks: Task[] = [];
   sub: Subscription;
   tasksFinished = 0;
+  date: Date = new Date();
   add = Intent.add;
   edit = Intent.edit;
 
@@ -53,7 +54,7 @@ export class TasksComponent implements OnInit, OnDestroy {
   }
 
   private loadTasks() {
-    this.sub = this.taskService.getTasks().subscribe(
+    this.sub = this.taskService.getTasks(this.date).subscribe(
       next => {
         this.tasks = next;
         this.updateNumOfTasksFinished();
@@ -80,7 +81,7 @@ export class TasksComponent implements OnInit, OnDestroy {
   private addTask(task: Task) {
     this.taskService.addTask(task).subscribe(
       next => {
-        if (task.date === this.timeService.toDateString(new Date())) {
+        if (task.date === this.timeService.toDateString(this.date)) {
           this.tasks.push(next);
         }
       }
@@ -100,6 +101,21 @@ export class TasksComponent implements OnInit, OnDestroy {
   private removeTaskFromList(task: Task) {
     const idx = this.tasks.findIndex(it => task === it);
     this.tasks.splice(idx, 1);
+  }
+
+  getTasksForNextDay() {
+    this.date = this.timeService.getNextDay(this.date);
+    this.reloadTasks();
+  }
+
+  getTasksForPreviousDay() {
+    this.date = this.timeService.getPreviousDay(this.date);
+    this.reloadTasks();
+  }
+
+  private reloadTasks() {
+    this.sub.unsubscribe();
+    this.loadTasks();
   }
 
   ngOnDestroy() {

@@ -1,5 +1,5 @@
 <div class="text-center px-3">
-  <h1 mat-dialog-title>{{data.action === 'add' ? 'Add' : 'Edit'}} task</h1>
+  <h1 mat-dialog-title>{{data.action === add ? 'Add' : 'Edit'}} task</h1>
 </div>
 
 <form class="text-center" [formGroup]="taskForm">
@@ -15,7 +15,7 @@
     <mat-datepicker #picker></mat-datepicker>
   </mat-form-field>
   <br>
-  <div *ngIf="data.action === 'edit'" style="text-align: right;">
+  <div *ngIf="data.action === edit" style="text-align: right;">
     <button mat-button tabindex="-1" (click)="onDeleteTask()">Delete task</button>
   </div>
   <mat-dialog-actions align="center">

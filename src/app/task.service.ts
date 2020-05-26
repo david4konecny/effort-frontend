@@ -16,8 +16,8 @@ export class TaskService {
     private timeService: TimeService) {
   }
 
-  getTasks(): Observable<Task[]> {
-    const options = { params: new HttpParams().set('date', this.timeService.toDateString(new Date())) };
+  getTasks(date: Date): Observable<Task[]> {
+    const options = { params: new HttpParams().set('date', this.timeService.toDateString(date)) };
     return this.http.get<Task[]>(this.url, options);
   }
 

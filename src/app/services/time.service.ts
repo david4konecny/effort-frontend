@@ -7,6 +7,7 @@ import { TimeSession } from '../model/time-session';
 export class TimeService {
   private sessions: TimeSession[] = [];
   private current: TimeSession;
+  private ONE_DAY_IN_MILLIS = 24 * 60 * 60 * 1000;
 
   constructor() { }
 
@@ -57,6 +58,16 @@ export class TimeService {
     const h = +time.slice(0, 2);
     const m = +time.slice(3);
     return (h * 3600 + m * 60) * 1000;
+  }
+
+  getNextDay(date: Date) {
+    const dateInMillis = date.getTime();
+    return new Date(dateInMillis + this.ONE_DAY_IN_MILLIS);
+  }
+
+  getPreviousDay(date: Date) {
+    const dateInMillis = date.getTime();
+    return new Date(dateInMillis - this.ONE_DAY_IN_MILLIS);
   }
 
 }

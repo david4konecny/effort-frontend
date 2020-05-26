@@ -2,6 +2,7 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { TimeService } from '../../services/time.service';
+import {Intent} from '../../intent.enum';
 
 @Component({
   selector: 'app-task-dialog',
@@ -10,6 +11,8 @@ import { TimeService } from '../../services/time.service';
 })
 export class TaskDialogComponent implements OnInit {
   taskForm: FormGroup;
+  add = Intent.add;
+  edit = Intent.edit;
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: any,
