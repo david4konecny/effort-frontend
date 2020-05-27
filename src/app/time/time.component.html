@@ -9,8 +9,11 @@
     {{isTrackingTime ? 'Stop' : 'Start'}}
   </button>
   <br>
-  <button mat-button (click)="onCategoryClick()">Today's log</button>
+  <button mat-button (click)="onDisplayTimeLog()">Time log</button>
   <button mat-button (click)="openDialog(add)">Add time entry</button>
   <br>
   <p>Today total: {{todayTotal | time:true}}</p>
+  <div *ngIf="displayTimeLog" class="mb-3 mx-auto mat-elevation-z2" style="max-width: 500px;">
+    <app-time-log></app-time-log>
+  </div>
 </div>

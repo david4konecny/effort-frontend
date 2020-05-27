@@ -3,4 +3,5 @@ export interface TimeSession {
   date: string;
   startTime: number;
   endTime: number;
+  duration: number;
 }

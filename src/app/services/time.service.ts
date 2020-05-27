@@ -1,15 +1,25 @@
 import { Injectable } from '@angular/core';
 import { TimeSession } from '../model/time-session';
+import {Observable} from 'rxjs';
+import {HttpClient, HttpParams} from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root'
 })
 export class TimeService {
+  private url = 'http://localhost:8080/time';
   private sessions: TimeSession[] = [];
   private current: TimeSession;
   private ONE_DAY_IN_MILLIS = 24 * 60 * 60 * 1000;
 
-  constructor() { }
+  constructor(
+    private http: HttpClient
+  ) { }
+
+  getEntriesByDate(date: Date): Observable<TimeSession[]> {
+    const options = { params: new HttpParams().set('date', this.toDateString(date)) };
+    return this.http.get<TimeSession[]>(this.url, options);
+  }
 
   startTimeSession(session: TimeSession) {
     this.current = session;

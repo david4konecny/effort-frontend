@@ -28,6 +28,8 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { TimeDialogComponent } from './time/time-dialog/time-dialog.component';
+import { TimeLogComponent } from './time/time-log/time-log.component';
+import {MatTableModule} from '@angular/material/table';
 
 @NgModule({
   declarations: [
@@ -39,29 +41,31 @@ import { TimeDialogComponent } from './time/time-dialog/time-dialog.component';
     LogComponent,
     TimeComponent,
     TimePipe,
-    TimeDialogComponent
+    TimeDialogComponent,
+    TimeLogComponent
   ],
-  imports: [
-    BrowserModule,
-    AppRoutingModule,
-    HttpClientModule,
-    BrowserAnimationsModule,
-    ReactiveFormsModule,
-    MatToolbarModule,
-    MatTabsModule,
-    MatButtonModule,
-    MatListModule,
-    MatIconModule,
-    MatCheckboxModule,
-    MatDialogModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatSliderModule,
-    MatSnackBarModule,
-    MatDatepickerModule,
-    MatNativeDateModule,
-    MatProgressBarModule,
-  ],
+    imports: [
+        BrowserModule,
+        AppRoutingModule,
+        HttpClientModule,
+        BrowserAnimationsModule,
+        ReactiveFormsModule,
+        MatToolbarModule,
+        MatTabsModule,
+        MatButtonModule,
+        MatListModule,
+        MatIconModule,
+        MatCheckboxModule,
+        MatDialogModule,
+        MatFormFieldModule,
+        MatInputModule,
+        MatSliderModule,
+        MatSnackBarModule,
+        MatDatepickerModule,
+        MatNativeDateModule,
+        MatProgressBarModule,
+        MatTableModule,
+    ],
   providers: [],
   bootstrap: [AppComponent]
 })

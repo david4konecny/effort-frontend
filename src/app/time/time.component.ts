@@ -18,6 +18,7 @@ export class TimeComponent implements OnInit {
   category: string;
   chronometer: Observable<number>;
   todayTotal = 0;
+  displayTimeLog = false;
   sub: Subscription;
   add = Intent.add;
   edit = Intent.edit;
@@ -87,6 +88,10 @@ export class TimeComponent implements OnInit {
 
   private updateTodayTotal() {
     this.todayTotal = this.timeService.getTodayTotal();
+  }
+
+  onDisplayTimeLog() {
+    this.displayTimeLog = !this.displayTimeLog;
   }
 
   displayMessage(msg: string) {
