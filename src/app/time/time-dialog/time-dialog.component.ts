@@ -22,14 +22,15 @@ export class TimeDialogComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    console.log(this.data.timeSession);
     this.setUpForm();
   }
 
   private setUpForm() {
     this.form = this.formBuilder.group({
       date: [this.data.timeSession.date, Validators.required],
-      startTime: [this.timeService.toTimeString(this.data.timeSession.startTime), Validators.required],
-      endTime: [this.timeService.toTimeString(this.data.timeSession.endTime), Validators.required]
+      startTime: [this.timeService.secondsOfDayToString(this.data.timeSession.startTime), Validators.required],
+      endTime: [this.timeService.secondsOfDayToString(this.data.timeSession.endTime), Validators.required]
     });
   }
 

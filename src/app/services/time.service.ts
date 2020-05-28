@@ -47,7 +47,7 @@ export class TimeService {
 
   getNewTimeSession(): TimeSession {
     const now = new Date();
-    return { id: 0, date: this.toDateString(now), startTime: now.getTime(), endTime: now.getTime() } as TimeSession;
+    return { id: 0, date: this.toDateString(now), startTime: Math.floor(now.getTime() / 1000), endTime: Math.floor(now.getTime() / 1000) } as TimeSession;
   }
 
   toDateString(date: Date): string {
@@ -59,6 +59,13 @@ export class TimeService {
 
   toTimeString(timeInMillis: number) {
     const time = new Date(timeInMillis);
+    const h = `${time.getHours()}`.padStart(2, '0');
+    const m = `${time.getMinutes()}`.padStart(2, '0');
+    return `${h}:${m}`;
+  }
+
+  secondsOfDayToString(seconds: number) {
+    const time = new Date(seconds * 1000);
     const h = `${time.getHours()}`.padStart(2, '0');
     const m = `${time.getMinutes()}`.padStart(2, '0');
     return `${h}:${m}`;

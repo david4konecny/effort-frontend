@@ -1,4 +1,4 @@
-<div class="text-center mt-5">
+<div class="text-center mt-5 mb-5">
   <p style="font-size: x-large">{{timeDisplay | time}}</p>
   <button mat-stroked-button style="margin-right: 0.5rem;">
     {{category}}
@@ -13,7 +13,7 @@
   <button mat-button (click)="openDialog(add)">Add time entry</button>
   <br>
   <p>Today total: {{todayTotal | time:true}}</p>
-  <div *ngIf="displayTimeLog" class="mb-3 mx-auto mat-elevation-z2" style="max-width: 500px;">
+  <div *ngIf="displayTimeLog" class="mb-3 mx-auto mat-elevation-z2 p-3" style="max-width: 500px;">
     <app-time-log></app-time-log>
   </div>
 </div>
