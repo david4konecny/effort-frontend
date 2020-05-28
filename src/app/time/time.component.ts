@@ -79,9 +79,16 @@ export class TimeComponent implements OnInit {
     dialog.afterClosed().subscribe(
       result => {
         if (result) {
-          this.timeService.addTimeSession(result as TimeSession);
-          this.updateTodayTotal();
+          this.addNewTimeEntry(result);
         }
+      }
+    );
+  }
+
+  private addNewTimeEntry(entry: TimeSession) {
+    this.timeService.addNewTimeEntry(entry).subscribe(
+      next => {
+        // TODO: update local things
       }
     );
   }

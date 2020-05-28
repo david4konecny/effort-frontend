@@ -21,6 +21,10 @@ export class TimeService {
     return this.http.get<TimeSession[]>(this.url, options);
   }
 
+  addNewTimeEntry(entry: TimeSession): Observable<TimeSession> {
+    return this.http.post<TimeSession>(this.url, entry);
+  }
+
   startTimeSession(session: TimeSession) {
     this.current = session;
     this.sessions.push(this.current);
@@ -71,10 +75,10 @@ export class TimeService {
     return `${h}:${m}`;
   }
 
-  toMilliseconds(time: string) {
+  toSecondsOfDay(time: string) {
     const h = +time.slice(0, 2);
     const m = +time.slice(3);
-    return (h * 3600 + m * 60) * 1000;
+    return h * 3600 + m * 60;
   }
 
   getNextDay(date: Date) {

@@ -37,8 +37,8 @@ export class TimeDialogComponent implements OnInit {
   onSubmit() {
     const result = this.data.timeSession;
     result.date = this.form.value.date;
-    result.startTime = this.timeService.toMilliseconds(this.form.value.startTime);
-    result.endTime = this.timeService.toMilliseconds(this.form.value.endTime);
+    result.startTime = this.timeService.toSecondsOfDay(this.form.value.startTime);
+    result.endTime = this.timeService.toSecondsOfDay(this.form.value.endTime);
     console.log(result);
     this.dialogRef.close(result);
   }
