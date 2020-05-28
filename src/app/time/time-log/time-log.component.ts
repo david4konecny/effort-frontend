@@ -50,7 +50,11 @@ export class TimeLogComponent implements OnInit {
   }
 
   private editTimeEntry(entry: TimeSession) {
-    this.timeService.editTimeEntry(entry).subscribe();
+    this.timeService.editTimeEntry(entry).subscribe(
+      next => {
+        entry.duration = next.duration;
+      }
+    );
   }
 
   private reloadTimeEntries() {
