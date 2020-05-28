@@ -22,7 +22,6 @@ export class TimeDialogComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    console.log(this.data.timeSession);
     this.setUpForm();
   }
 

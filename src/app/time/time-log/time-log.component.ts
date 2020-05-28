@@ -44,9 +44,13 @@ export class TimeLogComponent implements OnInit {
     dialogRef.afterClosed().subscribe(
       result => {
         if (result) {
-          // TODO: edit entry
+          this.editTimeEntry(result);
         }
       });
+  }
+
+  private editTimeEntry(entry: TimeSession) {
+    this.timeService.editTimeEntry(entry).subscribe();
   }
 
   private reloadTimeEntries() {

@@ -25,6 +25,10 @@ export class TimeService {
     return this.http.post<TimeSession>(this.url, entry);
   }
 
+  editTimeEntry(entry: TimeSession): Observable<TimeSession> {
+    return this.http.put<TimeSession>(this.url, entry);
+  }
+
   startTimeSession(session: TimeSession) {
     this.current = session;
     this.sessions.push(this.current);
@@ -61,17 +65,9 @@ export class TimeService {
     return `${year}-${month}-${day}`;
   }
 
-  toTimeString(timeInMillis: number) {
-    const time = new Date(timeInMillis);
-    const h = `${time.getHours()}`.padStart(2, '0');
-    const m = `${time.getMinutes()}`.padStart(2, '0');
-    return `${h}:${m}`;
-  }
-
   secondsOfDayToString(seconds: number) {
-    const time = new Date(seconds * 1000);
-    const h = `${time.getHours()}`.padStart(2, '0');
-    const m = `${time.getMinutes()}`.padStart(2, '0');
+    const h = `${Math.floor(seconds / 3600)}`.padStart(2, '0');
+    const m = `${Math.floor(seconds / 60) % 60}`.padStart(2, '0');
     return `${h}:${m}`;
   }
 
