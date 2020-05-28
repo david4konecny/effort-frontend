@@ -12,7 +12,7 @@
   <button mat-button (click)="onDisplayTimeLog()">Time log</button>
   <button mat-button (click)="openDialog(add)">Add time entry</button>
   <br>
-  <p>Today total: {{todayTotal | time:true}}</p>
+  <p>Today total: {{totalDuration | time:true}}</p>
   <div *ngIf="displayTimeLog" class="mb-3 mx-auto mat-elevation-z2 p-3" style="max-width: 500px;">
     <app-time-log></app-time-log>
   </div>

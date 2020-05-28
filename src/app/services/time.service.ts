@@ -38,19 +38,15 @@ export class TimeService {
   stopTimeSession() {
     this.current = null;
     console.log(this.sessions);
-    console.log(this.getTodayTotal());
   }
 
   addTimeSession(timeSession: TimeSession) {
     this.sessions.push(timeSession);
   }
 
-  getTodayTotal() {
-    return this.sessions.map(s => this.getDuration(s)).reduce((a, b) => a + b, 0);
-  }
-
-  getDuration(timeSession: TimeSession) {
-    return timeSession.endTime - timeSession.startTime;
+  getTotalDuration(date: Date): Observable<number> {
+    const options = { params: new HttpParams().set('date', this.toDateString(date)) };
+    return this.http.get<number>(`${this.url}/total`, options);
   }
 
   getNewTimeSession(): TimeSession {

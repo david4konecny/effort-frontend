@@ -17,7 +17,7 @@ export class TimeComponent implements OnInit {
   timeDisplay: number;
   category: string;
   chronometer: Observable<number>;
-  todayTotal = 0;
+  totalDuration = 0;
   displayTimeLog = false;
   sub: Subscription;
   add = Intent.add;
@@ -30,9 +30,16 @@ export class TimeComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    this.initTotalDuration();
     this.isTrackingTime = false;
     this.timeDisplay = 0;
     this.category = 'programming';
+  }
+
+  private initTotalDuration() {
+    this.timeService.getTotalDuration(new Date()).subscribe(
+      next => this.totalDuration = next
+    );
   }
 
   onTimeClick() {
@@ -55,7 +62,6 @@ export class TimeComponent implements OnInit {
     this.sub = this.chronometer.subscribe(it => {
       session.endTime = new Date().getTime();
       this.timeDisplay = it;
-      this.updateTodayTotal();
     });
   }
 
@@ -88,13 +94,11 @@ export class TimeComponent implements OnInit {
   private addNewTimeEntry(entry: TimeSession) {
     this.timeService.addNewTimeEntry(entry).subscribe(
       next => {
-        // TODO: update local things
+        if (next.date === this.timeService.toDateString(new Date())) {
+          this.totalDuration += next.duration;
+        }
       }
     );
-  }
-
-  private updateTodayTotal() {
-    this.todayTotal = this.timeService.getTodayTotal();
   }
 
   onDisplayTimeLog() {
