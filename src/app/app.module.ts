@@ -30,6 +30,7 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { TimeDialogComponent } from './time/time-dialog/time-dialog.component';
 import { TimeLogComponent } from './time/time-log/time-log.component';
 import {MatTableModule} from '@angular/material/table';
+import { StatsComponent } from './stats/stats.component';
 
 @NgModule({
   declarations: [
@@ -42,7 +43,8 @@ import {MatTableModule} from '@angular/material/table';
     TimeComponent,
     TimePipe,
     TimeDialogComponent,
-    TimeLogComponent
+    TimeLogComponent,
+    StatsComponent
   ],
     imports: [
         BrowserModule,
