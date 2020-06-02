@@ -29,6 +29,10 @@ export class TimeService {
     return this.http.put<TimeSession>(this.url, entry);
   }
 
+  deleteById(id: number): Observable<any> {
+    return this.http.delete(`${this.url}/${id}`);
+  }
+
   startTimeSession(session: TimeSession) {
     this.current = session;
     this.sessions.push(this.current);
@@ -38,10 +42,6 @@ export class TimeService {
   stopTimeSession() {
     this.current = null;
     console.log(this.sessions);
-  }
-
-  addTimeSession(timeSession: TimeSession) {
-    this.sessions.push(timeSession);
   }
 
   getTotalDuration(date: Date): Observable<number> {

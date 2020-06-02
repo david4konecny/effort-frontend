@@ -42,4 +42,8 @@ export class TimeDialogComponent implements OnInit {
     this.dialogRef.close(result);
   }
 
+  onDelete() {
+    this.dialogRef.close('delete');
+  }
+
 }

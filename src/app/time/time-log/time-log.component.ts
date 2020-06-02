@@ -43,7 +43,10 @@ export class TimeLogComponent implements OnInit {
       { height: '350', width: '400px', data: { action, timeSession: timeEntry }});
     dialogRef.afterClosed().subscribe(
       result => {
-        if (result) {
+        if (result === 'delete') {
+          this.deleteEntry(timeEntry);
+        }
+        else if (result) {
           this.editTimeEntry(result);
         }
       });
@@ -75,6 +78,14 @@ export class TimeLogComponent implements OnInit {
   onDatePicked(change: MatDatepickerInputEvent<any>) {
     this.date = change.value;
     this.reloadTimeEntries();
+  }
+
+  deleteEntry(entry: TimeSession) {
+    this.timeService.deleteById(entry.id).subscribe(
+      next => {
+        this.reloadTimeEntries();
+      }
+    );
   }
 
 }
