@@ -31,6 +31,7 @@ import { TimeDialogComponent } from './time/time-dialog/time-dialog.component';
 import { TimeLogComponent } from './time/time-log/time-log.component';
 import {MatTableModule} from '@angular/material/table';
 import { StatsComponent } from './stats/stats.component';
+import { MonthStatsComponent } from './stats/month-stats/month-stats.component';
 
 @NgModule({
   declarations: [
@@ -44,7 +45,8 @@ import { StatsComponent } from './stats/stats.component';
     TimePipe,
     TimeDialogComponent,
     TimeLogComponent,
-    StatsComponent
+    StatsComponent,
+    MonthStatsComponent
   ],
     imports: [
         BrowserModule,

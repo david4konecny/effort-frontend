@@ -1,0 +1,10 @@
+<div class="text-center mt-3">
+  <button mat-icon-button (click)="onPreviousPeriodClick()"><mat-icon>chevron_left</mat-icon></button>
+  <div style="display: inline-block; width: 5px; visibility: hidden;">
+    <input [matDatepicker]="picker">
+  </div>
+  <mat-datepicker #picker startView="year" (monthSelected)="onMonthSelected($event, picker)" [startAt]="date"></mat-datepicker>
+  <button (click)="picker.open()" mat-button>{{month}}, {{year}}</button>
+  <div style="display: inline-block; width: 5px;"></div>
+  <button mat-icon-button (click)="onNextPeriodClick()"><mat-icon>chevron_right</mat-icon></button>
+</div>
