@@ -2,13 +2,14 @@ import { Injectable } from '@angular/core';
 import { TimeSession } from '../model/time-session';
 import {Observable} from 'rxjs';
 import {HttpClient, HttpParams} from '@angular/common/http';
+import {tap} from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
 })
 export class TimeService {
   private url = 'http://localhost:8080/time';
-  private sessions: TimeSession[] = [];
+  private todayTimeEntries: TimeSession[] = [];
   private current: TimeSession;
   private ONE_DAY_IN_MILLIS = 24 * 60 * 60 * 1000;
 
@@ -18,7 +19,15 @@ export class TimeService {
 
   getEntriesByDate(date: Date): Observable<TimeSession[]> {
     const options = { params: new HttpParams().set('date', this.toDateString(date)) };
-    return this.http.get<TimeSession[]>(this.url, options);
+    return this.http.get<TimeSession[]>(this.url, options)
+      .pipe(
+        tap(next => {
+          if (this.toDateString(date) === this.toDateString(new Date())) {
+            this.todayTimeEntries = next;
+            console.log(this.todayTimeEntries);
+          }
+        })
+      );
   }
 
   addNewTimeEntry(entry: TimeSession): Observable<TimeSession> {
@@ -33,15 +42,15 @@ export class TimeService {
     return this.http.delete(`${this.url}/${id}`);
   }
 
-  startTimeSession(session: TimeSession) {
+  startTimeTracking(session: TimeSession) {
     this.current = session;
-    this.sessions.push(this.current);
-    console.log(this.sessions);
+    this.todayTimeEntries.push(session);
   }
 
-  stopTimeSession() {
+  saveTrackedTime(): Observable<TimeSession> {
+    const entry = this.current;
     this.current = null;
-    console.log(this.sessions);
+    return this.addNewTimeEntry(entry);
   }
 
   getTotalDuration(date: Date): Observable<number> {

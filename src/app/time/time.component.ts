@@ -44,9 +44,9 @@ export class TimeComponent implements OnInit {
 
   onTimeClick() {
     if (this.isTrackingTime) {
-      this.stopTime();
+      this.stopTimeTracking();
     } else {
-      this.startTime();
+      this.startTimeTracking();
     }
     this.isTrackingTime = !this.isTrackingTime;
   }
@@ -55,23 +55,23 @@ export class TimeComponent implements OnInit {
 
   }
 
-  startTime() {
+  startTimeTracking() {
     const session = this.timeService.getNewTimeSession();
-    this.timeService.startTimeSession(session);
-    this.chronometer = timer(0, 1000);
+    this.timeService.startTimeTracking(session);
+    this.chronometer = timer(1000, 1000);
     this.sub = this.chronometer.subscribe(it => {
-      session.endTime = new Date().getTime();
-      this.timeDisplay = it;
+      session.endTime += 1;
+      this.totalDuration += 1;
+      this.timeDisplay = it + 1;
     });
   }
 
-  stopTime() {
-    this.timeService.stopTimeSession();
-    if (this.timeDisplay < 5) {
-      this.displayMessage('Minimum length: 5s');
-    } else {
-      this.displayMessage('Session saved');
-    }
+  stopTimeTracking() {
+    this.timeService.saveTrackedTime().subscribe(
+      next => {
+        this.displayMessage('Entry saved');
+      }
+    );
     this.timeDisplay = 0;
     this.sub.unsubscribe();
   }
