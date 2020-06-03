@@ -1,0 +1,11 @@
+#canvas-container {
+  max-width: 700px;
+  max-height: 350px;
+  display: block;
+}
+
+#canvas {
+  display: block;
+  margin-right: auto;
+  margin-left: auto;
+}

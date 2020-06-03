@@ -1,8 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { MatDatepicker } from '@angular/material/datepicker';
 import { StatsService } from '../../stats.service';
 import {Subscription} from 'rxjs';
 import {DateTotal} from '../../model/date-total';
+import { Chart } from 'chart.js';
 
 @Component({
   selector: 'app-month-stats',
@@ -16,6 +17,9 @@ export class MonthStatsComponent implements OnInit {
   month: number;
   date = new Date();
   sub: Subscription;
+  @ViewChild('chart')
+  canvas: ElementRef;
+  chart: Chart;
 
   constructor(
     private statsService: StatsService
@@ -32,7 +36,10 @@ export class MonthStatsComponent implements OnInit {
       this.sub.unsubscribe();
     }
     this.sub = this.statsService.getDurationsForDaysInMonth(this.year, this.month).subscribe(
-      next => this.setDataset(next)
+      next => {
+        this.setDataset(next);
+        this.drawChart();
+      }
     );
   }
 
@@ -87,6 +94,24 @@ export class MonthStatsComponent implements OnInit {
     } else {
       this.month++;
     }
+  }
+
+  private drawChart() {
+    const ctx = this.canvas.nativeElement.getContext('2d');
+    this.chart = new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: this.labels,
+        datasets: [{
+          data: this.data
+        }]
+      },
+      options: {
+        legend: {
+          display: false
+        }
+      }
+    });
   }
 
 }
