@@ -4,6 +4,7 @@ import { StatsService } from '../../stats.service';
 import {Subscription} from 'rxjs';
 import {DateTotal} from '../../model/date-total';
 import { Chart } from 'chart.js';
+import { TimeService } from '../../services/time.service';
 
 @Component({
   selector: 'app-month-stats',
@@ -22,7 +23,8 @@ export class MonthStatsComponent implements OnInit {
   chart: Chart;
 
   constructor(
-    private statsService: StatsService
+    private statsService: StatsService,
+    private timeService: TimeService
   ) { }
 
   ngOnInit(): void {
@@ -103,10 +105,39 @@ export class MonthStatsComponent implements OnInit {
       data: {
         labels: this.labels,
         datasets: [{
-          data: this.data
+          data: this.data,
+          hoverBackgroundColor: '#009688'
         }]
       },
       options: {
+        scales: {
+          yAxes: [{
+            scaleLabel: {
+              display: true,
+              labelString: 'total time'
+            },
+            ticks: {
+              callback: (value) => this.timeService.secondsOfDayToString(value),
+              min: 0
+            },
+            gridLines: {
+              drawOnChartArea: false
+            }
+          }],
+          xAxes: [{
+            ticks: {
+              callback: (value, index) => index + 1
+            },
+            gridLines: {
+              drawOnChartArea: false
+            }
+          }]
+        },
+        tooltips: {
+          callbacks: {
+            label: (tooltipItem) => this.timeService.secondsOfDayToString(tooltipItem.yLabel)
+          }
+        },
         legend: {
           display: false
         }
