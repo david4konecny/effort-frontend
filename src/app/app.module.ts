@@ -32,6 +32,7 @@ import { TimeLogComponent } from './time/time-log/time-log.component';
 import {MatTableModule} from '@angular/material/table';
 import { StatsComponent } from './stats/stats.component';
 import { MonthStatsComponent } from './stats/month-stats/month-stats.component';
+import { CategoryComponent } from './category/category/category.component';
 
 @NgModule({
   declarations: [
@@ -46,7 +47,8 @@ import { MonthStatsComponent } from './stats/month-stats/month-stats.component';
     TimeDialogComponent,
     TimeLogComponent,
     StatsComponent,
-    MonthStatsComponent
+    MonthStatsComponent,
+    CategoryComponent
   ],
     imports: [
         BrowserModule,

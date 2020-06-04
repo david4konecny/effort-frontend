@@ -1,7 +1,8 @@
 <div class="text-center mt-5 mb-5">
   <p style="font-size: x-large">{{timeDisplay | time: true}}</p>
-  <button mat-stroked-button style="margin-right: 0.5rem;">
-    {{category}}
+  <button mat-stroked-button (click)="onCategoryClick()"
+          class="category-button">
+    {{category.name}}
   </button>
   <button mat-flat-button (click)="onTimeClick()" style="margin-left: 0.5rem;"
           [color]="isTrackingTime ? 'warn' : 'primary'">
@@ -9,6 +10,9 @@
     {{isTrackingTime ? 'Stop' : 'Start'}}
   </button>
   <br>
+  <div *ngIf="displayCategories" class="mb-3 mx-auto mat-elevation-z2 p-3" style="max-width: 500px;">
+    <app-category [selectedCategory]="category" (categoryChange)="onCategoryChanged($event)"></app-category>
+  </div>
   <button mat-button (click)="onDisplayTimeLog()">Time log</button>
   <button mat-button (click)="openDialog(add)">Add time entry</button>
   <br>

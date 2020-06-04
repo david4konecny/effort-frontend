@@ -6,6 +6,8 @@ import { MatDialog } from '@angular/material/dialog';
 import {TimeDialogComponent} from './time-dialog/time-dialog.component';
 import {Intent} from '../intent.enum';
 import {TimeSession} from '../model/time-session';
+import {CategoryService} from '../category/category.service';
+import {Category} from '../model/category';
 
 @Component({
   selector: 'app-time',
@@ -15,16 +17,18 @@ import {TimeSession} from '../model/time-session';
 export class TimeComponent implements OnInit {
   isTrackingTime: boolean;
   timeDisplay: number;
-  category: string;
+  category: Category;
   chronometer: Observable<number>;
   totalDuration = 0;
   displayTimeLog = false;
+  displayCategories = false;
   sub: Subscription;
   add = Intent.add;
   edit = Intent.edit;
 
   constructor(
     private timeService: TimeService,
+    private categoryService: CategoryService,
     public dialog: MatDialog,
     private snackBar: MatSnackBar
   ) { }
@@ -33,12 +37,20 @@ export class TimeComponent implements OnInit {
     this.initTotalDuration();
     this.isTrackingTime = false;
     this.timeDisplay = 0;
-    this.category = 'programming';
+    this.loadCategory();
   }
 
   private initTotalDuration() {
     this.timeService.getTotalDuration(new Date()).subscribe(
       next => this.totalDuration = next
+    );
+  }
+
+  private loadCategory() {
+    this.categoryService.getCategories().subscribe(
+      next => {
+        this.category = next[0];
+      }
     );
   }
 
@@ -52,7 +64,11 @@ export class TimeComponent implements OnInit {
   }
 
   onCategoryClick() {
-
+    if (this.isTrackingTime) {
+      this.displayMessage('Cannot change category during time tracking');
+    } else {
+      this.displayCategories = !this.displayCategories;
+    }
   }
 
   startTimeTracking() {
@@ -103,6 +119,12 @@ export class TimeComponent implements OnInit {
 
   onDisplayTimeLog() {
     this.displayTimeLog = !this.displayTimeLog;
+  }
+
+  onCategoryChanged(category: Category) {
+    if (!this.isTrackingTime) {
+      this.category = category;
+    }
   }
 
   displayMessage(msg: string) {

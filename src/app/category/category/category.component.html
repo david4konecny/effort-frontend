@@ -1,0 +1,17 @@
+<div>
+
+  <mat-list>
+
+    <mat-list-item class="category-item" *ngFor="let c of categories" [ngStyle]="{'border-color': c.color}">
+      <button mat-flat-button (click)="onSelectCategory(c)">
+        <mat-icon *ngIf="c.id === selectedCategory.id">done</mat-icon>
+        <span> {{c.name}} </span>
+      </button>
+      <button mat-icon-button (click)="onEditCategory(c)" class="edit-button">
+        <mat-icon>edit</mat-icon>
+      </button>
+    </mat-list-item>
+
+  </mat-list>
+
+</div>
