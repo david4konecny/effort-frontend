@@ -61,7 +61,7 @@ export class TimeService {
   getNewTimeSession(): TimeSession {
     const d = new Date();
     const placeholderTime = this.toSecondsOfDay(`${d.getHours()}-${d.getMinutes()}`);
-    return { id: 0, date: this.toDateString(d), startTime: placeholderTime, endTime: placeholderTime } as TimeSession;
+    return { id: 0, date: this.toDateString(d), category: {id: 1}, startTime: placeholderTime, endTime: placeholderTime } as TimeSession;
   }
 
   toDateString(date: Date): string {
