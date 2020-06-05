@@ -5,5 +5,10 @@
 }
 
 .edit-button {
+  display: none;
   margin-left: auto;
+}
+
+.category-item:hover .edit-button {
+  display: inline-block;
 }

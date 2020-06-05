@@ -33,6 +33,8 @@ import {MatTableModule} from '@angular/material/table';
 import { StatsComponent } from './stats/stats.component';
 import { MonthStatsComponent } from './stats/month-stats/month-stats.component';
 import { CategoryComponent } from './category/category/category.component';
+import { CategoryDialogComponent } from './category/category-dialog/category-dialog.component';
+import {MatGridListModule} from '@angular/material/grid-list';
 
 @NgModule({
   declarations: [
@@ -48,7 +50,8 @@ import { CategoryComponent } from './category/category/category.component';
     TimeLogComponent,
     StatsComponent,
     MonthStatsComponent,
-    CategoryComponent
+    CategoryComponent,
+    CategoryDialogComponent
   ],
     imports: [
         BrowserModule,
@@ -71,6 +74,7 @@ import { CategoryComponent } from './category/category/category.component';
         MatNativeDateModule,
         MatProgressBarModule,
         MatTableModule,
+        MatGridListModule,
     ],
   providers: [],
   bootstrap: [AppComponent]

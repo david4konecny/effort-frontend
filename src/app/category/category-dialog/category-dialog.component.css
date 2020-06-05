@@ -1,0 +1,14 @@
+.color-option, #selected-color {
+  width: 25px;
+  height: 25px;
+}
+
+#selected-color {
+  display: inline-block;
+  margin-left: 1rem;
+}
+
+#colors-container {
+  display: flex;
+  justify-content: space-between;
+}
