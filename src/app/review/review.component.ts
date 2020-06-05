@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ReviewService } from '../review.service';
 import { Review } from '../model/review';
+import {TimeService} from '../services/time.service';
 
 @Component({
   selector: 'app-review',
@@ -10,12 +11,13 @@ import { Review } from '../model/review';
 })
 export class ReviewComponent implements OnInit {
   reviewForm: FormGroup;
-  review = { date: new Date(), rating: 3, description: ''} as Review;
+  review = { date: this.timeService.toDateString(new Date()), rating: 3, description: ''} as Review;
   isEditingForm = false;
   date = new Date();
 
   constructor(
     private reviewService: ReviewService,
+    private timeService: TimeService,
     private formBuilder: FormBuilder
   ) { }
 
@@ -45,16 +47,21 @@ export class ReviewComponent implements OnInit {
   setUpForm(rating: number, description: string) {
     this.reviewForm = this.formBuilder.group(
       {
-        rating: [rating],
+        rating: [rating, Validators.required],
         description: [description, Validators.required]
       }
     );
   }
 
-  onSave() {
+  onSubmit() {
     this.review.rating = this.reviewForm.value.rating;
     this.review.description = this.reviewForm.value.description;
-    this.reviewService.saveReview(this.review);
+    this.reviewService.saveReview(this.review).subscribe(
+      next => {
+        this.review = next;
+        this.isEditingForm = false;
+      }
+    );
   }
 
 }

@@ -39,7 +39,7 @@
     </mat-form-field>
     <br>
     <div class="mt-3">
-      <button type="submit" color="primary" [disabled]="!reviewForm.valid || reviewForm.pristine" (click)="onSave()" mat-stroked-button>Save</button>
+      <button type="submit" color="primary" [disabled]="!reviewForm.valid || reviewForm.pristine" (click)="onSubmit()" mat-stroked-button>Save</button>
       <button type="button" color="warn" style="margin-left: 1rem;" (click)="onHideForm()" mat-stroked-button>Cancel</button>
     </div>
   </form>
