@@ -1,18 +1,26 @@
 import { Injectable } from '@angular/core';
 import { Review } from './model/review';
+import { HttpClient, HttpParams } from '@angular/common/http';
+import { TimeService } from './services/time.service';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ReviewService {
+  private url = 'http://localhost:8080/reviews';
   reviews: Review[];
 
-  constructor() {
+  constructor(
+    private http: HttpClient,
+    private timeService: TimeService
+  ) {
     this.populateSampleData();
   }
 
-  getReviewByDate(date: Date) {
-    return this.reviews.find(it => this.datesEqual(it.date, date));
+  getReview(date: Date): Observable<Review[]> {
+    const options = { params: new HttpParams().set('date', this.timeService.toDateString(date)) };
+    return this.http.get<Review[]>(this.url, options);
   }
 
   saveReview(review: Review) {

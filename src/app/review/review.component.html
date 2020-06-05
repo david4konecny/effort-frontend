@@ -1,18 +1,47 @@
-<form [formGroup]="reviewForm" class="text-center mt-3">
+<div>
 
-  <div>
-    <h4>Rate your day</h4>
-    <span><small>Bad</small></span>
-    <mat-slider min="1" max="5"
-                thumbLabel formControlName="rating"
-                style="width: 200px; padding: 0; margin: 0;"></mat-slider>
-    <span><small>Great</small></span>
+  <div *ngIf="!isEditingForm" class="text-center mt-3">
+
+    <div>
+      <h4>Rate your day</h4>
+      <button mat-button (click)="onDisplayForm()" title="Edit">
+        <span><small>Bad</small></span>
+        <mat-slider disabled min="1" max="5" [value]="review.rating"
+                    thumbLabel
+                    style="width: 200px; padding: 0; margin: 0;"></mat-slider>
+        <span><small>Great</small></span>
+      </button>
+    </div>
+
+    <div>
+      <button mat-stroked-button disableRipple id="text-button" (click)="onDisplayForm()" title="Edit">
+        {{review.description}}
+      </button>
+    </div>
+
   </div>
 
-  <mat-form-field>
-    <mat-label>How was your day?</mat-label>
-    <textarea matInput formControlName="description"></textarea>
-  </mat-form-field>
-  <br>
-  <button type="submit" [disabled]="!reviewForm.valid || reviewForm.pristine" (click)="onSave()" mat-stroked-button>Save</button>
-</form>
+  <form *ngIf="isEditingForm" [formGroup]="reviewForm" class="text-center mt-3">
+
+    <div>
+      <h4>Rate your day</h4>
+      <span><small>Bad</small></span>
+      <mat-slider min="1" max="5"
+                  thumbLabel formControlName="rating"
+                  style="width: 200px; padding: 0; margin: 0;"></mat-slider>
+      <span><small>Great</small></span>
+    </div>
+
+    <mat-form-field style="width: 400px; height: 200px;">
+      <mat-label>How was your day?</mat-label>
+      <textarea style="width: 100%; height: 100%;" mat-autosize matAutosizeMinRows="12"
+                matInput formControlName="description"></textarea>
+    </mat-form-field>
+    <br>
+    <div class="mt-3">
+      <button type="submit" color="primary" [disabled]="!reviewForm.valid || reviewForm.pristine" (click)="onSave()" mat-stroked-button>Save</button>
+      <button type="button" color="warn" style="margin-left: 1rem;" (click)="onHideForm()" mat-stroked-button>Cancel</button>
+    </div>
+  </form>
+
+</div>

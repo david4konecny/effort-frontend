@@ -1,0 +1,8 @@
+#text-button {
+  display: inline-flex;
+  align-items: flex-start;
+  margin: 1rem auto;
+  padding: 0;
+  width: 400px;
+  height: 200px;
+}

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ReviewService } from '../review.service';
 import { Review } from '../model/review';
 
@@ -10,7 +10,9 @@ import { Review } from '../model/review';
 })
 export class ReviewComponent implements OnInit {
   reviewForm: FormGroup;
-  review: Review;
+  review = { date: new Date(), rating: 3, description: ''} as Review;
+  isEditingForm = false;
+  date = new Date();
 
   constructor(
     private reviewService: ReviewService,
@@ -18,15 +20,26 @@ export class ReviewComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.review = this.getTodayReview();
-    if (!this.review) {
-      this.review = { date: new Date(), rating: 3, description: ''} as Review;
-    }
-    this.setUpForm(this.review.rating, this.review.description);
+    this.fetchReview();
   }
 
-  getTodayReview() {
-    return this.reviewService.getReviewByDate(new Date());
+  fetchReview() {
+    this.reviewService.getReview(this.date).subscribe(
+      next => {
+        if (next.length) {
+          this.review = next[0];
+        }
+      }
+    );
+  }
+
+  onDisplayForm() {
+    this.setUpForm(this.review.rating, this.review.description);
+    this.isEditingForm = true;
+  }
+
+  onHideForm() {
+    this.isEditingForm = false;
   }
 
   setUpForm(rating: number, description: string) {
