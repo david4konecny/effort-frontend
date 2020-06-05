@@ -4,11 +4,11 @@
   border: 1px solid;
 }
 
-.edit-button {
+.menu-button {
   display: none;
   margin-left: auto;
 }
 
-.category-item:hover .edit-button {
+.category-item:hover .menu-button {
   display: inline-block;
 }

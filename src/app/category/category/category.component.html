@@ -7,9 +7,13 @@
         <mat-icon *ngIf="c.id === selectedCategory.id">done</mat-icon>
         <span> {{c.name}} </span>
       </button>
-      <button mat-icon-button (click)="onEditCategory(c)" class="edit-button">
-        <mat-icon>edit</mat-icon>
+      <button mat-icon-button [matMenuTriggerFor]="menu" class="menu-button">
+        <mat-icon>more_vert</mat-icon>
       </button>
+      <mat-menu #menu>
+        <button mat-menu-item (click)="onEditCategory(c)">Edit</button>
+        <button mat-menu-item (click)="onDeleteCategory(c)">Delete</button>
+      </mat-menu>
     </mat-list-item>
 
   </mat-list>

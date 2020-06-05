@@ -35,6 +35,7 @@ import { MonthStatsComponent } from './stats/month-stats/month-stats.component';
 import { CategoryComponent } from './category/category/category.component';
 import { CategoryDialogComponent } from './category/category-dialog/category-dialog.component';
 import {MatGridListModule} from '@angular/material/grid-list';
+import {MatMenuModule} from '@angular/material/menu';
 
 @NgModule({
   declarations: [
@@ -75,6 +76,7 @@ import {MatGridListModule} from '@angular/material/grid-list';
         MatProgressBarModule,
         MatTableModule,
         MatGridListModule,
+        MatMenuModule,
     ],
   providers: [],
   bootstrap: [AppComponent]

@@ -9,7 +9,6 @@ import {TimeService} from './services/time.service';
 })
 export class TaskService {
   private url = 'http://localhost:8080/tasks';
-  private tasks: Task[];
 
   constructor(
     private http: HttpClient,
@@ -33,15 +32,4 @@ export class TaskService {
     return this.http.put<Task>(this.url, task);
   }
 
-  private genId(): number {
-    return this.tasks.length > 0 ? Math.max(...this.tasks.map(task => task.id)) + 1 : 1;
-  }
-
-  private populateSampleData() {
-    this.tasks = [
-      { id: 1, description: 'run', date: new Date().toDateString(), finished: false },
-      { id: 2, description: 'walk', date: new Date().toDateString(), finished: false },
-      { id: 3, description: 'gym', date: new Date().toDateString(), finished: true },
-    ];
-  }
 }

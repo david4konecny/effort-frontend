@@ -43,6 +43,12 @@ export class CategoryComponent implements OnInit {
     this.openCategoryDialog(Intent.edit, category);
   }
 
+  onDeleteCategory(category: Category) {
+    this.categoryService.deleteById(category.id).subscribe(
+      next => this.removeDeletedCategoryFromList(category)
+    );
+  }
+
   onAddNewCategory() {
     const category = { id: 0, name: '', color: '#3700b3'} as Category;
     this.openCategoryDialog(Intent.add, category);
@@ -77,6 +83,11 @@ export class CategoryComponent implements OnInit {
 
   editCategory(category: Category) {
     this.categoryService.edit(category).subscribe();
+  }
+
+  removeDeletedCategoryFromList(category: Category) {
+    const idx = this.categories.findIndex(it => category === it);
+    this.categories.splice(idx, 1);
   }
 
 }
