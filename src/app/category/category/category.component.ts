@@ -42,11 +42,32 @@ export class CategoryComponent implements OnInit {
   }
 
   onEditCategory(action: Intent, category: Category) {
-    console.log('edit category');
-    this.dialog.open(
+    const dialog = this.dialog.open(
       CategoryDialogComponent,
       { height: '350px', width: '400px', data: { action, category }}
-    )
+    );
+    dialog.afterClosed().subscribe(
+      result => this.onDialogClosed(action, result)
+    );
+  }
+
+  onDialogClosed(action: Intent, result: Category) {
+    if (result) {
+      if (action === this.edit) {
+        this.editCategory(result);
+      }
+      else if (action === this.add) {
+        this.addCategory(result);
+      }
+    }
+  }
+
+  addCategory(category: Category) {
+    this.categoryService.add(category).subscribe();
+  }
+
+  editCategory(category: Category) {
+    this.categoryService.edit(category).subscribe();
   }
 
 }
