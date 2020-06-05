@@ -40,7 +40,4 @@ export class TaskDialogComponent implements OnInit {
     this.dialogRef.close(this.data.task);
   }
 
-  onDeleteTask() {
-    this.dialogRef.close('delete');
-  }
 }

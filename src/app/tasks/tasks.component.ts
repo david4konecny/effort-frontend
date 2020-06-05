@@ -19,8 +19,6 @@ export class TasksComponent implements OnInit, OnDestroy {
   sub: Subscription;
   tasksFinished = 0;
   date: Date = new Date();
-  add = Intent.add;
-  edit = Intent.edit;
 
   constructor(
     private taskService: TaskService,
@@ -30,6 +28,18 @@ export class TasksComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.loadTasks();
+  }
+
+  onEditTask(task: Task) {
+    this.openDialog(Intent.edit, task);
+  }
+
+  onAddTask() {
+    this.openDialog(Intent.add);
+  }
+
+  onDeleteTask(task: Task) {
+    this.deleteTask(task);
   }
 
   openDialog(action: Intent, task?: Task) {
@@ -43,9 +53,7 @@ export class TasksComponent implements OnInit, OnDestroy {
   }
 
   private onDialogClosed(result: any, action: Intent, task: Task) {
-    if (result === 'delete') {
-      this.deleteTask(task);
-    } else if (result) {
+    if (result) {
       if (action === Intent.edit) {
         this.editTask(result);
       } else if (action === Intent.add) {

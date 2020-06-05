@@ -17,19 +17,22 @@
   <p class="text-right" *ngIf="tasks.length">{{tasksFinished}} / {{tasks.length}}</p>
   <mat-progress-bar
     *ngIf="tasks.length" [value]="(tasksFinished / tasks.length) * 100"></mat-progress-bar>
-  <mat-list-item *ngFor="let task of tasks">
+  <mat-list-item class="task-item" *ngFor="let task of tasks">
     <mat-checkbox [checked]="task.finished" (change)="onItemCheck($event, task)">
       {{task.description}}
     </mat-checkbox>
-    <button mat-icon-button style="margin-left: auto;"
-            title="edit" (click)="openDialog(edit, task)">
-      <mat-icon>edit</mat-icon>
+    <button mat-icon-button [matMenuTriggerFor]="menu" class="menu-button" title="more">
+      <mat-icon>more_vert</mat-icon>
     </button>
+    <mat-menu #menu>
+      <button mat-menu-item (click)="onEditTask(task)">Edit</button>
+      <button mat-menu-item (click)="onDeleteTask(task)">Delete</button>
+    </mat-menu>
   </mat-list-item>
 </mat-list>
 
 <div style="text-align: center">
-  <button mat-stroked-button (click)="openDialog(add)">
+  <button mat-stroked-button (click)="onAddTask()">
     <mat-icon>add</mat-icon>
     Add new task
   </button>
