@@ -16,8 +16,6 @@ export class CategoryComponent implements OnInit {
   selectedCategory: Category;
   @Output()
   categoryChange = new EventEmitter<Category>();
-  add = Intent.add;
-  edit = Intent.edit;
 
   constructor(
     private categoryService: CategoryService,
@@ -41,7 +39,16 @@ export class CategoryComponent implements OnInit {
     this.categoryChange.emit(category);
   }
 
-  onEditCategory(action: Intent, category: Category) {
+  onEditCategory(category: Category) {
+    this.openCategoryDialog(Intent.edit, category);
+  }
+
+  onAddNewCategory() {
+    const category = { id: 0, name: '', color: '#3700b3'} as Category;
+    this.openCategoryDialog(Intent.add, category);
+  }
+
+  openCategoryDialog(action: Intent, category: Category) {
     const dialog = this.dialog.open(
       CategoryDialogComponent,
       { height: '350px', width: '400px', data: { action, category }}
@@ -53,17 +60,19 @@ export class CategoryComponent implements OnInit {
 
   onDialogClosed(action: Intent, result: Category) {
     if (result) {
-      if (action === this.edit) {
+      if (action === Intent.edit) {
         this.editCategory(result);
       }
-      else if (action === this.add) {
+      else if (action === Intent.add) {
         this.addCategory(result);
       }
     }
   }
 
   addCategory(category: Category) {
-    this.categoryService.add(category).subscribe();
+    this.categoryService.add(category).subscribe(
+      next => this.categories.push(next)
+    );
   }
 
   editCategory(category: Category) {

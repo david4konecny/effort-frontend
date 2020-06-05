@@ -11,18 +11,18 @@
       </mat-form-field>
     </div>
 
-    <div>
+    <div class="mb-2">
       <button mat-flat-button (click)="onDisplayColorOptions()">
         Color <mat-icon>{{displayColorOptions ? 'arrow_drop_up' : 'arrow_drop_down'}}</mat-icon>
       </button>
       <div id="selected-color" [ngStyle]="{'background': selectedColor}"></div>
       <input matInput formControlName="color" hidden>
-      <div *ngIf="displayColorOptions" id="colors-container">
-        <div class="color-option" *ngFor="let color of colors" [ngStyle]="{'background': color}"
-                       (click)="onSelectColor(color)"
-                       [style.border]="color === selectedColor ? '2px solid white' : '0'"></div>
+    </div>
 
-      </div>
+    <div *ngIf="displayColorOptions" id="colors-container" class="mx-auto">
+      <div class="color-option" *ngFor="let color of colors" [ngStyle]="{'background': color}"
+           (click)="onSelectColor(color)"
+           [style.border]="color === selectedColor ? '2px solid black' : '0'"></div>
     </div>
 
     <mat-dialog-actions align="center">
