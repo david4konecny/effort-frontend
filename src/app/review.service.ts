@@ -25,4 +25,8 @@ export class ReviewService {
     return this.http.post<Review>(this.url, review);
   }
 
+  getNewReview(date: Date): Review {
+    return { id: 0, date: this.timeService.toDateString(date), description: '', rating: 3 } as Review;
+  }
+
 }

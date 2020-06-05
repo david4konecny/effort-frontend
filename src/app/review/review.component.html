@@ -1,10 +1,21 @@
 <div>
 
+  <div class="text-center mt-3">
+    <button mat-icon-button (click)="onGetReviewForPreviousDay()" [disabled]="isEditingForm"><mat-icon>chevron_left</mat-icon></button>
+    <div style="display: inline-block; width: 5px; visibility: hidden;">
+      <input (dateChange)="onDatePicked($event)" [matDatepicker]="picker">
+    </div>
+    <mat-datepicker #picker></mat-datepicker>
+    <button (click)="picker.open()" [disabled]="isEditingForm" mat-button>{{date | date: 'dd MMM, yyyy'}}</button>
+    <div style="display: inline-block; width: 5px;"></div>
+    <button mat-icon-button (click)="onGetReviewForNextDay()" [disabled]="isEditingForm"><mat-icon>chevron_right</mat-icon></button>
+  </div>
+
   <div *ngIf="!isEditingForm" class="text-center mt-3">
 
     <div>
       <h4>Rate your day</h4>
-      <button mat-button (click)="onDisplayForm()" title="Edit">
+      <button mat-button (click)="onDisplayForm()">
         <span><small>Bad</small></span>
         <mat-slider disabled min="1" max="5" [value]="review.rating"
                     thumbLabel
@@ -14,9 +25,9 @@
     </div>
 
     <div>
-      <button mat-stroked-button disableRipple id="text-button" (click)="onDisplayForm()" title="Edit">
-        {{review.description}}
-      </button>
+      <p id="review-description" (click)="onDisplayForm()" [style.color]="review.description ? 'black' : 'darkgrey'">
+        {{review.description ? review.description : 'Click to edit'}}
+      </p>
     </div>
 
   </div>
@@ -34,7 +45,7 @@
 
     <mat-form-field style="width: 400px; height: 200px;">
       <mat-label>How was your day?</mat-label>
-      <textarea style="width: 100%; height: 100%;" mat-autosize matAutosizeMinRows="12"
+      <textarea style="height: 100%; width: 100%; padding: 0.5rem;" mat-autosize matAutosizeMinRows="12"
                 matInput formControlName="description"></textarea>
     </mat-form-field>
     <br>

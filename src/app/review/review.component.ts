@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ReviewService } from '../review.service';
-import { Review } from '../model/review';
-import {TimeService} from '../services/time.service';
+import { TimeService } from '../services/time.service';
+import { MatDatepickerInputEvent } from '@angular/material/datepicker';
 
 @Component({
   selector: 'app-review',
@@ -11,7 +11,7 @@ import {TimeService} from '../services/time.service';
 })
 export class ReviewComponent implements OnInit {
   reviewForm: FormGroup;
-  review = { date: this.timeService.toDateString(new Date()), rating: 3, description: ''} as Review;
+  review = this.reviewService.getNewReview(new Date());
   isEditingForm = false;
   date = new Date();
 
@@ -22,14 +22,16 @@ export class ReviewComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.fetchReview();
+    this.loadReview();
   }
 
-  fetchReview() {
+  loadReview() {
     this.reviewService.getReview(this.date).subscribe(
       next => {
         if (next.length) {
           this.review = next[0];
+        } else {
+          this.review = this.reviewService.getNewReview(this.date);
         }
       }
     );
@@ -62,6 +64,21 @@ export class ReviewComponent implements OnInit {
         this.isEditingForm = false;
       }
     );
+  }
+
+  onGetReviewForPreviousDay() {
+    this.date = this.timeService.getPreviousDay(this.date);
+    this.loadReview();
+  }
+
+  onGetReviewForNextDay() {
+    this.date = this.timeService.getNextDay(this.date);
+    this.loadReview();
+  }
+
+  onDatePicked(change: MatDatepickerInputEvent<Date>) {
+    this.date = change.value;
+    this.loadReview();
   }
 
 }
