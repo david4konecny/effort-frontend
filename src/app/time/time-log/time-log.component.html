@@ -7,28 +7,27 @@
 <div style="display: inline-block; width: 5px;"></div>
 <button mat-icon-button (click)="onNextDay()"><mat-icon>chevron_right</mat-icon></button>
 
-<table mat-table [dataSource]="timeEntries" style="text-align: left; width: 100%; max-height: 500px;">
-
-  <ng-container matColumnDef="time">
-    <th mat-header-cell *matHeaderCellDef>time</th>
-    <td mat-cell *matCellDef="let entry">{{entry.startTime | time}} - {{entry.endTime | time}}</td>
-  </ng-container>
-
-  <ng-container matColumnDef="duration">
-    <th mat-header-cell *matHeaderCellDef>duration</th>
-    <td mat-cell *matCellDef="let entry">{{entry.duration | time}}</td>
-  </ng-container>
-
-  <ng-container matColumnDef="edit">
-    <th mat-header-cell *matHeaderCellDef></th>
-    <td mat-cell *matCellDef="let entry">
-      <button mat-icon-button (click)="openDialog(edit, entry)">
-        <mat-icon>edit</mat-icon>
-      </button>
-    </td>
-  </ng-container>
-
-  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-  <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-
-</table>
+<mat-list style="margin: 0 auto;">
+  <mat-list-item *ngFor="let entry of timeEntries" style="height: 80px;">
+    <div class="entry-item" [style.border-color]="entry.category.color">
+      <span>
+        {{entry.startTime | time}} - {{entry.endTime | time}}
+      </span>
+      <span>
+        {{entry.duration | time}}
+      </span>
+      <span>
+        {{entry.category.name}}
+      </span>
+      <div style="width: 40px; height: 42px;">
+        <button mat-icon-button [matMenuTriggerFor]="menu" class="menu-button">
+          <mat-icon>more_vert</mat-icon>
+        </button>
+        <mat-menu #menu>
+          <button mat-menu-item (click)="onOpenEditDialog(entry)">Edit</button>
+          <button mat-menu-item (click)="onDeleteEntry(entry)">Delete</button>
+        </mat-menu>
+      </div>
+    </div>
+  </mat-list-item>
+</mat-list>

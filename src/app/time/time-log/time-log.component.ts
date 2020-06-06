@@ -4,8 +4,8 @@ import { TimeSession } from '../../model/time-session';
 import { Subscription } from 'rxjs';
 import { MatDatepickerInputEvent } from '@angular/material/datepicker';
 import { MatDialog } from '@angular/material/dialog';
-import { Intent } from '../../intent.enum';
 import { TimeDialogComponent } from '../time-dialog/time-dialog.component';
+import { Intent } from '../../intent.enum';
 
 @Component({
   selector: 'app-time-log',
@@ -14,10 +14,8 @@ import { TimeDialogComponent } from '../time-dialog/time-dialog.component';
 })
 export class TimeLogComponent implements OnInit {
   timeEntries: TimeSession[];
-  displayedColumns = ['time', 'duration', 'edit'];
   date = new Date();
   sub: Subscription;
-  edit = Intent.edit;
 
   constructor(
     private timeService: TimeService,
@@ -34,19 +32,13 @@ export class TimeLogComponent implements OnInit {
     );
   }
 
-  openDialog(action: Intent, timeEntry?: TimeSession) {
-    if (!timeEntry) {
-      timeEntry = this.timeService.getNewTimeSession();
-    }
+  onOpenEditDialog(timeEntry: TimeSession) {
     const dialogRef = this.dialog.open(
       TimeDialogComponent,
-      { height: '350', width: '400px', data: { action, timeSession: timeEntry }});
+      { height: '350', width: '400px', data: { action: Intent.edit , timeSession: timeEntry }});
     dialogRef.afterClosed().subscribe(
       result => {
-        if (result === 'delete') {
-          this.deleteEntry(timeEntry);
-        }
-        else if (result) {
+        if (result) {
           this.editTimeEntry(result);
         }
       });
@@ -80,7 +72,7 @@ export class TimeLogComponent implements OnInit {
     this.reloadTimeEntries();
   }
 
-  deleteEntry(entry: TimeSession) {
+  onDeleteEntry(entry: TimeSession) {
     this.timeService.deleteById(entry.id).subscribe(
       next => {
         this.reloadTimeEntries();
