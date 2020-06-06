@@ -12,6 +12,15 @@
 
   <div>
     <mat-form-field style="width: 40%; max-width: 250px;">
+      <mat-label>Category</mat-label>
+      <mat-select formControlName="category" required>
+        <mat-option *ngFor="let category of categories" [value]="category">{{category.name}}</mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
+
+  <div>
+    <mat-form-field style="width: 40%; max-width: 250px;">
       <mat-label>Start time</mat-label>
       <input type="time" matInput formControlName="startTime" required>
     </mat-form-field>

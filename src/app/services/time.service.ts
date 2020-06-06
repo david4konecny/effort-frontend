@@ -3,6 +3,7 @@ import { TimeSession } from '../model/time-session';
 import {Observable} from 'rxjs';
 import {HttpClient, HttpParams} from '@angular/common/http';
 import {tap} from 'rxjs/operators';
+import {Category} from '../model/category';
 
 @Injectable({
   providedIn: 'root'
@@ -58,10 +59,10 @@ export class TimeService {
     return this.http.get<number>(`${this.url}/total`, options);
   }
 
-  getNewTimeSession(): TimeSession {
+  getNewTimeSession(category: Category): TimeSession {
     const d = new Date();
     const placeholderTime = this.toSecondsOfDay(`${d.getHours()}-${d.getMinutes()}`);
-    return { id: 0, date: this.toDateString(d), category: {id: 1}, startTime: placeholderTime, endTime: placeholderTime } as TimeSession;
+    return { id: 0, date: this.toDateString(d), category, startTime: placeholderTime, endTime: placeholderTime } as TimeSession;
   }
 
   toDateString(date: Date): string {

@@ -36,6 +36,7 @@ import { CategoryComponent } from './category/category/category.component';
 import { CategoryDialogComponent } from './category/category-dialog/category-dialog.component';
 import {MatGridListModule} from '@angular/material/grid-list';
 import {MatMenuModule} from '@angular/material/menu';
+import {MatSelectModule} from '@angular/material/select';
 
 @NgModule({
   declarations: [
@@ -77,6 +78,7 @@ import {MatMenuModule} from '@angular/material/menu';
         MatTableModule,
         MatGridListModule,
         MatMenuModule,
+        MatSelectModule,
     ],
   providers: [],
   bootstrap: [AppComponent]

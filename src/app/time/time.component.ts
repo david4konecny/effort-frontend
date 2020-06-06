@@ -23,8 +23,6 @@ export class TimeComponent implements OnInit {
   displayTimeLog = false;
   displayCategories = false;
   sub: Subscription;
-  add = Intent.add;
-  edit = Intent.edit;
 
   constructor(
     private timeService: TimeService,
@@ -72,7 +70,7 @@ export class TimeComponent implements OnInit {
   }
 
   startTimeTracking() {
-    const session = this.timeService.getNewTimeSession();
+    const session = this.timeService.getNewTimeSession(this.category);
     this.timeService.startTimeTracking(session);
     this.chronometer = timer(1000, 1000);
     this.sub = this.chronometer.subscribe(it => {
@@ -92,11 +90,11 @@ export class TimeComponent implements OnInit {
     this.sub.unsubscribe();
   }
 
-  openDialog(action: Intent) {
-    const timeSession = this.timeService.getNewTimeSession();
+  onOpenDialog() {
+    const timeSession = this.timeService.getNewTimeSession(this.category);
     const dialog = this.dialog.open(
       TimeDialogComponent,
-      { height: '350px', width: '400px', data: { action, timeSession }}
+      { height: '350px', width: '400px', data: { action: Intent.add, timeSession }}
     );
     dialog.afterClosed().subscribe(
       result => {
