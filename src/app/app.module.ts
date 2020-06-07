@@ -37,6 +37,9 @@ import { CategoryDialogComponent } from './category/category-dialog/category-dia
 import {MatGridListModule} from '@angular/material/grid-list';
 import {MatMenuModule} from '@angular/material/menu';
 import {MatSelectModule} from '@angular/material/select';
+import { LoginComponent } from './auth/login/login.component';
+import { HomeComponent } from './home/home.component';
+import { TodayComponent } from './today/today.component';
 
 @NgModule({
   declarations: [
@@ -53,7 +56,10 @@ import {MatSelectModule} from '@angular/material/select';
     StatsComponent,
     MonthStatsComponent,
     CategoryComponent,
-    CategoryDialogComponent
+    CategoryDialogComponent,
+    LoginComponent,
+    HomeComponent,
+    TodayComponent
   ],
     imports: [
         BrowserModule,

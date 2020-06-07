@@ -1,20 +1,12 @@
-<mat-tab-group mat-align-tabs="center">
-  <mat-tab>
-    <ng-template mat-tab-label>
-      <span class="dashboard-tab-label">time</span>
-    </ng-template>
-    <app-time></app-time>
-  </mat-tab>
-  <mat-tab>
-    <ng-template mat-tab-label>
-      <span class="dashboard-tab-label">tasks</span>
-    </ng-template>
-    <app-tasks></app-tasks>
-  </mat-tab>
-  <mat-tab>
-    <ng-template mat-tab-label>
-      <span class="dashboard-tab-label">review</span>
-    </ng-template>
-    <app-review></app-review>
-  </mat-tab>
-</mat-tab-group>
+<mat-toolbar color="primary">
+  <div class="container mx-auto">
+    <a mat-flat-button color="primary" class="nav-item-brand">effort</a>
+    <a routerLink="./" mat-flat-button color="primary" class="nav-item">today</a>
+    <a routerLink="./stats" mat-flat-button color="primary" class="nav-item">stats</a>
+    <a routerLink="./log" mat-flat-button color="primary" class="nav-item">log</a>
+  </div>
+</mat-toolbar>
+
+<div class="container mx-auto">
+  <router-outlet></router-outlet>
+</div>
