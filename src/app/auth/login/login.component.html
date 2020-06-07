@@ -1,1 +1,43 @@
-<p>login works!</p>
+<mat-toolbar color="primary">
+  <div class="text-center mx-auto">
+    <a routerLink="" mat-flat-button color="primary" class="nav-item-brand">effort</a>
+  </div>
+</mat-toolbar>
+
+<div class="container text-center mx-auto mt-5">
+
+  <div>
+    <h1>Log in</h1>
+  </div>
+
+  <div *ngIf="message" class="login-warning mx-auto mb-3">
+    <span>{{message}}</span>
+    <button mat-icon-button (click)="onCloseMessage()" style="display: inline-block; margin-left: auto;">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+
+  <form [formGroup]="form">
+
+    <div>
+      <mat-form-field>
+        <mat-label>Username</mat-label>
+        <input matInput type="text" formControlName="username" required>
+      </mat-form-field>
+    </div>
+
+    <div>
+      <mat-form-field>
+        <mat-label>Password</mat-label>
+        <input matInput type="password" formControlName="password" required>
+      </mat-form-field>
+    </div>
+
+    <div>
+      <button type="submit" (click)="onSubmit()" [disabled]="!form.valid" mat-stroked-button color="primary">Submit</button>
+      <button type="button" (click)="onCancel()" mat-stroked-button color="warn" style="margin-left: 0.5rem;">Cancel</button>
+    </div>
+
+  </form>
+
+</div>

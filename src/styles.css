@@ -13,7 +13,7 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 .mt-3 { margin-top: 1rem; }
 .mt-5 { margin-top: 3rem; }
 .mx-3 { margin-left: 1rem; margin-right: 1rem; }
-.mx-auto { margin: auto; }
+.mx-auto { margin-right: auto; margin-left: auto;}
 
 .p-3 { padding: 1rem; }
 .px-3 { padding-left: 1rem; padding-right: 1rem; }

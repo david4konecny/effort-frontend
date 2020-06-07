@@ -1,4 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { AuthService } from '../auth.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-login',
@@ -6,10 +9,44 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./login.component.css']
 })
 export class LoginComponent implements OnInit {
+  form: FormGroup;
+  message = '';
 
-  constructor() { }
+  constructor(
+    private formBuilder: FormBuilder,
+    private authService: AuthService,
+    private router: Router
+  ) { }
 
   ngOnInit(): void {
+    this.setUpForm();
+  }
+
+  private setUpForm() {
+    this.form = this.formBuilder.group({
+      username: ['', Validators.required],
+      password: ['', Validators.required]
+    });
+  }
+
+  onSubmit() {
+    this.authService.login(this.form.value.username, this.form.value.password).subscribe(
+      isLoggedIn => {
+        if (isLoggedIn) {
+          this.router.navigate([this.authService.targetUrl]);
+        } else {
+          this.message = 'Try again';
+        }
+      }
+    );
+  }
+
+  onCancel() {
+    this.router.navigate(['']);
+  }
+
+  onCloseMessage() {
+    this.message = '';
   }
 
 }
