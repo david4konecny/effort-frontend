@@ -31,12 +31,11 @@ export class LoginComponent implements OnInit {
 
   onSubmit() {
     this.authService.login(this.form.value.username, this.form.value.password).subscribe(
-      isLoggedIn => {
-        if (isLoggedIn) {
-          this.router.navigate([this.authService.targetUrl]);
-        } else {
-          this.message = 'Try again';
-        }
+      next => {
+        this.router.navigate([this.authService.targetUrl]);
+      },
+      error => {
+        this.message = 'Username or password was not recognised. Please try again.';
       }
     );
   }

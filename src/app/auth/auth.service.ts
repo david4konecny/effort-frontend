@@ -1,20 +1,26 @@
 import { Injectable } from '@angular/core';
-import { Observable, of } from 'rxjs';
+import { Observable } from 'rxjs';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { tap } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
+  private url = 'http://localhost:8080/api/users';
   isAuthenticated = false;
   targetUrl = 'dashboard';
 
-  constructor() { }
+  constructor(
+    private http: HttpClient
+  ) { }
 
-  login(username: string, password: string): Observable<boolean> {
-    if (username === 'joe' && password === 'test') {
-      this.isAuthenticated = true;
-    }
-    return of(this.isAuthenticated);
+  login(username: string, password: string): Observable<any> {
+    const encodedData = btoa(`${username}:${password}`);
+    const headers = new HttpHeaders({Authorization: `Basic ${encodedData}`});
+    return this.http.get(`${this.url}/authenticate`, { headers }).pipe(
+      tap(next => this.isAuthenticated = true)
+    );
   }
 
   setTargetUrl(url: string) {
