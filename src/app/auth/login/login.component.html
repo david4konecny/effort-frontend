@@ -1,10 +1,10 @@
-<mat-toolbar color="primary">
+<mat-toolbar *ngIf="displayForm" color="primary">
   <div class="text-center mx-auto">
     <a routerLink="" mat-flat-button color="primary" class="nav-item-brand">effort</a>
   </div>
 </mat-toolbar>
 
-<div class="container text-center mx-auto mt-5">
+<div *ngIf="displayForm" class="container text-center mx-auto mt-5">
 
   <div>
     <h1>Log in</h1>

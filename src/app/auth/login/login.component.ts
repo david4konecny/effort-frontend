@@ -9,6 +9,7 @@ import { Router } from '@angular/router';
   styleUrls: ['./login.component.css']
 })
 export class LoginComponent implements OnInit {
+  displayForm = false;
   form: FormGroup;
   message = '';
 
@@ -19,7 +20,13 @@ export class LoginComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.setUpForm();
+    this.authService.verifyAuthentication().subscribe(
+      next => this.router.navigate([this.authService.targetUrl]),
+      error => {
+        this.displayForm = true;
+        this.setUpForm();
+      }
+    );
   }
 
   private setUpForm() {

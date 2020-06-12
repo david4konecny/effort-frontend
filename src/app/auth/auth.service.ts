@@ -23,6 +23,13 @@ export class AuthService {
     );
   }
 
+  verifyAuthentication(): Observable<void> {
+    const headers = new HttpHeaders().append("X-Requested-With", "XMLHttpRequest");
+    return this.http.get<void>(`${this.url}/login/verification`, { headers }).pipe(
+      tap(next => this.isAuthenticated = true)
+    );
+  }
+
   setTargetUrl(url: string) {
     this.targetUrl = url;
   }
