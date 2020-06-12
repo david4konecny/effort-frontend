@@ -8,7 +8,7 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class ReviewService {
-  private url = 'http://localhost:8080/reviews';
+  private url = 'http://localhost:8080/api/reviews';
 
   constructor(
     private http: HttpClient,

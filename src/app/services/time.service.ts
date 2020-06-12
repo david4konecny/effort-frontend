@@ -9,7 +9,7 @@ import {Category} from '../model/category';
   providedIn: 'root'
 })
 export class TimeService {
-  private url = 'http://localhost:8080/time';
+  private url = 'http://localhost:8080/api/time';
   private todayTimeEntries: TimeSession[] = [];
   private current: TimeSession;
   private ONE_DAY_IN_MILLIS = 24 * 60 * 60 * 1000;

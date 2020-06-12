@@ -40,6 +40,7 @@ import {MatSelectModule} from '@angular/material/select';
 import { LoginComponent } from './auth/login/login.component';
 import { HomeComponent } from './home/home.component';
 import { TodayComponent } from './today/today.component';
+import { httpInterceptorProviders } from './interceptor-providers';
 
 @NgModule({
   declarations: [
@@ -86,7 +87,7 @@ import { TodayComponent } from './today/today.component';
         MatMenuModule,
         MatSelectModule,
     ],
-  providers: [],
+  providers: [httpInterceptorProviders],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

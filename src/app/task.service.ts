@@ -8,7 +8,7 @@ import {TimeService} from './services/time.service';
   providedIn: 'root'
 })
 export class TaskService {
-  private url = 'http://localhost:8080/tasks';
+  private url = 'http://localhost:8080/api/tasks';
 
   constructor(
     private http: HttpClient,

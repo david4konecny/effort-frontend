@@ -7,7 +7,7 @@ import {DateTotal} from './model/date-total';
   providedIn: 'root'
 })
 export class StatsService {
-  private url = 'http://localhost:8080';
+  private url = 'http://localhost:8080/api';
 
   constructor(
     private http: HttpClient

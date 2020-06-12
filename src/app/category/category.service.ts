@@ -7,7 +7,7 @@ import {Category} from '../model/category';
   providedIn: 'root'
 })
 export class CategoryService {
-  private url = 'http://localhost:8080/category';
+  private url = 'http://localhost:8080/api/categories';
 
   constructor(
     private http: HttpClient
