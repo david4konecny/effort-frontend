@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 import { TimeSession } from '../model/time-session';
-import {Observable} from 'rxjs';
-import {HttpClient, HttpParams} from '@angular/common/http';
-import {tap} from 'rxjs/operators';
-import {Category} from '../model/category';
+import { Observable } from 'rxjs';
+import { HttpClient, HttpParams } from '@angular/common/http';
+import { tap } from 'rxjs/operators';
+import { Category } from '../model/category';
 
 @Injectable({
   providedIn: 'root'
@@ -18,6 +18,16 @@ export class TimeService {
     private http: HttpClient
   ) { }
 
+  getCurrent(): Observable<TimeSession[]> {
+    return this.http.get<TimeSession[]>(`${this.url}/current`).pipe(
+      tap(next => {
+        if (next.length > 0) {
+          this.current = next[0];
+        }
+      })
+    );
+  }
+
   getEntriesByDate(date: Date): Observable<TimeSession[]> {
     const options = { params: new HttpParams().set('date', this.toDateString(date)) };
     return this.http.get<TimeSession[]>(this.url, options)
@@ -25,33 +35,39 @@ export class TimeService {
         tap(next => {
           if (this.toDateString(date) === this.toDateString(new Date())) {
             this.todayTimeEntries = next;
-            console.log(this.todayTimeEntries);
           }
         })
       );
   }
 
-  addNewTimeEntry(entry: TimeSession): Observable<TimeSession> {
-    return this.http.post<TimeSession>(this.url, entry);
+  addFinished(entry: TimeSession): Observable<TimeSession> {
+    return this.http.post<TimeSession>(`${this.url}/finished`, entry);
   }
 
-  editTimeEntry(entry: TimeSession): Observable<TimeSession> {
-    return this.http.put<TimeSession>(this.url, entry);
+  editFinished(entry: TimeSession): Observable<TimeSession> {
+    return this.http.put<TimeSession>(`${this.url}/finished`, entry);
   }
 
-  deleteById(id: number): Observable<any> {
-    return this.http.delete(`${this.url}/${id}`);
+  deleteFinishedById(id: number): Observable<any> {
+    return this.http.delete(`${this.url}/finished/${id}`);
   }
 
-  startTimeTracking(session: TimeSession) {
-    this.current = session;
-    this.todayTimeEntries.push(session);
+  endCurrent() {
+    this.http.delete(`${this.url}/current/${this.current.id}`).subscribe(
+      next => {
+        this.addFinished(this.current).subscribe(
+          next => {
+            this.current = null;
+          }
+        );
+      }
+    );
   }
 
-  saveTrackedTime(): Observable<TimeSession> {
-    const entry = this.current;
-    this.current = null;
-    return this.addNewTimeEntry(entry);
+  startTimeTracking(entry: TimeSession): Observable<TimeSession> {
+    return this.http.post<TimeSession>(`${this.url}/current`, entry).pipe(
+      tap(next => this.current = next)
+    );
   }
 
   getTotalDuration(date: Date): Observable<number> {

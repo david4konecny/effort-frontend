@@ -25,7 +25,7 @@ export class AuthService {
 
   verifyAuthentication(): Observable<void> {
     const headers = new HttpHeaders().append("X-Requested-With", "XMLHttpRequest");
-    return this.http.get<void>(`${this.url}/login/verification`, { headers }).pipe(
+    return this.http.get<void>(`${this.url}/login/test`, { headers }).pipe(
       tap(next => this.isAuthenticated = true)
     );
   }

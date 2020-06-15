@@ -41,6 +41,7 @@ import { LoginComponent } from './auth/login/login.component';
 import { HomeComponent } from './home/home.component';
 import { TodayComponent } from './today/today.component';
 import { httpInterceptorProviders } from './interceptor-providers';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 @NgModule({
   declarations: [
@@ -86,6 +87,7 @@ import { httpInterceptorProviders } from './interceptor-providers';
         MatGridListModule,
         MatMenuModule,
         MatSelectModule,
+        MatProgressSpinnerModule,
     ],
   providers: [httpInterceptorProviders],
   bootstrap: [AppComponent]

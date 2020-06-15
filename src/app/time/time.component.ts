@@ -3,11 +3,11 @@ import { Observable, Subscription, timer} from 'rxjs';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { TimeService } from '../services/time.service';
 import { MatDialog } from '@angular/material/dialog';
-import {TimeDialogComponent} from './time-dialog/time-dialog.component';
-import {Intent} from '../intent.enum';
-import {TimeSession} from '../model/time-session';
-import {CategoryService} from '../category/category.service';
-import {Category} from '../model/category';
+import { TimeDialogComponent } from './time-dialog/time-dialog.component';
+import { Intent } from '../intent.enum';
+import { TimeSession } from '../model/time-session';
+import { CategoryService } from '../category/category.service';
+import { Category } from '../model/category';
 
 @Component({
   selector: 'app-time',
@@ -15,6 +15,8 @@ import {Category} from '../model/category';
   styleUrls: ['./time.component.css']
 })
 export class TimeComponent implements OnInit {
+  isLoaded = false;
+  current: TimeSession;
   isTrackingTime: boolean;
   timeDisplay: number;
   category: Category;
@@ -32,10 +34,16 @@ export class TimeComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    this.fetchCurrent();
     this.initTotalDuration();
     this.isTrackingTime = false;
     this.timeDisplay = 0;
     this.loadCategory();
+  }
+
+  private fetchCurrent() {
+    console.log('fetching current...');
+    this.timeService.getCurrent().subscribe(next => this.isLoaded = true);
   }
 
   private initTotalDuration() {
@@ -70,22 +78,26 @@ export class TimeComponent implements OnInit {
   }
 
   startTimeTracking() {
-    const session = this.timeService.getNewTimeSession(this.category);
-    this.timeService.startTimeTracking(session);
+    this.current = this.timeService.getNewTimeSession(this.category);
+    this.timeService.startTimeTracking(this.current).subscribe(
+      next => {
+        this.current = next;
+        this.startCounter();
+      }
+    );
+  }
+
+  private startCounter() {
     this.chronometer = timer(1000, 1000);
     this.sub = this.chronometer.subscribe(it => {
-      session.endTime += 1;
+      this.current.endTime += 1;
       this.totalDuration += 1;
       this.timeDisplay = it + 1;
     });
   }
 
   stopTimeTracking() {
-    this.timeService.saveTrackedTime().subscribe(
-      next => {
-        this.displayMessage('Entry saved');
-      }
-    );
+    this.timeService.endCurrent();
     this.timeDisplay = 0;
     this.sub.unsubscribe();
   }
@@ -106,7 +118,7 @@ export class TimeComponent implements OnInit {
   }
 
   private addNewTimeEntry(entry: TimeSession) {
-    this.timeService.addNewTimeEntry(entry).subscribe(
+    this.timeService.addFinished(entry).subscribe(
       next => {
         if (next.date === this.timeService.toDateString(new Date())) {
           this.totalDuration += next.duration;

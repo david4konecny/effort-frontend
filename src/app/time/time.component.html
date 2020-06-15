@@ -1,4 +1,7 @@
-<div class="text-center mt-5 mb-5">
+<div *ngIf="!isLoaded || !category" class="text-center mt-5 mb-5">
+  <mat-spinner class="mx-auto"></mat-spinner>
+</div>
+<div *ngIf="isLoaded && category" class="text-center mt-5 mb-5">
   <p style="font-size: x-large">{{timeDisplay | time: true}}</p>
   <button mat-stroked-button (click)="onCategoryClick()"
           class="category-button">

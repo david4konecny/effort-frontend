@@ -45,7 +45,7 @@ export class TimeLogComponent implements OnInit {
   }
 
   private editTimeEntry(entry: TimeSession) {
-    this.timeService.editTimeEntry(entry).subscribe(
+    this.timeService.editFinished(entry).subscribe(
       next => {
         entry.duration = next.duration;
       }
@@ -73,7 +73,7 @@ export class TimeLogComponent implements OnInit {
   }
 
   onDeleteEntry(entry: TimeSession) {
-    this.timeService.deleteById(entry.id).subscribe(
+    this.timeService.deleteFinishedById(entry.id).subscribe(
       next => {
         this.reloadTimeEntries();
       }
