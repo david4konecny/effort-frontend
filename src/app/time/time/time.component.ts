@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Observable, Subscription, timer} from 'rxjs';
+import { Subscription, timer} from 'rxjs';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { TimeService } from '../service/time.service';
 import { MatDialog } from '@angular/material/dialog';
@@ -16,15 +16,13 @@ import { Category } from '../../category/category';
 })
 export class TimeComponent implements OnInit {
   isLoaded = false;
-  current: TimeSession;
   isTrackingTime: boolean;
   timeDisplay: number;
   category: Category;
-  chronometer: Observable<number>;
   totalDuration = 0;
   displayTimeLog = false;
   displayCategories = false;
-  sub: Subscription;
+  private timerSub: Subscription;
 
   constructor(
     private timeService: TimeService,
@@ -39,6 +37,7 @@ export class TimeComponent implements OnInit {
     this.isTrackingTime = false;
     this.timeDisplay = 0;
     this.loadCategory();
+    this.displayMsgWhenEntrySaved();
   }
 
   private fetchCurrent() {
@@ -77,28 +76,21 @@ export class TimeComponent implements OnInit {
   }
 
   startTimeTracking() {
-    this.current = this.timeService.getNewTimeSession(this.category);
-    this.timeService.startTimeTracking(this.current).subscribe(
-      next => {
-        this.current = next;
-        this.startCounter();
-      }
-    );
+    this.timeService.startTimeTracking(this.category);
+    this.startCounter();
   }
 
   private startCounter() {
-    this.chronometer = timer(1000, 1000);
-    this.sub = this.chronometer.subscribe(it => {
-      this.current.endTime += 1;
+    this.timerSub = timer(1000, 1000).subscribe(it => {
       this.totalDuration += 1;
       this.timeDisplay = it + 1;
     });
   }
 
   stopTimeTracking() {
-    this.timeService.endCurrent();
+    this.timeService.stopTimeTracking();
     this.timeDisplay = 0;
-    this.sub.unsubscribe();
+    this.timerSub.unsubscribe();
   }
 
   onOpenDialog() {
@@ -134,6 +126,10 @@ export class TimeComponent implements OnInit {
     if (!this.isTrackingTime) {
       this.category = category;
     }
+  }
+
+  private displayMsgWhenEntrySaved() {
+    this.timeService.entrySavedEvent.subscribe(_ => this.displayMessage('Entry saved'));
   }
 
   displayMessage(msg: string) {

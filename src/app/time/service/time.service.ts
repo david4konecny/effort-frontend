@@ -1,6 +1,6 @@
-import { Injectable } from '@angular/core';
+import { Injectable, EventEmitter } from '@angular/core';
 import { TimeSession } from '../time-session';
-import { Observable } from 'rxjs';
+import { Observable, timer, Subscription } from 'rxjs';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { tap } from 'rxjs/operators';
 import { Category } from '../../category/category';
@@ -10,9 +10,10 @@ import { Category } from '../../category/category';
 })
 export class TimeService {
   private url = '//localhost:8080/api/time';
-  private todayTimeEntries: TimeSession[] = [];
+  private timerSub: Subscription;
   private current: TimeSession;
   private ONE_DAY_IN_MILLIS = 24 * 60 * 60 * 1000;
+  entrySavedEvent = new EventEmitter();
 
   constructor(
     private http: HttpClient
@@ -30,22 +31,21 @@ export class TimeService {
 
   getEntriesByDate(date: Date): Observable<TimeSession[]> {
     const options = { params: new HttpParams().set('date', this.toDateString(date)) };
-    return this.http.get<TimeSession[]>(this.url, options)
-      .pipe(
-        tap(next => {
-          if (this.toDateString(date) === this.toDateString(new Date())) {
-            this.todayTimeEntries = next;
-          }
-        })
-      );
+    return this.http.get<TimeSession[]>(this.url, options);
   }
 
   addFinished(entry: TimeSession): Observable<TimeSession> {
-    return this.http.post<TimeSession>(`${this.url}/finished`, entry);
+    return this.http.post<TimeSession>(`${this.url}/finished`, entry).pipe(
+      tap(_ => this.entrySavedEvent.emit())
+    );
   }
 
   editFinished(entry: TimeSession): Observable<TimeSession> {
     return this.http.put<TimeSession>(`${this.url}/finished`, entry);
+  }
+
+  editCurrent(entry: TimeSession): Observable<TimeSession> {
+    return this.http.put<TimeSession>(`${this.url}/current`, entry);
   }
 
   deleteFinishedById(id: number): Observable<any> {
@@ -53,8 +53,12 @@ export class TimeService {
   }
 
   endCurrent() {
+    if (!this.current) {
+      return;
+    }
     this.http.delete(`${this.url}/current/${this.current.id}`).subscribe(
       next => {
+        this.current.id = 0;
         this.addFinished(this.current).subscribe(
           next => {
             this.current = null;
@@ -64,10 +68,28 @@ export class TimeService {
     );
   }
 
-  startTimeTracking(entry: TimeSession): Observable<TimeSession> {
-    return this.http.post<TimeSession>(`${this.url}/current`, entry).pipe(
-      tap(next => this.current = next)
+  startTimeTracking(category: Category) {
+    const entry = this.getNewTimeSession(category);
+    this.http.post<TimeSession>(`${this.url}/current`, entry).subscribe(
+      next => {
+        this.current = next;
+        this.startTimer();
+      }
+    )
+  }
+
+  private startTimer() {
+    this.timerSub = timer(1000, 1000).subscribe(
+      it => {
+        this.current.endTime += 1;
+        this.editCurrent(this.current).subscribe();
+      }
     );
+  }
+
+  stopTimeTracking() {
+    this.timerSub.unsubscribe();
+    this.endCurrent();
   }
 
   getTotalDuration(date: Date): Observable<number> {
