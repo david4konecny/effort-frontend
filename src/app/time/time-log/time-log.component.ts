@@ -24,6 +24,7 @@ export class TimeLogComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadTimeEntries();
+    this.reloadEntriesOnChange();
   }
 
   private loadTimeEntries() {
@@ -50,6 +51,10 @@ export class TimeLogComponent implements OnInit {
         entry.duration = next.duration;
       }
     );
+  }
+
+  private reloadEntriesOnChange() {
+    this.timeService.entrySavedEvent.subscribe(_ => this.reloadTimeEntries());
   }
 
   private reloadTimeEntries() {
