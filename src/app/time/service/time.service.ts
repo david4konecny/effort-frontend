@@ -48,6 +48,13 @@ export class TimeService {
     return this.http.put<TimeSession>(`${this.url}/current`, entry);
   }
 
+  changeCategoryOfCurrent(category: Category) {
+    if (this.current) {
+      this.current.category = category;
+      this.editCurrent(this.current).subscribe();
+    }
+  }
+
   deleteFinishedById(id: number): Observable<any> {
     return this.http.delete(`${this.url}/finished/${id}`);
   }

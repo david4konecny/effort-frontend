@@ -68,11 +68,7 @@ export class TimeComponent implements OnInit {
   }
 
   onCategoryClick() {
-    if (this.isTrackingTime) {
-      this.displayMessage('Cannot change category during time tracking');
-    } else {
-      this.displayCategories = !this.displayCategories;
-    }
+    this.displayCategories = !this.displayCategories;
   }
 
   startTimeTracking() {
@@ -123,9 +119,10 @@ export class TimeComponent implements OnInit {
   }
 
   onCategoryChanged(category: Category) {
-    if (!this.isTrackingTime) {
-      this.category = category;
+    if (this.isTrackingTime) {
+      this.timeService.changeCategoryOfCurrent(category);
     }
+    this.category = category;
   }
 
   private displayMsgWhenEntrySaved() {
