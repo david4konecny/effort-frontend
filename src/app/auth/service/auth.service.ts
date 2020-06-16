@@ -7,7 +7,7 @@ import { tap } from 'rxjs/operators';
   providedIn: 'root'
 })
 export class AuthService {
-  private url = 'http://localhost:8080/api/users';
+  private url = '//localhost:8080/api/users';
   isAuthenticated = false;
   targetUrl = 'dashboard';
 

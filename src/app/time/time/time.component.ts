@@ -1,13 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { Observable, Subscription, timer} from 'rxjs';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { TimeService } from '../services/time.service';
+import { TimeService } from '../service/time.service';
 import { MatDialog } from '@angular/material/dialog';
-import { TimeDialogComponent } from './time-dialog/time-dialog.component';
-import { Intent } from '../intent.enum';
-import { TimeSession } from '../model/time-session';
-import { CategoryService } from '../category/category.service';
-import { Category } from '../model/category';
+import { TimeDialogComponent } from '../time-dialog/time-dialog.component';
+import { Intent } from '../../intent.enum';
+import { TimeSession } from '../time-session';
+import { CategoryService } from '../../category/service/category.service';
+import { Category } from '../../category/category';
 
 @Component({
   selector: 'app-time',
@@ -42,7 +42,6 @@ export class TimeComponent implements OnInit {
   }
 
   private fetchCurrent() {
-    console.log('fetching current...');
     this.timeService.getCurrent().subscribe(next => this.isLoaded = true);
   }
 

@@ -1,15 +1,15 @@
 import { Injectable } from '@angular/core';
-import { TimeSession } from '../model/time-session';
+import { TimeSession } from '../time-session';
 import { Observable } from 'rxjs';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { tap } from 'rxjs/operators';
-import { Category } from '../model/category';
+import { Category } from '../../category/category';
 
 @Injectable({
   providedIn: 'root'
 })
 export class TimeService {
-  private url = 'http://localhost:8080/api/time';
+  private url = '//localhost:8080/api/time';
   private todayTimeEntries: TimeSession[] = [];
   private current: TimeSession;
   private ONE_DAY_IN_MILLIS = 24 * 60 * 60 * 1000;

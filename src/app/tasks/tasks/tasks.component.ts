@@ -1,12 +1,12 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {TaskService} from '../task.service';
+import {TaskService} from '../service/task.service';
 import {Task} from '../task';
 import {Subscription} from 'rxjs';
 import {MatDialog} from '@angular/material/dialog';
-import {TaskDialogComponent} from './task-dialog/task-dialog.component';
+import {TaskDialogComponent} from '../task-dialog/task-dialog.component';
 import {MatCheckboxChange} from '@angular/material/checkbox';
-import {TimeService} from '../services/time.service';
-import {Intent} from '../intent.enum';
+import {TimeService} from '../../time/service/time.service';
+import {Intent} from '../../intent.enum';
 import {MatDatepickerInputEvent} from '@angular/material/datepicker';
 
 @Component({

@@ -1,14 +1,14 @@
 import { Injectable } from '@angular/core';
-import {Task} from './task';
+import {Task} from '../task';
 import {Observable, of} from 'rxjs';
 import {HttpClient, HttpParams} from '@angular/common/http';
-import {TimeService} from './services/time.service';
+import {TimeService} from '../../time/service/time.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class TaskService {
-  private url = 'http://localhost:8080/api/tasks';
+  private url = '//localhost:8080/api/tasks';
 
   constructor(
     private http: HttpClient,

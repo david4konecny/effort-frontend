@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { Category } from '../../model/category';
-import { CategoryService } from '../category.service';
+import { Category } from '../category';
+import { CategoryService } from '../service/category.service';
 import { MatDialog } from '@angular/material/dialog';
 import { CategoryDialogComponent } from '../category-dialog/category-dialog.component';
 import { Intent } from '../../intent.enum';

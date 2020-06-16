@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ReviewService } from '../review.service';
-import { TimeService } from '../services/time.service';
+import { ReviewService } from '../service/review.service';
+import { TimeService } from '../../time/service/time.service';
 import { MatDatepickerInputEvent } from '@angular/material/datepicker';
 
 @Component({

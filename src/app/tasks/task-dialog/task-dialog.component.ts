@@ -1,7 +1,7 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { TimeService } from '../../services/time.service';
+import { TimeService } from '../../time/service/time.service';
 import {Intent} from '../../intent.enum';
 
 @Component({

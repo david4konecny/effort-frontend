@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { TimeService } from '../../services/time.service';
-import { TimeSession } from '../../model/time-session';
+import { TimeService } from '../service/time.service';
+import { TimeSession } from '../time-session';
 import { Subscription } from 'rxjs';
 import { MatDatepickerInputEvent } from '@angular/material/datepicker';
 import { MatDialog } from '@angular/material/dialog';

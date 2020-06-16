@@ -1,4 +1,4 @@
-import {Category} from './category';
+import {Category} from '../category/category';
 
 export interface TimeSession {
   id: number;

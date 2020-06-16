@@ -1,10 +1,10 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { TimeService } from '../../services/time.service';
+import { TimeService } from '../service/time.service';
 import { Intent } from '../../intent.enum';
-import { Category } from '../../model/category';
-import { CategoryService } from '../../category/category.service';
+import { Category } from '../../category/category';
+import { CategoryService } from '../../category/service/category.service';
 
 @Component({
   selector: 'app-time-dialog',

@@ -1,14 +1,14 @@
 import { Injectable } from '@angular/core';
-import { Review } from './model/review';
+import { Review } from '../review';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { TimeService } from './services/time.service';
+import { TimeService } from '../../time/service/time.service';
 import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ReviewService {
-  private url = 'http://localhost:8080/api/reviews';
+  private url = '//localhost:8080/api/reviews';
 
   constructor(
     private http: HttpClient,

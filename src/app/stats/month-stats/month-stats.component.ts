@@ -1,10 +1,10 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { MatDatepicker } from '@angular/material/datepicker';
-import { StatsService } from '../../stats.service';
+import { StatsService } from '../service/stats.service';
 import {Subscription} from 'rxjs';
-import {DateTotal} from '../../model/date-total';
+import {DateTotal} from '../../time/date-total';
 import { Chart } from 'chart.js';
-import { TimeService } from '../../services/time.service';
+import { TimeService } from '../../time/service/time.service';
 
 @Component({
   selector: 'app-month-stats',
