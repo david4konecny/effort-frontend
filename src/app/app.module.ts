@@ -42,6 +42,8 @@ import { HomeComponent } from './home/home.component';
 import { TodayComponent } from './today/today.component';
 import { httpInterceptorProviders } from './interceptor-providers';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { UserComponent } from './user/user/user.component';
+import { MatDividerModule } from '@angular/material/divider';
 
 @NgModule({
   declarations: [
@@ -61,7 +63,8 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
     CategoryDialogComponent,
     LoginComponent,
     HomeComponent,
-    TodayComponent
+    TodayComponent,
+    UserComponent
   ],
     imports: [
         BrowserModule,
@@ -88,6 +91,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
         MatMenuModule,
         MatSelectModule,
         MatProgressSpinnerModule,
+        MatDividerModule,
     ],
   providers: [httpInterceptorProviders],
   bootstrap: [AppComponent]

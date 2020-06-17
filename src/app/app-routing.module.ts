@@ -7,6 +7,7 @@ import { HomeComponent } from './home/home.component';
 import { TodayComponent } from './today/today.component';
 import { LoginComponent } from './auth/login/login.component';
 import { AuthGuard } from './auth/guard/auth.guard';
+import { UserComponent } from './user/user/user.component';
 
 
 const routes: Routes = [
@@ -16,7 +17,8 @@ const routes: Routes = [
       { path: '', children: [
           { path: '', component: TodayComponent },
           { path: 'stats', component: StatsComponent },
-          { path: 'log', component: LogComponent }
+          { path: 'log', component: LogComponent },
+          { path: 'account', component: UserComponent },
         ]}
     ] },
 ];

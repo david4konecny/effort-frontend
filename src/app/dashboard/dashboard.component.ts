@@ -7,6 +7,7 @@ import { AuthService } from '../auth/service/auth.service';
   styleUrls: ['./dashboard.component.css']
 })
 export class DashboardComponent implements OnInit {
+  username = '';
   userInitialLetter = '';
 
   constructor(
@@ -14,15 +15,19 @@ export class DashboardComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.setUsernameInitial();
+    this.setUserInfo();
   }
 
-  private setUsernameInitial() {
+  private setUserInfo() {
     if (this.authService.username) {
+      this.username = this.authService.username;
       this.userInitialLetter = this.getUpperCaseInitial(this.authService.username);
     } else {
       this.authService.getUsername().subscribe(
-        next => this.userInitialLetter = this.getUpperCaseInitial(next)
+        next => {
+          this.username = this.authService.username;
+          this.userInitialLetter = this.getUpperCaseInitial(next)
+        }
       );
     }
   }

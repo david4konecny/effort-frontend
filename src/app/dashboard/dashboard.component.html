@@ -8,7 +8,9 @@
       <div id="letter">{{ userInitialLetter }}</div>
     </button>
     <mat-menu #menu="matMenu">
-      <button mat-menu-item>Account</button>
+      <div id="username-menu-item">{{ username }}</div>
+      <mat-divider></mat-divider>
+      <a routerLink="./account" mat-menu-item>Account</a>
       <button mat-menu-item>Logout</button>
     </mat-menu>
   </div>
