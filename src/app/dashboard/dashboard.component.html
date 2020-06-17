@@ -4,6 +4,13 @@
     <a routerLink="./" mat-flat-button color="primary" class="nav-item">today</a>
     <a routerLink="./stats" mat-flat-button color="primary" class="nav-item">stats</a>
     <a routerLink="./log" mat-flat-button color="primary" class="nav-item">log</a>
+    <button mat-button id="user-icon" [matMenuTriggerFor]="menu">
+      <div id="letter">{{ userInitialLetter }}</div>
+    </button>
+    <mat-menu #menu="matMenu">
+      <button mat-menu-item>Account</button>
+      <button mat-menu-item>Logout</button>
+    </mat-menu>
   </div>
 </mat-toolbar>
 

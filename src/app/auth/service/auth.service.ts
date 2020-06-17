@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { tap } from 'rxjs/operators';
+import { tap, map } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -9,6 +9,7 @@ import { tap } from 'rxjs/operators';
 export class AuthService {
   private url = '//localhost:8080/api/users';
   isAuthenticated = false;
+  username = '';
   targetUrl = 'dashboard';
 
   constructor(
@@ -19,7 +20,11 @@ export class AuthService {
     const encodedData = btoa(`${username}:${password}`);
     const headers = new HttpHeaders({Authorization: `Basic ${encodedData}`});
     return this.http.get(`${this.url}/login`, { headers }).pipe(
-      tap(next => this.isAuthenticated = true)
+      tap(next => {
+        this.isAuthenticated = true;
+        this.username = next.username;
+      }
+      )
     );
   }
 
@@ -32,6 +37,13 @@ export class AuthService {
 
   setTargetUrl(url: string) {
     this.targetUrl = url;
+  }
+
+  getUsername(): Observable<string> {
+    return this.http.get<any>(this.url).pipe(
+      tap(next => this.username = next.username),
+      map(next => next.username)
+    );
   }
 
   logout() {

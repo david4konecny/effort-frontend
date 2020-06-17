@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { AuthService } from '../auth/service/auth.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -6,10 +7,28 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./dashboard.component.css']
 })
 export class DashboardComponent implements OnInit {
+  userInitialLetter = '';
 
-  constructor() { }
+  constructor(
+    private authService: AuthService
+  ) { }
 
   ngOnInit(): void {
+    this.setUsernameInitial();
+  }
+
+  private setUsernameInitial() {
+    if (this.authService.username) {
+      this.userInitialLetter = this.getUpperCaseInitial(this.authService.username);
+    } else {
+      this.authService.getUsername().subscribe(
+        next => this.userInitialLetter = this.getUpperCaseInitial(next)
+      );
+    }
+  }
+
+  private getUpperCaseInitial(username: string) {
+    return username.substring(0, 1).toUpperCase();
   }
 
 }

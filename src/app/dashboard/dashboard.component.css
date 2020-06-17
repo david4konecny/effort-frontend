@@ -8,3 +8,21 @@
   margin-right: 1rem;
   font-size: large;
 }
+
+#user-icon {
+  width: 35px;
+  height: 35px;
+  min-width: 35px;
+  float: right;
+  color: black;
+  background-color: white;
+  padding: 0;
+  border-radius: 50%;
+  text-align: center;
+}
+
+#letter {
+  width: 35px;
+  height: 35px;
+  line-height: 35px;
+}
