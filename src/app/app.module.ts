@@ -44,6 +44,7 @@ import { httpInterceptorProviders } from './interceptor-providers';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { UserComponent } from './user/user/user.component';
 import { MatDividerModule } from '@angular/material/divider';
+import { DragDropModule } from '@angular/cdk/drag-drop';
 
 @NgModule({
   declarations: [
@@ -92,6 +93,7 @@ import { MatDividerModule } from '@angular/material/divider';
         MatSelectModule,
         MatProgressSpinnerModule,
         MatDividerModule,
+        DragDropModule,
     ],
   providers: [httpInterceptorProviders],
   bootstrap: [AppComponent]

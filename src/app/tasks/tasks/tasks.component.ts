@@ -8,6 +8,7 @@ import {MatCheckboxChange} from '@angular/material/checkbox';
 import {TimeService} from '../../time/service/time.service';
 import {Intent} from '../../intent.enum';
 import {MatDatepickerInputEvent} from '@angular/material/datepicker';
+import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 
 @Component({
   selector: 'app-tasks',
@@ -130,6 +131,10 @@ export class TasksComponent implements OnInit, OnDestroy {
   private reloadTasks() {
     this.sub.unsubscribe();
     this.loadTasks();
+  }
+
+  onTaskMoved(event: CdkDragDrop<Task[]>) {
+    moveItemInArray(this.tasks, event.previousIndex, event.currentIndex);
   }
 
   ngOnDestroy() {

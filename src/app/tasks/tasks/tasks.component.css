@@ -1,12 +1,47 @@
-.tasks-list {
+.tasks-info {
+  margin-bottom: 1rem;
   width: 50%;
 }
 
-.menu-button {
-  display: none;
-  margin-left: auto;
+.tasks-list {
+  margin-bottom: 1rem;
+  width: 50%;
 }
 
-.task-item:hover .menu-button {
-  display: inline-block;
+.item-checkbox {
+  line-height: 40px;
+  padding-left: 1rem;
+}
+
+.button-icon {
+  color: white;
+}
+
+.item-button {
+  height: 40px;
+}
+
+.task-item {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  background: white;
+  font-size: 1rem;
+  margin: 0.5rem 0;
+}
+
+.task-item:hover .button-icon {
+  color: black;
+}
+
+.cdk-drag-placeholder {
+  opacity: 0;
+}
+
+.cdk-drag-preview {
+  box-shadow: 1px 2px 7px 1px rgba(0, 0, 0, 0.452);
+}
+
+.cdk-drag-preview .button-icon {
+  color: black;
 }

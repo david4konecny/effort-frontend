@@ -13,23 +13,30 @@
   <h1 class="text-muted">No tasks for this day</h1>
 </div>
 
-<mat-list #taskList class="tasks-list mx-auto">
+<div class="tasks-info mx-auto">
   <p class="text-right" *ngIf="tasks.length">{{tasksFinished}} / {{tasks.length}}</p>
-  <mat-progress-bar
-    *ngIf="tasks.length" [value]="(tasksFinished / tasks.length) * 100"></mat-progress-bar>
-  <mat-list-item class="task-item" *ngFor="let task of tasks">
-    <mat-checkbox [checked]="task.finished" (change)="onItemCheck($event, task)">
+  <mat-progress-bar *ngIf="tasks.length" [value]="(tasksFinished / tasks.length) * 100"></mat-progress-bar>
+</div>
+
+<div cdkDropList (cdkDropListDropped)="onTaskMoved($event)" #taskList class="tasks-list mx-auto">
+  <div cdkDrag cdkDragBoundary=".tasks-list" class="task-item" *ngFor="let task of tasks">
+    <mat-checkbox class="item-checkbox" [checked]="task.finished" (change)="onItemCheck($event, task)">
       {{task.description}}
     </mat-checkbox>
-    <button mat-icon-button [matMenuTriggerFor]="menu" class="menu-button" title="more">
-      <mat-icon>more_vert</mat-icon>
-    </button>
-    <mat-menu #menu>
-      <button mat-menu-item (click)="onEditTask(task)">Edit</button>
-      <button mat-menu-item (click)="onDeleteTask(task)">Delete</button>
-    </mat-menu>
-  </mat-list-item>
-</mat-list>
+    <div>
+      <button cdkDragHandle mat-icon-button disableRipple="true" class="item-button">
+        <mat-icon class="button-icon">reorder</mat-icon>
+      </button>
+      <button mat-icon-button disableRipple="true" [matMenuTriggerFor]="menu" class="item-button">
+        <mat-icon class="button-icon">more_vert</mat-icon>
+      </button>
+      <mat-menu #menu>
+        <button mat-menu-item (click)="onEditTask(task)">Edit</button>
+        <button mat-menu-item (click)="onDeleteTask(task)">Delete</button>
+      </mat-menu>
+    </div>
+  </div>
+</div>
 
 <div style="text-align: center">
   <button mat-stroked-button (click)="onAddTask()">
