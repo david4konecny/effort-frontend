@@ -8,11 +8,13 @@ import { TodayComponent } from './today/today.component';
 import { LoginComponent } from './auth/login/login.component';
 import { AuthGuard } from './auth/guard/auth.guard';
 import { UserComponent } from './user/user/user.component';
+import { SignupComponent } from './auth/signup/signup.component';
 
 
 const routes: Routes = [
   { path: '', component: HomeComponent },
   { path: 'login', component: LoginComponent },
+  { path: 'signup', component: SignupComponent },
   { path: 'dashboard', component: DashboardComponent, canActivate: [AuthGuard], children: [
       { path: '', children: [
           { path: '', component: TodayComponent },

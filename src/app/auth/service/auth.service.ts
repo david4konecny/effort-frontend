@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { tap, map } from 'rxjs/operators';
+import { User } from 'src/app/user/user';
 
 @Injectable({
   providedIn: 'root'
@@ -44,6 +45,10 @@ export class AuthService {
       tap(next => this.username = next.username),
       map(next => next.username)
     );
+  }
+
+  signup(user: User): Observable<User> {
+    return this.http.post<User>(this.url, user);
   }
 
   logout() {

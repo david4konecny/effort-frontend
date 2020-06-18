@@ -45,6 +45,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { UserComponent } from './user/user/user.component';
 import { MatDividerModule } from '@angular/material/divider';
 import { DragDropModule } from '@angular/cdk/drag-drop';
+import { SignupComponent } from './auth/signup/signup.component';
 
 @NgModule({
   declarations: [
@@ -65,7 +66,8 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
     LoginComponent,
     HomeComponent,
     TodayComponent,
-    UserComponent
+    UserComponent,
+    SignupComponent
   ],
     imports: [
         BrowserModule,
