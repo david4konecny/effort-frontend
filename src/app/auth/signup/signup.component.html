@@ -1,6 +1,12 @@
-<div class="container">
+<mat-toolbar color="primary">
+  <div class="text-center mx-auto">
+    <a routerLink="" mat-flat-button color="primary" class="nav-item-brand">effort</a>
+  </div>
+</mat-toolbar>
 
-  <form [formGroup]="form" class="text-center">
+<div class="container mx-auto text-center mt-5">
+
+  <form [formGroup]="form">
 
     <div>
       <mat-form-field>
@@ -14,6 +20,10 @@
         <mat-label>Password</mat-label>
         <input matInput type="password" formControlName="password" required>
       </mat-form-field>
+    </div>
+
+    <div class="mb-5">
+      <mat-checkbox formControlName="addSampleData">Include sample data</mat-checkbox>
     </div>
 
     <div>

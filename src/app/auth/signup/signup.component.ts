@@ -25,12 +25,13 @@ export class SignupComponent implements OnInit {
   private setupForm() {
     this.form = this.formBuilder.group({
       username: ['', Validators.required],
-      password: ['', Validators.required]
+      password: ['', Validators.required],
+      addSampleData: [false]
     })
   }
 
   onSubmit() {
-    const user = { id: 0, username: this.form.value.username, password: this.form.value.password } as User;
+    const user = this.getUserFromForm();
     this.authService.signup(user).subscribe(
       next => {
         this.authService.login(user.username, user.password).subscribe(
@@ -44,6 +45,15 @@ export class SignupComponent implements OnInit {
 
   onCancel() {
     this.router.navigate(['']);
+  }
+
+  private getUserFromForm(): User {
+    return {
+      id: 0,
+      username: this.form.value.username,
+      password: this.form.value.password,
+      addSampleData: this.form.value.addSampleData
+    } as User;
   }
 
 }
