@@ -11,9 +11,10 @@ import { Router } from '@angular/router';
 })
 export class UserComponent implements OnInit {
   username = '';
-  displayUsernameForm = false;
-  displayPasswordForm = false;
+  showUsernameForm = false;
+  showPasswordForm = false;
   usernameForm: FormGroup;
+  passwordForm: FormGroup;
 
   constructor(
     private authService: AuthService,
@@ -36,16 +37,30 @@ export class UserComponent implements OnInit {
     }
   }
 
-  onDisplayUsernameForm() {
-    if (!this.displayUsernameForm) {
+  onShowUsernameForm() {
+    if (!this.showUsernameForm) {
       this.setupUsernameForm();
     }
-    this.displayUsernameForm = !this.displayUsernameForm;
+    this.showUsernameForm = !this.showUsernameForm;
+  }
+
+  onShowPasswordForm() {
+    if (!this.showPasswordForm) {
+      this.setupPasswordForm();
+    }
+    this.showPasswordForm = !this.showPasswordForm;
   }
 
   setupUsernameForm() {
     this.usernameForm = this.formBuilder.group({
       newUsername: ['', Validators.required]
+    });
+  }
+
+  setupPasswordForm() {
+    this.passwordForm = this.formBuilder.group({
+      oldPassword: ['', Validators.required],
+      newPassword: ['', Validators.required],
     });
   }
 
@@ -60,6 +75,16 @@ export class UserComponent implements OnInit {
         this.snackBar.open('Username already exists', '', {duration: 2000});
       }
     );
+  }
+
+  onSubmitPasswordChange() {
+    this.authService.editPassword(this.passwordForm.value.oldPassword, this.passwordForm.value.newPassword)
+      .subscribe(next => {
+        this.snackBar.open('Password successfully changed', '', {duration: 2000});
+      },
+      error => {
+        this.snackBar.open('Error: Incorrect password', '', {duration: 2000});
+      })
   }
 
   onDeleteAccount() {

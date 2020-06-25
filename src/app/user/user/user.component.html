@@ -3,11 +3,9 @@
     <h1>{{ username }}</h1>
 
     <mat-action-list id="options-list" class="mx-auto">
-        <button mat-list-item (click)="onDisplayUsernameForm()">Change username</button>
-        <div *ngIf="displayUsernameForm">
+        <button mat-list-item (click)="onShowUsernameForm()">Change username</button>
+        <div *ngIf="showUsernameForm">
             <form [formGroup]="usernameForm">
-                <h4>Choose your new username</h4>
-
                 <mat-form-field>
                     <mat-label>New username</mat-label>
                     <input matInput type="text" formControlName="newUsername" required>
@@ -20,7 +18,30 @@
 
             </form>
         </div>
-        <button mat-list-item>Change password</button>
+        <button mat-list-item (click)="onShowPasswordForm()">Change password</button>
+        <div *ngIf="showPasswordForm">
+            <form [formGroup]="passwordForm">
+                <div>
+                    <mat-form-field>
+                        <mat-label>Old password</mat-label>
+                        <input matInput type="password" formControlName="oldPassword" required>
+                    </mat-form-field>
+                </div>
+
+                <div>
+                    <mat-form-field>
+                        <mat-label>New password</mat-label>
+                        <input matInput type="password" formControlName="newPassword" required>
+                    </mat-form-field>
+                </div>
+
+                <div>
+                    <button mat-button type="submit" [disabled]="!passwordForm.valid"
+                    (click)="onSubmitPasswordChange()">Save</button>
+                </div>
+
+            </form>
+        </div>
         <button mat-list-item>Logout</button>
         <button mat-list-item (click)="onDeleteAccount()">Delete account</button>
     </mat-action-list>

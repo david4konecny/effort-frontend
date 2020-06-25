@@ -57,6 +57,10 @@ export class AuthService {
     );
   }
 
+  editPassword(oldPassword: string, newPassword: string) {
+    return this.http.put<void>(`${this.url}/password`, { oldPassword, newPassword });
+  }
+
   deleteUser(): Observable<void> {
     return this.http.delete<void>(this.url).pipe(
       tap(next => {
