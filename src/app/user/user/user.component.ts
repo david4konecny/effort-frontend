@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { AuthService } from 'src/app/auth/service/auth.service';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-user',
@@ -17,6 +18,7 @@ export class UserComponent implements OnInit {
   constructor(
     private authService: AuthService,
     private formBuilder: FormBuilder,
+    private router: Router,
     private snackBar: MatSnackBar
   ) { }
 
@@ -48,14 +50,28 @@ export class UserComponent implements OnInit {
   }
 
   onSubmitUsernameChange() {
-    this.authService.editUsername(this.usernameForm.value.newUsername).subscribe(
+    const newUsername = this.usernameForm.value.newUsername;
+    this.authService.editUsername(newUsername).subscribe(
       next => {
         this.snackBar.open('Username successfully changed', '', {duration: 2000});
+        this.username = newUsername;
       },
       error => {
         this.snackBar.open('Username already exists', '', {duration: 2000});
       }
     );
+  }
+
+  onDeleteAccount() {
+    this.authService.deleteUser().subscribe(
+      next => {
+        this.snackBar.open('User account successfully deleted', '', {duration: 2000});
+        this.router.navigate(['']);
+      },
+      error => {
+        this.snackBar.open('Error: Could not delete the account', '', {duration: 2000});
+      }
+    )
   }
 
 }

@@ -52,10 +52,22 @@ export class AuthService {
   }
 
   editUsername(newUsername: string): Observable<void> {
-    return this.http.put<void>(`${this.url}/username`, newUsername);
+    return this.http.put<void>(`${this.url}/username`, newUsername).pipe(
+      tap(next => this.username = newUsername)
+    );
+  }
+
+  deleteUser(): Observable<void> {
+    return this.http.delete<void>(this.url).pipe(
+      tap(next => {
+        this.username = '';
+        this.isAuthenticated = false;
+      })
+    );
   }
 
   logout() {
+    this.username = '';
     this.isAuthenticated = false;
   }
 }
