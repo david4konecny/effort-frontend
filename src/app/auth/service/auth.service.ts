@@ -51,6 +51,10 @@ export class AuthService {
     return this.http.post<User>(this.url, user);
   }
 
+  editUsername(newUsername: string): Observable<void> {
+    return this.http.put<void>(`${this.url}/username`, newUsername);
+  }
+
   logout() {
     this.isAuthenticated = false;
   }

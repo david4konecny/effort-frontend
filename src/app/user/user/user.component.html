@@ -3,7 +3,24 @@
     <h1>{{ username }}</h1>
 
     <mat-action-list id="options-list" class="mx-auto">
-        <button mat-list-item>Change username</button>
+        <button mat-list-item (click)="onDisplayUsernameForm()">Change username</button>
+        <div *ngIf="displayUsernameForm">
+            <form [formGroup]="usernameForm">
+                <h4>Choose your new username</h4>
+
+                <mat-form-field>
+                    <mat-label>New username</mat-label>
+                    <input matInput type="text" formControlName="newUsername" required>
+                </mat-form-field>
+
+                <div>
+                    <button mat-button type="submit" [disabled]="!usernameForm.valid"
+                    (click)="onSubmitUsernameChange()">Save</button>
+                </div>
+
+            </form>
+        </div>
+        <button mat-list-item>Change password</button>
         <button mat-list-item>Logout</button>
         <button mat-list-item>Delete account</button>
     </mat-action-list>
