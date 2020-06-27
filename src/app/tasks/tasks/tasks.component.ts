@@ -89,6 +89,12 @@ export class TasksComponent implements OnInit, OnDestroy {
   }
 
   private addTask(task: Task) {
+    if (this.tasks.length === 0) {
+      task.position = 10000.0;
+    } else {
+      const lastPosition = this.tasks[this.tasks.length - 1].position;
+      task.position = lastPosition + 10000.0;
+    }
     this.taskService.addTask(task).subscribe(
       next => {
         if (task.date === this.timeService.toDateString(this.date)) {
@@ -135,6 +141,25 @@ export class TasksComponent implements OnInit, OnDestroy {
 
   onTaskMoved(event: CdkDragDrop<Task[]>) {
     moveItemInArray(this.tasks, event.previousIndex, event.currentIndex);
+    if (this.tasks.length === 1 || event.previousIndex === event.currentIndex) {
+      return;
+    }
+    this.updateTaskPosition(event.currentIndex);
+  }
+
+  private updateTaskPosition(newIdx: number) {
+    const movedTask = this.tasks[newIdx];
+    switch (newIdx) {
+      case 0:
+        movedTask.position = 0.9 * this.tasks[1].position;
+        break;
+      case this.tasks.length - 1:
+        movedTask.position = this.tasks[this.tasks.length - 2].position + 10000.0;
+        break;
+      default:
+        movedTask.position = (this.tasks[newIdx - 1].position + this.tasks[newIdx + 1].position) / 2;
+    }
+    this.taskService.editTask(movedTask).subscribe();
   }
 
   ngOnDestroy() {
