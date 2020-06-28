@@ -17,6 +17,12 @@ export class MonthStatsComponent implements OnInit {
   year: number;
   month: number;
   date = new Date();
+  startDate: Date;
+  endDate: Date;
+  totalTime = 0;
+  finishedTasks = 0;
+  totalTasks = 0;
+  averageRating = 0.0;
   sub: Subscription;
   @ViewChild('chart')
   canvas: ElementRef;
@@ -30,6 +36,8 @@ export class MonthStatsComponent implements OnInit {
   ngOnInit(): void {
     this.year = this.date.getFullYear();
     this.month = this.date.getMonth() + 1;
+    this.startDate = new Date(this.year, this.month - 1, 1);
+    this.endDate = new Date(this.year, this.month, 0);
     this.reloadData();
   }
 
@@ -41,6 +49,16 @@ export class MonthStatsComponent implements OnInit {
       next => {
         this.setDataset(next);
         this.drawChart();
+      }
+    );
+    this.statsService.getStatsForPeriod(
+        this.timeService.toDateString(this.startDate), this.timeService.toDateString(this.endDate)
+      ).subscribe(
+      next => {
+        this.totalTime = next.totalTime;
+        this.finishedTasks = next.tasks.finished;
+        this.totalTasks = next.tasks.count;
+        this.averageRating = next.averageRating;
       }
     );
   }
@@ -58,6 +76,8 @@ export class MonthStatsComponent implements OnInit {
     this.date = new Date();
     this.date.setMonth(this.month - 1);
     this.date.setFullYear(this.year);
+    this.startDate = new Date(this.year, this.month - 1, 1);
+    this.endDate = new Date(this.year, this.month, 0);
   }
 
   onPreviousPeriodClick() {

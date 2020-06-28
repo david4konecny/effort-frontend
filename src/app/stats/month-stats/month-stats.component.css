@@ -9,3 +9,8 @@
   margin-right: auto;
   margin-left: auto;
 }
+
+#stats {
+  display: inline-block;
+  text-align: left;
+}
