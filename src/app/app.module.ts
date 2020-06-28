@@ -46,6 +46,7 @@ import { UserComponent } from './user/user/user.component';
 import { MatDividerModule } from '@angular/material/divider';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { SignupComponent } from './auth/signup/signup.component';
+import { ConfirmationDialogComponent } from './dialog/confirmation-dialog/confirmation-dialog.component';
 
 @NgModule({
   declarations: [
@@ -67,7 +68,8 @@ import { SignupComponent } from './auth/signup/signup.component';
     HomeComponent,
     TodayComponent,
     UserComponent,
-    SignupComponent
+    SignupComponent,
+    ConfirmationDialogComponent
   ],
     imports: [
         BrowserModule,
@@ -97,6 +99,12 @@ import { SignupComponent } from './auth/signup/signup.component';
         MatDividerModule,
         DragDropModule,
     ],
+  entryComponents: [
+    CategoryDialogComponent,
+    ConfirmationDialogComponent,
+    TaskDialogComponent,
+    TimeDialogComponent
+  ],
   providers: [httpInterceptorProviders],
   bootstrap: [AppComponent]
 })

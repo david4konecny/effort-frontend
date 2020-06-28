@@ -1,9 +1,10 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Category } from '../category';
 import { CategoryService } from '../service/category.service';
-import { MatDialog } from '@angular/material/dialog';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { CategoryDialogComponent } from '../category-dialog/category-dialog.component';
 import { Intent } from '../../intent.enum';
+import { ConfirmationDialogComponent } from 'src/app/dialog/confirmation-dialog/confirmation-dialog.component';
 
 @Component({
   selector: 'app-category',
@@ -44,6 +45,29 @@ export class CategoryComponent implements OnInit {
   }
 
   onDeleteCategory(category: Category) {
+    const dialog = this.openConfirmationDialog();
+    dialog.afterClosed().subscribe(
+      result => {
+        if (result) {
+          this.deleteCategory(category);
+        }
+      }
+    );
+  }
+
+  private openConfirmationDialog(): MatDialogRef<ConfirmationDialogComponent, any> {
+    return this.dialog.open(
+      ConfirmationDialogComponent,
+      { height: '200px', width: '400px',
+        data: {
+          title: 'Delete category?',
+          content: 'This will delete all time entries for this category.'
+        }
+      }
+    );
+  }
+
+  private deleteCategory(category: Category) {
     this.categoryService.deleteById(category.id).subscribe(
       next => this.removeDeletedCategoryFromList(category)
     );
