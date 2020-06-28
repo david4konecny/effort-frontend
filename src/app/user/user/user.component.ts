@@ -3,6 +3,8 @@ import { AuthService } from 'src/app/auth/service/auth.service';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
+import { MatDialog } from '@angular/material/dialog';
+import { ConfirmationDialogComponent } from 'src/app/dialog/confirmation-dialog/confirmation-dialog.component';
 
 @Component({
   selector: 'app-user',
@@ -18,6 +20,7 @@ export class UserComponent implements OnInit {
 
   constructor(
     private authService: AuthService,
+    private dialog: MatDialog,
     private formBuilder: FormBuilder,
     private router: Router,
     private snackBar: MatSnackBar
@@ -88,9 +91,31 @@ export class UserComponent implements OnInit {
   }
 
   onDeleteAccount() {
+    const dialogRef = this.openConfirmationDialog();
+    dialogRef.afterClosed().subscribe(
+      result => {
+        if (result) {
+          this.deleteAccount();
+        }
+      }
+    );
+  }
+
+  private openConfirmationDialog() {
+    return this.dialog.open(ConfirmationDialogComponent,
+      { height: '200px', width: '400px',
+        data: {
+          title: 'Delete account?',
+          content: 'This will delete all your data.'
+        }
+      }
+    );
+  }
+
+  private deleteAccount() {
     this.authService.deleteUser().subscribe(
       next => {
-        this.snackBar.open('User account successfully deleted', '', {duration: 2000});
+        this.snackBar.open('User account successfully deleted', '', {duration: 4000});
         this.router.navigate(['']);
       },
       error => {
