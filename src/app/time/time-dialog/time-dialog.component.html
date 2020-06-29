@@ -1,5 +1,5 @@
 <h1 class="text-center">{{this.data.action === add ? 'Add' : 'Edit'}} time entry</h1>
-<form class="text-center" [formGroup]="form">
+<form *ngIf="form" class="text-center" [formGroup]="form">
 
   <div>
     <mat-form-field style="width: 40%; max-width: 250px;">

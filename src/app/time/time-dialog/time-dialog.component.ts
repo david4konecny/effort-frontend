@@ -26,20 +26,22 @@ export class TimeDialogComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.loadCategories();
-    this.setUpForm();
+    this.loadOptionsAndInitForm();
   }
 
-  private loadCategories() {
+  private loadOptionsAndInitForm() {
     this.categoryService.getCategories().subscribe(
-      next => this.categories = next
+      next => {
+        this.categories = next;
+        this.setUpForm();
+      }
     );
   }
 
   private setUpForm() {
     this.form = this.formBuilder.group({
       date: [this.data.timeSession.date, Validators.required],
-      category: [this.data.timeSession.category, Validators.required],
+      category: [this.findInitialCategoryFromOptions(), Validators.required],
       startTime: [this.timeService.secondsOfDayToString(this.data.timeSession.startTime), Validators.required],
       endTime: [this.timeService.secondsOfDayToString(this.data.timeSession.endTime), Validators.required]
     });
@@ -47,11 +49,19 @@ export class TimeDialogComponent implements OnInit {
 
   onSubmit() {
     const result = this.data.timeSession;
-    result.date = this.timeService.toDateString(this.form.value.date);
+    if (typeof this.form.value.date === 'string') {
+      result.date = this.form.value.date;
+    } else {
+      result.date = this.timeService.toDateString(this.form.value.date);
+    }
     result.category = this.form.value.category;
     result.startTime = this.timeService.toSecondsOfDay(this.form.value.startTime);
     result.endTime = this.timeService.toSecondsOfDay(this.form.value.endTime);
     this.dialogRef.close(result);
+  }
+
+  private findInitialCategoryFromOptions(): Category {
+    return this.categories.find(it => it.id === this.data.timeSession.category.id);
   }
 
 }
