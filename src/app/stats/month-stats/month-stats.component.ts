@@ -124,6 +124,9 @@ export class MonthStatsComponent implements OnInit {
 
   private drawChart() {
     const ctx = this.canvas.nativeElement.getContext('2d');
+    if (this.chart) {
+      this.chart.destroy();
+    }
     this.chart = new Chart(ctx, {
       type: 'bar',
       data: {

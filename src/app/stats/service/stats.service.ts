@@ -19,6 +19,11 @@ export class StatsService {
     return this.http.get<DateTotal[]>(`${this.url}/time/total/month`, options);
   }
 
+  getDurationsForDaysInPeriod(startDate: string, endDate: string): Observable<DateTotal[]> {
+    const options = { params: new HttpParams().append('startDate', startDate).append('endDate', endDate) };
+    return this.http.get<DateTotal[]>(`${this.url}/time/total/period`, options);
+  }
+
   getStatsForPeriod(startDate: string, endDate: string): Observable<any> {
     const options = { params: new HttpParams().append('startDate', startDate).append('endDate', endDate) };
     return this.http.get<any>(`${this.url}/stats`, options);

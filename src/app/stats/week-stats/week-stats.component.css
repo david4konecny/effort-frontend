@@ -1,3 +1,19 @@
+#picker-btn {
+  min-width: 210px;
+}
+
+#canvas-container {
+  max-width: 500px;
+  max-height: 250px;
+  display: block;
+}
+
+#canvas {
+  display: block;
+  margin-right: auto;
+  margin-left: auto;
+}
+
 #stats {
     display: inline-block;
     text-align: left;

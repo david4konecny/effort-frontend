@@ -1,6 +1,10 @@
+#picker-btn {
+  width: 140px;
+}
+
 #canvas-container {
-  max-width: 700px;
-  max-height: 350px;
+  max-width: 500px;
+  max-height: 250px;
   display: block;
 }
 

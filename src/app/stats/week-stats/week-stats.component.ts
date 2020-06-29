@@ -1,7 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { TimeService } from 'src/app/time/service/time.service';
 import { StatsService } from '../service/stats.service';
 import { MatDatepickerInputEvent } from '@angular/material/datepicker';
+import { Chart } from 'chart.js';
 
 @Component({
   selector: 'app-week-stats',
@@ -9,6 +10,8 @@ import { MatDatepickerInputEvent } from '@angular/material/datepicker';
   styleUrls: ['./week-stats.component.css']
 })
 export class WeekStatsComponent implements OnInit {
+  labels = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+  dayTotals = new Array<number>();
   date = new Date();
   startDate: Date;
   endDate: Date;
@@ -16,6 +19,9 @@ export class WeekStatsComponent implements OnInit {
   finishedTasks = 0;
   totalTasks = 0;
   averageRating = 0.0;
+  @ViewChild('chart')
+  canvas: ElementRef;
+  chart: Chart;
 
   constructor(
     private statsService: StatsService,
@@ -57,6 +63,7 @@ export class WeekStatsComponent implements OnInit {
   private updateData() {
     const start = this.timeService.toDateString(this.startDate);
     const end = this.timeService.toDateString(this.endDate);
+    this.loadGraphData(start, end);
     this.statsService.getStatsForPeriod(start, end).subscribe(
       next => {
         this.totalTime = next.totalTime;
@@ -69,6 +76,62 @@ export class WeekStatsComponent implements OnInit {
         }
       }
     );
+  }
+
+  private loadGraphData(startDate: string, endDate: string) {
+    this.statsService.getDurationsForDaysInPeriod(startDate, endDate).subscribe(
+      next => {
+        this.dayTotals = next.map(it => it.total);
+        this.drawChart();
+      }
+    )
+  }
+
+  private drawChart() {
+    const ctx = this.canvas.nativeElement.getContext('2d');
+    if (this.chart) {
+      this.chart.destroy();
+    }
+    this.chart = new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: this.labels,
+        datasets: [{
+          data: this.dayTotals,
+          hoverBackgroundColor: '#009688'
+        }]
+      },
+      options: {
+        scales: {
+          yAxes: [{
+            scaleLabel: {
+              display: true,
+              labelString: 'total time'
+            },
+            ticks: {
+              callback: (value) => this.timeService.secondsOfDayToString(value),
+              min: 0
+            },
+            gridLines: {
+              drawOnChartArea: false
+            }
+          }],
+          xAxes: [{
+            gridLines: {
+              drawOnChartArea: false
+            }
+          }]
+        },
+        tooltips: {
+          callbacks: {
+            label: (tooltipItem) => this.timeService.secondsOfDayToString(tooltipItem.yLabel)
+          }
+        },
+        legend: {
+          display: false
+        }
+      }
+    });
   }
 
 }

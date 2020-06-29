@@ -6,11 +6,15 @@
     <input (dateChange)="onDateChanged($event)" [matDatepicker]="picker">
   </div>
   <mat-datepicker #picker [startAt]="date"></mat-datepicker>
-  <button (click)="picker.open()" mat-button>{{ startDate | date }} - {{ endDate | date }}</button>
+  <button id="picker-btn" (click)="picker.open()" mat-button>{{ startDate | date }} - {{ endDate | date }}</button>
   <div style="display: inline-block; width: 5px;"></div>
   <button mat-icon-button (click)="onNextPeriodClick()">
     <mat-icon>chevron_right</mat-icon>
   </button>
+</div>
+
+<div id="canvas-container" class="mx-auto text-center">
+  <canvas id="canvas" #chart></canvas>
 </div>
 
 <div class="text-center">
