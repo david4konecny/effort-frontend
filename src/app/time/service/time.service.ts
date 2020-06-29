@@ -139,4 +139,14 @@ export class TimeService {
     return new Date(dateInMillis - this.ONE_DAY_IN_MILLIS);
   }
 
+  addDays(date: Date, days: number) {
+    const dateInMillis = date.getTime();
+    return new Date(dateInMillis + (this.ONE_DAY_IN_MILLIS * days));
+  }
+
+  subtractDays(date: Date, days: number) {
+    const dateInMillis = date.getTime();
+    return new Date(dateInMillis - (this.ONE_DAY_IN_MILLIS * days));
+  }
+
 }

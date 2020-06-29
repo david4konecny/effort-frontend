@@ -58,7 +58,11 @@ export class MonthStatsComponent implements OnInit {
         this.totalTime = next.totalTime;
         this.finishedTasks = next.tasks.finished;
         this.totalTasks = next.tasks.count;
-        this.averageRating = next.averageRating;
+        if (next.averageRating) {
+          this.averageRating = next.averageRating.toFixed(2);
+        } else {
+          this.averageRating = null;
+        }
       }
     );
   }
