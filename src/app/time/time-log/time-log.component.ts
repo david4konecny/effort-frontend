@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { TimeService } from '../service/time.service';
 import { TimeSession } from '../time-session';
 import { Subscription } from 'rxjs';
@@ -12,10 +12,10 @@ import { Intent } from '../../intent.enum';
   templateUrl: './time-log.component.html',
   styleUrls: ['./time-log.component.css']
 })
-export class TimeLogComponent implements OnInit {
+export class TimeLogComponent implements OnInit, OnDestroy {
   timeEntries: TimeSession[];
   date = new Date();
-  sub: Subscription;
+  private entryChangedSub: Subscription;
 
   constructor(
     private timeService: TimeService,
@@ -28,7 +28,7 @@ export class TimeLogComponent implements OnInit {
   }
 
   private loadTimeEntries() {
-    this.sub = this.timeService.getEntriesByDate(this.date).subscribe(
+    this.timeService.getEntriesByDate(this.date).subscribe(
       next => this.timeEntries = next
     );
   }
@@ -54,35 +54,36 @@ export class TimeLogComponent implements OnInit {
   }
 
   private reloadEntriesOnChange() {
-    this.timeService.entrySavedEvent.subscribe(_ => this.reloadTimeEntries());
-  }
-
-  private reloadTimeEntries() {
-    this.sub.unsubscribe();
-    this.loadTimeEntries();
+    this.entryChangedSub = this.timeService.entrySavedEvent.subscribe(_ => this.loadTimeEntries());
   }
 
   onNextDay() {
     this.date = this.timeService.getNextDay(this.date);
-    this.reloadTimeEntries();
+    this.loadTimeEntries();
   }
 
   onPreviousDay() {
     this.date = this.timeService.getPreviousDay(this.date);
-    this.reloadTimeEntries();
+    this.loadTimeEntries();
   }
 
   onDatePicked(change: MatDatepickerInputEvent<any>) {
     this.date = change.value;
-    this.reloadTimeEntries();
+    this.loadTimeEntries();
   }
 
   onDeleteEntry(entry: TimeSession) {
     this.timeService.deleteFinishedById(entry.id).subscribe(
       next => {
-        this.reloadTimeEntries();
+        this.loadTimeEntries();
       }
     );
+  }
+
+  ngOnDestroy() {
+    if (this.entryChangedSub) {
+      this.entryChangedSub.unsubscribe();
+    }
   }
 
 }

@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild, OnDestroy } from '@angular/core';
 import { MatDatepicker } from '@angular/material/datepicker';
 import { StatsService } from '../service/stats.service';
 import {Subscription} from 'rxjs';
@@ -11,7 +11,7 @@ import { TimeService } from '../../time/service/time.service';
   templateUrl: './month-stats.component.html',
   styleUrls: ['./month-stats.component.css']
 })
-export class MonthStatsComponent implements OnInit {
+export class MonthStatsComponent implements OnInit, OnDestroy {
   labels = new Array<string>();
   data = new Array<number>();
   year: number;
@@ -23,10 +23,10 @@ export class MonthStatsComponent implements OnInit {
   finishedTasks = 0;
   totalTasks = 0;
   averageRating = 0.0;
-  sub: Subscription;
   @ViewChild('chart')
   canvas: ElementRef;
   chart: Chart;
+  private dataChangedSub: Subscription;
 
   constructor(
     private statsService: StatsService,
@@ -38,33 +38,35 @@ export class MonthStatsComponent implements OnInit {
     this.month = this.date.getMonth() + 1;
     this.startDate = new Date(this.year, this.month - 1, 1);
     this.endDate = new Date(this.year, this.month, 0);
-    this.reloadData();
+    this.loadData();
+    this.reloadDataOnChange();
   }
 
-  private reloadData() {
-    if (this.sub) {
-      this.sub.unsubscribe();
-    }
-    this.sub = this.statsService.getDurationsForDaysInMonth(this.year, this.month).subscribe(
+  private loadData() {
+    this.loadChartData();
+    this.loadStatsData();
+  }
+
+  private loadChartData() {
+    this.statsService.getDurationsForDaysInMonth(this.year, this.month).subscribe(
       next => {
         this.setDataset(next);
         this.drawChart();
       }
     );
+  }
+
+  private loadStatsData() {
     this.statsService.getStatsForPeriod(
-        this.timeService.toDateString(this.startDate), this.timeService.toDateString(this.endDate)
-      ).subscribe(
-      next => {
-        this.totalTime = next.totalTime;
-        this.finishedTasks = next.tasks.finished;
-        this.totalTasks = next.tasks.count;
-        if (next.averageRating) {
-          this.averageRating = next.averageRating.toFixed(2);
-        } else {
-          this.averageRating = null;
-        }
-      }
-    );
+      this.timeService.toDateString(this.startDate), this.timeService.toDateString(this.endDate)
+    ).subscribe(
+    next => {
+      this.totalTime = next.totalTime;
+      this.finishedTasks = next.tasks.finished;
+      this.totalTasks = next.tasks.count;
+      this.averageRating = next.averageRating ? next.averageRating.toFixed(2) : null;
+    }
+  );
   }
 
   private setDataset(data: DateTotal[]) {
@@ -87,13 +89,13 @@ export class MonthStatsComponent implements OnInit {
   onPreviousPeriodClick() {
     this.setPreviousMonth();
     this.setDate();
-    this.reloadData();
+    this.loadData();
   }
 
   onNextPeriodClick() {
     this.setNextMonth();
     this.setDate();
-    this.reloadData();
+    this.loadData();
   }
 
   onMonthSelected(change: Date, picker: MatDatepicker<Date>) {
@@ -101,7 +103,7 @@ export class MonthStatsComponent implements OnInit {
     this.year = change.getFullYear();
     this.month = change.getMonth() + 1;
     this.setDate();
-    this.reloadData();
+    this.loadData();
   }
 
   private setPreviousMonth() {
@@ -120,6 +122,12 @@ export class MonthStatsComponent implements OnInit {
     } else {
       this.month++;
     }
+  }
+
+  private reloadDataOnChange() {
+    this.dataChangedSub = this.timeService.entrySavedEvent.subscribe(
+      _ => this.loadData()
+    )
   }
 
   private drawChart() {
@@ -170,6 +178,12 @@ export class MonthStatsComponent implements OnInit {
         }
       }
     });
+  }
+
+  ngOnDestroy() {
+    if (this.dataChangedSub) {
+      this.dataChangedSub.unsubscribe();
+    }
   }
 
 }

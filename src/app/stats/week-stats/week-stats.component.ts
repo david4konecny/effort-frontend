@@ -1,15 +1,16 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild, OnDestroy } from '@angular/core';
 import { TimeService } from 'src/app/time/service/time.service';
 import { StatsService } from '../service/stats.service';
 import { MatDatepickerInputEvent } from '@angular/material/datepicker';
 import { Chart } from 'chart.js';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-week-stats',
   templateUrl: './week-stats.component.html',
   styleUrls: ['./week-stats.component.css']
 })
-export class WeekStatsComponent implements OnInit {
+export class WeekStatsComponent implements OnInit, OnDestroy {
   labels = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
   dayTotals = new Array<number>();
   date = new Date();
@@ -22,6 +23,7 @@ export class WeekStatsComponent implements OnInit {
   @ViewChild('chart')
   canvas: ElementRef;
   chart: Chart;
+  private dataChangedSub: Subscription;
 
   constructor(
     private statsService: StatsService,
@@ -30,7 +32,8 @@ export class WeekStatsComponent implements OnInit {
 
   ngOnInit(): void {
     this.setDates(new Date());
-    this.updateData();
+    this.loadData();
+    this.reloadDataOnChange();
   }
 
   private setDates(newDate: Date) {
@@ -47,43 +50,49 @@ export class WeekStatsComponent implements OnInit {
 
   onDateChanged(change: MatDatepickerInputEvent<Date>) {
     this.setDates(change.value);
-    this.updateData();
+    this.loadData();
   }
 
   onPreviousPeriodClick() {
     this.setDates(this.timeService.subtractDays(this.date, 7));
-    this.updateData();
+    this.loadData();
   }
 
   onNextPeriodClick() {
     this.setDates(this.timeService.addDays(this.date, 7));
-    this.updateData();
+    this.loadData();
   }
 
-  private updateData() {
+  private loadData() {
     const start = this.timeService.toDateString(this.startDate);
     const end = this.timeService.toDateString(this.endDate);
-    this.loadGraphData(start, end);
-    this.statsService.getStatsForPeriod(start, end).subscribe(
-      next => {
-        this.totalTime = next.totalTime;
-        this.finishedTasks = next.tasks.finished;
-        this.totalTasks = next.tasks.count;
-        if (next.averageRating) {
-          this.averageRating = next.averageRating.toFixed(2);
-        } else {
-          this.averageRating = null;
-        }
-      }
-    );
+    this.loadChartData(start, end);
+    this.loadStatsData(start, end);
   }
 
-  private loadGraphData(startDate: string, endDate: string) {
+  private loadChartData(startDate: string, endDate: string) {
     this.statsService.getDurationsForDaysInPeriod(startDate, endDate).subscribe(
       next => {
         this.dayTotals = next.map(it => it.total);
         this.drawChart();
       }
+    )
+  }
+
+  private loadStatsData(startDate: string, endDate: string) {
+    this.statsService.getStatsForPeriod(startDate, endDate).subscribe(
+      next => {
+        this.totalTime = next.totalTime;
+        this.finishedTasks = next.tasks.finished;
+        this.totalTasks = next.tasks.count;
+        this.averageRating = next.averageRating ? next.averageRating.toFixed(2) : null;
+      }
+    );
+  }
+
+  private reloadDataOnChange() {
+    this.dataChangedSub = this.timeService.entrySavedEvent.subscribe(
+      _ => this.loadData()
     )
   }
 
@@ -132,6 +141,12 @@ export class WeekStatsComponent implements OnInit {
         }
       }
     });
+  }
+
+  ngOnDestroy() {
+    if (this.dataChangedSub) {
+      this.dataChangedSub.unsubscribe();
+    }
   }
 
 }

@@ -1,9 +1,11 @@
 import { Injectable, EventEmitter } from '@angular/core';
 import { TimeSession } from '../time-session';
-import { Observable, timer, Subscription } from 'rxjs';
+import { Observable, timer, Subscription, of } from 'rxjs';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { tap } from 'rxjs/operators';
 import { Category } from '../../category/category';
+import { DateTotal } from '../date-total';
+import { Intent } from 'src/app/intent.enum';
 
 @Injectable({
   providedIn: 'root'
@@ -13,17 +15,24 @@ export class TimeService {
   private timerSub: Subscription;
   private current: TimeSession;
   private ONE_DAY_IN_MILLIS = 24 * 60 * 60 * 1000;
-  entrySavedEvent = new EventEmitter();
+  entrySavedEvent = new EventEmitter<Intent>();
 
   constructor(
     private http: HttpClient
   ) { }
 
   getCurrent(): Observable<TimeSession[]> {
+    if (this.current) {
+      const res = new Array<TimeSession>();
+      res.push(this.current);
+      return of(res);
+    }
     return this.http.get<TimeSession[]>(`${this.url}/current`).pipe(
       tap(next => {
         if (next.length > 0) {
           this.current = next[0];
+          this.current.endTime = this.dateToSecondsOfDay(new Date());
+          this.startTimer();
         }
       })
     );
@@ -36,16 +45,20 @@ export class TimeService {
 
   addFinished(entry: TimeSession): Observable<TimeSession> {
     return this.http.post<TimeSession>(`${this.url}/finished`, entry).pipe(
-      tap(_ => this.entrySavedEvent.emit())
+      tap(_ => this.entrySavedEvent.emit(Intent.add))
     );
   }
 
   editFinished(entry: TimeSession): Observable<TimeSession> {
-    return this.http.put<TimeSession>(`${this.url}/finished`, entry);
+    return this.http.put<TimeSession>(`${this.url}/finished`, entry).pipe(
+      tap(_ => this.entrySavedEvent.emit(Intent.edit))
+    );
   }
 
   editCurrent(entry: TimeSession): Observable<TimeSession> {
-    return this.http.put<TimeSession>(`${this.url}/current`, entry);
+    return this.http.put<TimeSession>(`${this.url}/current`, entry).pipe(
+      tap(_ => this.entrySavedEvent.emit(Intent.edit))
+    );
   }
 
   changeCategoryOfCurrent(category: Category) {
@@ -63,6 +76,7 @@ export class TimeService {
     if (!this.current) {
       return;
     }
+    this.current.endTime = this.dateToSecondsOfDay(new Date());
     this.http.delete(`${this.url}/current/${this.current.id}`).subscribe(
       next => {
         this.current.id = 0;
@@ -76,7 +90,7 @@ export class TimeService {
   }
 
   startTimeTracking(category: Category) {
-    const entry = this.getNewTimeSession(category);
+    const entry = this.getNewCurrentEntry(category);
     this.http.post<TimeSession>(`${this.url}/current`, entry).subscribe(
       next => {
         this.current = next;
@@ -86,9 +100,9 @@ export class TimeService {
   }
 
   private startTimer() {
-    this.timerSub = timer(1000, 1000).subscribe(
+    this.timerSub = timer(60000, 60000).subscribe(
       it => {
-        this.current.endTime += 1;
+        this.current.endTime = this.dateToSecondsOfDay(new Date());
         this.editCurrent(this.current).subscribe();
       }
     );
@@ -102,6 +116,17 @@ export class TimeService {
   getTotalDuration(date: Date): Observable<number> {
     const options = { params: new HttpParams().set('date', this.toDateString(date)) };
     return this.http.get<number>(`${this.url}/total`, options);
+  }
+
+  getTotalFinishedDuration(date: Date): Observable<DateTotal> {
+    const options = { params: new HttpParams().set('date', this.toDateString(date)) };
+    return this.http.get<DateTotal>(`${this.url}/finished/total`, options);
+  }
+
+  private getNewCurrentEntry(category: Category): TimeSession {
+    const d = new Date();
+    const placeholderTime = this.dateToSecondsOfDay(d);
+    return { id: 0, date: this.toDateString(d), category, startTime: placeholderTime, endTime: placeholderTime } as TimeSession;
   }
 
   getNewTimeSession(category: Category): TimeSession {
@@ -127,6 +152,10 @@ export class TimeService {
     const h = +time.slice(0, 2);
     const m = +time.slice(3);
     return h * 3600 + m * 60;
+  }
+
+  dateToSecondsOfDay(date: Date) {
+    return (date.getHours() * 3600) + (date.getMinutes() * 60) + date.getSeconds();
   }
 
   getNextDay(date: Date) {

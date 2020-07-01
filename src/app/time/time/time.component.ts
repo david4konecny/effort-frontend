@@ -16,8 +16,8 @@ import { Category } from '../../category/category';
 })
 export class TimeComponent implements OnInit {
   isLoaded = false;
-  isTrackingTime: boolean;
-  timeDisplay: number;
+  isTrackingTime = false;
+  timeDisplay = 0;
   category: Category;
   totalDuration = 0;
   displayTimeLog = false;
@@ -34,19 +34,31 @@ export class TimeComponent implements OnInit {
   ngOnInit(): void {
     this.fetchCurrent();
     this.initTotalDuration();
-    this.isTrackingTime = false;
-    this.timeDisplay = 0;
     this.loadCategory();
     this.displayMsgWhenEntrySaved();
   }
 
   private fetchCurrent() {
-    this.timeService.getCurrent().subscribe(next => this.isLoaded = true);
+    this.timeService.getCurrent().subscribe(
+      next => {
+        if (next.length > 0) {
+          this.category = next[0].category;
+          const duration = this.timeService.dateToSecondsOfDay(new Date()) - next[0].startTime;
+          this.timeDisplay = duration;
+          this.totalDuration += duration;
+          this.startCounter();
+          this.isTrackingTime = true;
+        }
+        this.isLoaded = true;
+      }
+    );
   }
 
   private initTotalDuration() {
-    this.timeService.getTotalDuration(new Date()).subscribe(
-      next => this.totalDuration = next
+    this.timeService.getTotalFinishedDuration(new Date()).subscribe(
+      next => {
+        this.totalDuration += next.total;
+      }
     );
   }
 
@@ -79,7 +91,7 @@ export class TimeComponent implements OnInit {
   private startCounter() {
     this.timerSub = timer(1000, 1000).subscribe(it => {
       this.totalDuration += 1;
-      this.timeDisplay = it + 1;
+      this.timeDisplay += 1;
     });
   }
 
@@ -126,7 +138,13 @@ export class TimeComponent implements OnInit {
   }
 
   private displayMsgWhenEntrySaved() {
-    this.timeService.entrySavedEvent.subscribe(_ => this.displayMessage('Entry saved'));
+    this.timeService.entrySavedEvent.subscribe(
+      next => {
+        if (next === Intent.add) {
+          this.displayMessage('Entry saved');
+        }
+      }
+    );
   }
 
   displayMessage(msg: string) {
