@@ -41,7 +41,7 @@ export class CategoryDialogComponent implements OnInit {
   onSubmit() {
     const result = this.category;
     result.name = this.form.value.name;
-    result.color = this.form.value.color;
+    result.color = this.selectedColor;
     this.dialogRef.close(result);
   }
 
@@ -51,7 +51,6 @@ export class CategoryDialogComponent implements OnInit {
 
   onSelectColor(color: string) {
     this.selectedColor = color;
-    this.form.value.color = color;
   }
 
   loadColorOptions() {

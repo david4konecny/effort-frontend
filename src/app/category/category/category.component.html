@@ -1,19 +1,23 @@
-<div class="text-center">
+<div class="text-center" style="padding-left: 1rem; padding-right: 1rem;">
+
+  <h2 style="margin: 0;">Choose category</h2>
 
   <mat-list>
 
-    <mat-list-item class="category-item" *ngFor="let c of categories" [ngStyle]="{'border-color': c.color}">
-      <button mat-flat-button (click)="onSelectCategory(c)">
+    <mat-list-item class="category-item" *ngFor="let c of categories" [ngStyle]="getStyleObject(c.color)">
+    <div style="flex: auto; display: flex;">
+      <button mat-button (click)="onSelectCategory(c)" style="flex: auto; text-align: left;">
         <mat-icon *ngIf="c.id === selectedCategory.id">done</mat-icon>
         <span> {{c.name}} </span>
       </button>
-      <button mat-icon-button [matMenuTriggerFor]="menu" class="menu-button">
+      <button mat-icon-button [matMenuTriggerFor]="menu" class="menu-button" style="flex: initial;">
         <mat-icon>more_vert</mat-icon>
       </button>
-      <mat-menu #menu>
+      <mat-menu #menu style="flex: initial;">
         <button mat-menu-item (click)="onEditCategory(c)">Edit</button>
         <button mat-menu-item (click)="onDeleteCategory(c)">Delete</button>
       </mat-menu>
+    </div>
     </mat-list-item>
 
   </mat-list>

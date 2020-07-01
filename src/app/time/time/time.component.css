@@ -2,3 +2,8 @@
   margin-right: 0.5rem;
   min-width: 100px;
 }
+
+.popup {
+  max-width: 400px;
+  border-radius: 6px;
+}

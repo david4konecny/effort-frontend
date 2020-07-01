@@ -141,6 +141,9 @@ export class MonthStatsComponent implements OnInit, OnDestroy {
         labels: this.labels,
         datasets: [{
           data: this.data,
+          borderWidth: 1,
+          backgroundColor: '#80CBC4',
+          borderColor: '#009688',
           hoverBackgroundColor: '#009688'
         }]
       },
@@ -171,7 +174,8 @@ export class MonthStatsComponent implements OnInit, OnDestroy {
         tooltips: {
           callbacks: {
             label: (tooltipItem) => this.timeService.secondsOfDayToString(tooltipItem.yLabel)
-          }
+          },
+          displayColors: false
         },
         legend: {
           display: false

@@ -20,7 +20,6 @@ import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatInputModule} from '@angular/material/input';
 import { ReactiveFormsModule } from '@angular/forms';
 import {MatSliderModule} from '@angular/material/slider';
-import { LogComponent } from './log/log.component';
 import { TimeComponent } from './time/time/time.component';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { TimePipe } from './time.pipe';
@@ -56,7 +55,6 @@ import { WeekStatsComponent } from './stats/week-stats/week-stats.component';
     TasksComponent,
     ReviewComponent,
     TaskDialogComponent,
-    LogComponent,
     TimeComponent,
     TimePipe,
     TimeDialogComponent,

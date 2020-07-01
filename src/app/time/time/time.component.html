@@ -13,14 +13,14 @@
     {{isTrackingTime ? 'Stop' : 'Start'}}
   </button>
   <br>
-  <div *ngIf="displayCategories" class="mb-3 mx-auto mat-elevation-z2 p-3" style="max-width: 500px;">
+  <div *ngIf="displayCategories" class="mb-3 mx-auto mat-elevation-z5 mt-3 p-3 popup">
     <app-category [selectedCategory]="category" (categoryChange)="onCategoryChanged($event)"></app-category>
   </div>
   <button mat-button (click)="onDisplayTimeLog()">Time log</button>
   <button mat-button (click)="onOpenDialog()">Add time entry</button>
   <br>
   <p>Today total: {{totalDuration | time:true}}</p>
-  <div *ngIf="displayTimeLog" class="mb-3 mx-auto mat-elevation-z2 p-3" style="max-width: 500px;">
+  <div *ngIf="displayTimeLog" class="mb-3 mx-auto mat-elevation-z5 p-3 popup">
     <app-time-log></app-time-log>
   </div>
 </div>
