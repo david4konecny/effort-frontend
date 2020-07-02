@@ -118,9 +118,9 @@ export class TimeService {
     return this.http.get<number>(`${this.url}/total`, options);
   }
 
-  getTotalFinishedDuration(date: Date): Observable<DateTotal> {
+  getTotalFinishedDuration(date: Date): Observable<number> {
     const options = { params: new HttpParams().set('date', this.toDateString(date)) };
-    return this.http.get<DateTotal>(`${this.url}/finished/total`, options);
+    return this.http.get<number>(`${this.url}/finished/total`, options);
   }
 
   private getNewCurrentEntry(category: Category): TimeSession {

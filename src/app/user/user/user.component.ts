@@ -124,4 +124,13 @@ export class UserComponent implements OnInit {
     )
   }
 
+  onLogout() {
+    this.authService.logout().subscribe(
+      next => {
+        this.snackBar.open('You have been logged out', '', {duration: 4000});
+        this.router.navigate(['']);
+      }
+    )
+  }
+
 }

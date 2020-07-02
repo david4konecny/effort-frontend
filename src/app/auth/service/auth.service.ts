@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { tap, map } from 'rxjs/operators';
+import { tap, map, retry } from 'rxjs/operators';
 import { User } from 'src/app/user/user';
 
 @Injectable({
@@ -48,7 +48,10 @@ export class AuthService {
   }
 
   signup(user: User): Observable<User> {
-    return this.http.post<User>(this.url, user);
+    const headers = new HttpHeaders().append("X-Requested-With", "XMLHttpRequest");
+    return this.http.post<User>(this.url, user, { headers }).pipe(
+      retry(2)
+    )
   }
 
   editUsername(newUsername: string): Observable<void> {
@@ -70,8 +73,12 @@ export class AuthService {
     );
   }
 
-  logout() {
-    this.username = '';
-    this.isAuthenticated = false;
+  logout(): Observable<void> {
+    return this.http.post<void>(`${this.url}/logout`, null).pipe(
+      tap(next => {
+        this.isAuthenticated = false;
+        this.username = '';
+        })
+    );
   }
 }

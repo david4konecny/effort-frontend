@@ -57,7 +57,7 @@ export class TimeComponent implements OnInit {
   private initTotalDuration() {
     this.timeService.getTotalFinishedDuration(new Date()).subscribe(
       next => {
-        this.totalDuration += next.total;
+        this.totalDuration += next;
       }
     );
   }

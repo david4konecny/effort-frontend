@@ -10,7 +10,7 @@
       <div id="username-menu-item">{{ username }}</div>
       <mat-divider></mat-divider>
       <a routerLink="./account" mat-menu-item>Account</a>
-      <button mat-menu-item>Logout</button>
+      <button mat-menu-item (click)="onLogout()">Logout</button>
     </mat-menu>
   </div>
 </mat-toolbar>
