@@ -1,13 +1,48 @@
-<mat-toolbar color="primary">
-  <div class="text-center mx-auto">
-    <a routerLink="" mat-flat-button color="primary" class="nav-item-brand">effort</a>
+<div class="text-center">
+  <a mat-button routerLink="/" color="primary" [disableRipple]="true" id="main-heading">
+    effort
+  </a>
+</div>
+
+<div class="container mx-auto text-center">
+
+  <h1>Your time and productivity tracker</h1>
+
+  <div class="feature-container mt-3">
+
+    <div class="feature-item mat-elevation-z3 text-center">
+      <mat-icon class="feature-icon">access_time</mat-icon>
+      <p>Measure the most important resource: time</p>
+    </div>
+
+    <div class="feature-item mat-elevation-z3 text-center">
+      <mat-icon class="feature-icon">list</mat-icon>
+      <p>Keep track of your tasks</p>
+    </div>
+
   </div>
-</mat-toolbar>
 
-<div class="container mx-auto">
+  <div class="feature-container">
 
-  <button mat-raised-button color="primary" routerLink="/login">
-    Log in
+    <div class="feature-item mat-elevation-z3 text-center">
+      <mat-icon class="feature-icon">timeline</mat-icon>
+      <p>Watch your progress</p>
+    </div>
+
+    <div class="feature-item mat-elevation-z3 text-center">
+      <mat-icon class="feature-icon">star_half</mat-icon>
+      <p>Raview and rate your day</p>
+    </div>
+
+  </div>
+
+  <button id="signup-btn" mat-raised-button color="primary" routerLink="/signup">
+    Sign up
   </button>
+  <div>
+      <a mat-button routerLink="/login" [disableRipple]="true">
+        Already have an account? Login here.
+      </a>
+  </div>
 
 </div>

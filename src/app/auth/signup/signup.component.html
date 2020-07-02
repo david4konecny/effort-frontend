@@ -6,6 +6,17 @@
 
 <div class="container mx-auto text-center mt-5">
 
+  <div class="mb-3 mx-auto"
+  style="display: inline-block; border-radius: 4px; border: 1px solid #e0e0e0">
+    <a mat-button routerLink="/login" [disableRipple]="true">
+      Already have an account? Login here.
+    </a>
+  </div>
+
+  <div>
+    <h1>Sign up</h1>
+  </div>
+
   <form [formGroup]="form">
 
     <div>
@@ -22,15 +33,14 @@
       </mat-form-field>
     </div>
 
-    <div class="mb-5">
+    <div class="mb-3">
       <mat-checkbox formControlName="addSampleData">Include sample data</mat-checkbox>
     </div>
 
     <div>
-      <button type="submit" (click)="onSubmit()" [disabled]="!form.valid" mat-stroked-button
-        color="primary">Submit</button>
-      <button type="button" (click)="onCancel()" mat-stroked-button color="warn"
-        style="margin-left: 0.5rem;">Cancel</button>
+      <button type="button" (click)="onCancel()" mat-stroked-button color="warn">Cancel</button>
+        <button type="submit" (click)="onSubmit()" [disabled]="!form.valid" mat-stroked-button
+        style="margin-left: 1rem;" color="primary">Submit</button>
     </div>
 
   </form>
