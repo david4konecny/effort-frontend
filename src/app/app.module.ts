@@ -47,6 +47,7 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
 import { SignupComponent } from './auth/signup/signup.component';
 import { ConfirmationDialogComponent } from './dialog/confirmation-dialog/confirmation-dialog.component';
 import { WeekStatsComponent } from './stats/week-stats/week-stats.component';
+import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 
 @NgModule({
   declarations: [
@@ -69,7 +70,8 @@ import { WeekStatsComponent } from './stats/week-stats/week-stats.component';
     UserComponent,
     SignupComponent,
     ConfirmationDialogComponent,
-    WeekStatsComponent
+    WeekStatsComponent,
+    PageNotFoundComponent
   ],
     imports: [
         BrowserModule,

@@ -8,6 +8,7 @@ import { LoginComponent } from './auth/login/login.component';
 import { AuthGuard } from './auth/guard/auth.guard';
 import { UserComponent } from './user/user/user.component';
 import { SignupComponent } from './auth/signup/signup.component';
+import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 
 
 const routes: Routes = [
@@ -21,6 +22,7 @@ const routes: Routes = [
           { path: 'account', component: UserComponent },
         ]}
     ] },
+  { path: '**', component: PageNotFoundComponent },
 ];
 
 @NgModule({
