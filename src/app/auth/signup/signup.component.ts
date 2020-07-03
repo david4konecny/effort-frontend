@@ -3,6 +3,7 @@ import { AuthService } from '../service/auth.service';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { User } from 'src/app/user/user';
 import { Router } from '@angular/router';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-signup',
@@ -12,11 +13,13 @@ import { Router } from '@angular/router';
 export class SignupComponent implements OnInit {
   form: FormGroup;
   hidePassword = true;
+  showLoadingSpinner = false;
 
   constructor(
     private authService: AuthService,
     private formBuilder: FormBuilder,
-    private router: Router
+    private router: Router,
+    private snackBar: MatSnackBar
   ) { }
 
   ngOnInit(): void {
@@ -32,6 +35,7 @@ export class SignupComponent implements OnInit {
   }
 
   onSubmit() {
+    this.showLoadingSpinner = true;
     const user = this.getUserFromForm();
     this.authService.signup(user).subscribe(
       next => {
@@ -40,6 +44,10 @@ export class SignupComponent implements OnInit {
             this.router.navigate(['dashboard']);
           }
         );
+      },
+      error => {
+        this.snackBar.open('Username already exists', '', { duration: 4000 });
+        this.showLoadingSpinner = false;
       }
     );
   }

@@ -12,6 +12,7 @@ export class LoginComponent implements OnInit {
   displayForm = false;
   form: FormGroup;
   message = '';
+  showLoadingSpinner = false;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -37,12 +38,14 @@ export class LoginComponent implements OnInit {
   }
 
   onSubmit() {
+    this.showLoadingSpinner = true;
     this.authService.login(this.form.value.username, this.form.value.password).subscribe(
       next => {
         this.router.navigate([this.authService.targetUrl]);
       },
       error => {
         this.message = 'Username or password was not recognised. Please try again.';
+        this.showLoadingSpinner = false;
       }
     );
   }

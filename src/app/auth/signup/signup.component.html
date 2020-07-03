@@ -17,7 +17,11 @@
     <h1>Sign up</h1>
   </div>
 
-  <form [formGroup]="form">
+  <div *ngIf="showLoadingSpinner">
+    <mat-spinner class="mx-auto"></mat-spinner>
+  </div>
+
+  <form [formGroup]="form" [hidden]=showLoadingSpinner>
 
     <div>
       <mat-form-field style="width: 185px;">
