@@ -131,7 +131,7 @@ export class TimeService {
 
   getNewTimeSession(category: Category): TimeSession {
     const d = new Date();
-    const placeholderTime = this.toSecondsOfDay(`${d.getHours()}-${d.getMinutes()}`);
+    const placeholderTime = TimeService.toSecondsOfDay(`${d.getHours()}-${d.getMinutes()}`);
     return { id: 0, date: this.toDateString(d), category, startTime: placeholderTime, endTime: placeholderTime } as TimeSession;
   }
 
@@ -148,7 +148,7 @@ export class TimeService {
     return `${h}:${m}`;
   }
 
-  toSecondsOfDay(time: string) {
+  static toSecondsOfDay(time: string) {
     const h = +time.slice(0, 2);
     const m = +time.slice(3);
     return h * 3600 + m * 60;

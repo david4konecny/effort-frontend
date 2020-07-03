@@ -5,6 +5,7 @@ import { TimeService } from '../service/time.service';
 import { Intent } from '../../intent.enum';
 import { Category } from '../../category/category';
 import { CategoryService } from '../../category/service/category.service';
+import { timeValidator } from '../time-validator';
 
 @Component({
   selector: 'app-time-dialog',
@@ -44,7 +45,7 @@ export class TimeDialogComponent implements OnInit {
       category: [this.findInitialCategoryFromOptions(), Validators.required],
       startTime: [this.timeService.secondsOfDayToString(this.data.timeSession.startTime), Validators.required],
       endTime: [this.timeService.secondsOfDayToString(this.data.timeSession.endTime), Validators.required]
-    });
+    }, { validators: timeValidator });
   }
 
   onSubmit() {
@@ -55,8 +56,8 @@ export class TimeDialogComponent implements OnInit {
       result.date = this.timeService.toDateString(this.form.value.date);
     }
     result.category = this.form.value.category;
-    result.startTime = this.timeService.toSecondsOfDay(this.form.value.startTime);
-    result.endTime = this.timeService.toSecondsOfDay(this.form.value.endTime);
+    result.startTime = TimeService.toSecondsOfDay(this.form.value.startTime);
+    result.endTime = TimeService.toSecondsOfDay(this.form.value.endTime);
     this.dialogRef.close(result);
   }
 
