@@ -20,16 +20,21 @@
   <form [formGroup]="form">
 
     <div>
-      <mat-form-field>
+      <mat-form-field style="width: 185px;">
         <mat-label>Username</mat-label>
-        <input matInput type="text" formControlName="username" required>
+        <input matInput type="text" formControlName="username" required maxlength="15">
+        <mat-error *ngIf="form.controls.username.invalid">Must be at least 3 letters</mat-error>
       </mat-form-field>
     </div>
 
-    <div>
-      <mat-form-field>
+    <div class="mb-3">
+      <mat-form-field style="width: 185px;">
         <mat-label>Password</mat-label>
-        <input matInput type="password" formControlName="password" required>
+        <input matInput [type]="hidePassword ? 'password' : 'text'" formControlName="password" required maxlength="30">
+        <button mat-icon-button matSuffix (click)="hidePassword = !hidePassword">
+          <mat-icon>{{ hidePassword ? 'visibility_off' : 'visibility' }}</mat-icon>
+        </button>
+        <mat-error *ngIf="form.controls.password.invalid">Must be at least 5 characters</mat-error>
       </mat-form-field>
     </div>
 

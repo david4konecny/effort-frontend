@@ -3,12 +3,14 @@
     <h1>{{ username }}</h1>
 
     <mat-action-list id="options-list" class="mx-auto">
+        <mat-divider></mat-divider>
         <button mat-list-item (click)="onShowUsernameForm()">Change username</button>
         <div *ngIf="showUsernameForm">
             <form [formGroup]="usernameForm">
                 <mat-form-field>
                     <mat-label>New username</mat-label>
-                    <input matInput type="text" formControlName="newUsername" required>
+                    <input matInput type="text" formControlName="newUsername" required maxlength="15">
+                    <mat-error *ngIf="usernameForm.controls.newUsername.invalid">Must be at least 3 letters</mat-error>
                 </mat-form-field>
 
                 <div>
@@ -24,14 +26,23 @@
                 <div>
                     <mat-form-field>
                         <mat-label>Old password</mat-label>
-                        <input matInput type="password" formControlName="oldPassword" required>
+                        <input matInput [type]="hideOldPassword ? 'password' : 'text'"
+                        formControlName="oldPassword" required maxlength="30">
+                        <button mat-icon-button matSuffix (click)="hideOldPassword = !hideOldPassword">
+                            <mat-icon>{{ hideOldPassword ? 'visibility_off' : 'visibility' }}</mat-icon>
+                        </button>
                     </mat-form-field>
                 </div>
 
                 <div>
                     <mat-form-field>
                         <mat-label>New password</mat-label>
-                        <input matInput type="password" formControlName="newPassword" required>
+                        <input matInput [type]="hideNewPassword ? 'password' : 'text'"
+                        formControlName="newPassword" required maxlength="30">
+                        <button mat-icon-button matSuffix (click)="hideNewPassword = !hideNewPassword">
+                            <mat-icon>{{ hideNewPassword ? 'visibility_off' : 'visibility' }}</mat-icon>
+                        </button>
+                        <mat-error *ngIf="passwordForm.controls.newPassword.invalid">Must be at least 5 characters</mat-error>
                     </mat-form-field>
                 </div>
 

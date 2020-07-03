@@ -21,7 +21,7 @@
 }
 
 .feature-item {
-  margin: 1rem;
+  margin: 1rem 2rem 1rem;
   padding: 1rem;
   background-color: #e0e0e0;
 }
@@ -36,10 +36,12 @@
     min-width: 310px;
     max-width: 350px;
     min-height: 100px;
-    max-height: 400px;
+    max-height: 350px;
+    margin: 1rem;
   }
 
   .feature-icon {
+    margin-top: 1rem;
     font-size: 32px;
   }
 }

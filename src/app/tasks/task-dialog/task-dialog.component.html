@@ -3,12 +3,12 @@
 </div>
 
 <form class="text-center" [formGroup]="taskForm">
-  <mat-form-field>
+  <mat-form-field style="width: 185px;">
     <mat-label>Task</mat-label>
-    <input matInput formControlName="description" required>
+    <input matInput formControlName="description" required maxlength="30">
   </mat-form-field>
   <br>
-  <mat-form-field>
+  <mat-form-field style="width: 185px;">
     <mat-label>Date</mat-label>
     <input matInput [matDatepicker]="picker" formControlName="date" required>
     <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>

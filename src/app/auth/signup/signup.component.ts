@@ -11,6 +11,7 @@ import { Router } from '@angular/router';
 })
 export class SignupComponent implements OnInit {
   form: FormGroup;
+  hidePassword = true;
 
   constructor(
     private authService: AuthService,
@@ -24,10 +25,10 @@ export class SignupComponent implements OnInit {
 
   private setupForm() {
     this.form = this.formBuilder.group({
-      username: ['', Validators.required],
-      password: ['', Validators.required],
+      username: ['', [Validators.required, Validators.pattern('[a-zA-Z]{3,15}')]],
+      password: ['', [Validators.required, Validators.pattern('.{5,30}')]],
       addSampleData: [false]
-    })
+    });
   }
 
   onSubmit() {

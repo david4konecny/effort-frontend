@@ -50,7 +50,7 @@ export class ReviewComponent implements OnInit {
     this.reviewForm = this.formBuilder.group(
       {
         rating: [rating, Validators.required],
-        description: [description, Validators.required]
+        description: [description]
       }
     );
   }

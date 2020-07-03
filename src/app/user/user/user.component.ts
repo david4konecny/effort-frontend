@@ -17,6 +17,8 @@ export class UserComponent implements OnInit {
   showPasswordForm = false;
   usernameForm: FormGroup;
   passwordForm: FormGroup;
+  hideOldPassword = true;
+  hideNewPassword = true;
 
   constructor(
     private authService: AuthService,
@@ -56,14 +58,14 @@ export class UserComponent implements OnInit {
 
   setupUsernameForm() {
     this.usernameForm = this.formBuilder.group({
-      newUsername: ['', Validators.required]
+      newUsername: ['', [Validators.required, Validators.pattern('[a-zA-Z]{3,15}')]]
     });
   }
 
   setupPasswordForm() {
     this.passwordForm = this.formBuilder.group({
       oldPassword: ['', Validators.required],
-      newPassword: ['', Validators.required],
+      newPassword: ['', [Validators.required, Validators.pattern('.{5,30}')]],
     });
   }
 
