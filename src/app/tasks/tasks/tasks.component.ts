@@ -45,7 +45,7 @@ export class TasksComponent implements OnInit, OnDestroy {
 
   openDialog(action: Intent, task?: Task) {
     if (!task) {
-      task = { id: 0, date: this.timeService.toDateString(new Date()), description: '', finished: false} as Task;
+      task = { id: 0, date: this.timeService.toDateString(this.date), description: '', finished: false} as Task;
     }
     const dialogRef = this.dialog.open(
       TaskDialogComponent,

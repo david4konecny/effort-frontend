@@ -33,7 +33,7 @@ export class CategoryDialogComponent implements OnInit {
 
   private setupForm() {
     this.form = this.formBuilder.group({
-      name: [this.category.name, [Validators.required, Validators.pattern('[a-zA-Z0-9]{1,15}')]],
+      name: [this.category.name, [Validators.required, Validators.pattern('[a-zA-Z0-9]{1,14}')]],
       color: [this.category.color, Validators.required]
     });
   }

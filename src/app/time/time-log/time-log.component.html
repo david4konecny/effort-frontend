@@ -8,26 +8,29 @@
 <button mat-icon-button (click)="onNextDay()"><mat-icon>chevron_right</mat-icon></button>
 
 <mat-list style="margin: 0 auto;">
-  <mat-list-item *ngFor="let entry of timeEntries" style="height: 80px;">
-    <div class="entry-item" [style.border-color]="entry.category.color">
-      <span>
+  <mat-list-item *ngIf="!timeEntries.length">
+    <div class="text-center" style="width: 100%;">
+      <h2 class="text-muted">No entries for this day</h2>
+    </div>
+  </mat-list-item>
+  <mat-list-item *ngFor="let entry of timeEntries">
+    <div class="entry-item" [style]="getStyleObject(entry.category.color)">
+      <span style="width: 95px; flex: initial; margin-right: 1rem; font-size: 14px;">
         {{entry.startTime | time}} - {{entry.endTime | time}}
       </span>
-      <span>
+      <span style="width: 45px; flex: initial; margin-right: 1rem; font-size: 14px;">
         {{entry.duration | time}}
       </span>
-      <span>
+      <span style="flex: auto; text-align: left; font-size: 14px;">
         {{entry.category.name}}
       </span>
-      <div style="width: 40px; height: 42px;">
-        <button mat-icon-button [matMenuTriggerFor]="menu" class="menu-button">
-          <mat-icon>more_vert</mat-icon>
-        </button>
-        <mat-menu #menu>
-          <button mat-menu-item (click)="onOpenEditDialog(entry)">Edit</button>
-          <button mat-menu-item (click)="onDeleteEntry(entry)">Delete</button>
-        </mat-menu>
-      </div>
+      <button mat-icon-button [matMenuTriggerFor]="menu" class="menu-button" style="flex: initial;">
+        <mat-icon>more_vert</mat-icon>
+      </button>
+      <mat-menu #menu style="flex: initial;">
+        <button mat-menu-item (click)="onOpenEditDialog(entry)">Edit</button>
+        <button mat-menu-item (click)="onDeleteEntry(entry)">Delete</button>
+      </mat-menu>
     </div>
   </mat-list-item>
 </mat-list>
