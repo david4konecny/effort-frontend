@@ -4,7 +4,6 @@ import { Observable, timer, Subscription, of } from 'rxjs';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { tap } from 'rxjs/operators';
 import { Category } from '../../category/category';
-import { DateTotal } from '../date-total';
 import { Intent } from 'src/app/intent.enum';
 
 @Injectable({
@@ -15,7 +14,9 @@ export class TimeService {
   private timerSub: Subscription;
   private current: TimeSession;
   private ONE_DAY_IN_MILLIS = 24 * 60 * 60 * 1000;
+  private SECONDS_IN_DAY = 24 * 60 * 60;
   entrySavedEvent = new EventEmitter<Intent>();
+  resetCurrentEvent = new EventEmitter<TimeSession>();
 
   constructor(
     private http: HttpClient
@@ -40,7 +41,13 @@ export class TimeService {
 
   getEntriesByDate(date: Date): Observable<TimeSession[]> {
     const options = { params: new HttpParams().set('date', this.toDateString(date)) };
-    return this.http.get<TimeSession[]>(this.url, options);
+    return this.http.get<TimeSession[]>(`${this.url}/finished`, options);
+  }
+
+  private addCurrent(entry: TimeSession): Observable<TimeSession> {
+    return this.http.post<TimeSession>(`${this.url}/current`, entry).pipe(
+      tap(next => this.current = next)
+    );
   }
 
   addFinished(entry: TimeSession): Observable<TimeSession> {
@@ -55,8 +62,8 @@ export class TimeService {
     );
   }
 
-  editCurrent(entry: TimeSession): Observable<TimeSession> {
-    return this.http.put<TimeSession>(`${this.url}/current`, entry).pipe(
+  private editCurrent(): Observable<TimeSession> {
+    return this.http.put<TimeSession>(`${this.url}/current`, this.current).pipe(
       tap(_ => this.entrySavedEvent.emit(Intent.edit))
     );
   }
@@ -64,7 +71,7 @@ export class TimeService {
   changeCategoryOfCurrent(category: Category) {
     if (this.current) {
       this.current.category = category;
-      this.editCurrent(this.current).subscribe();
+      this.editCurrent().subscribe();
     }
   }
 
@@ -72,17 +79,35 @@ export class TimeService {
     return this.http.delete(`${this.url}/finished/${id}`);
   }
 
-  endCurrent() {
-    if (!this.current) {
-      return;
-    }
-    this.current.endTime = this.dateToSecondsOfDay(new Date());
-    this.http.delete(`${this.url}/current/${this.current.id}`).subscribe(
+  deleteCurrentById(id: number): Observable<any> {
+    return this.http.delete(`${this.url}/current/${id}`);
+  }
+
+  private endCurrent() {
+    const entry = this.current;
+    this.current = null;
+    this.deleteCurrentById(entry.id).subscribe(
       next => {
-        this.current.id = 0;
-        this.addFinished(this.current).subscribe(
+        entry.id = 0;
+        this.addFinished(entry).subscribe();
+      }
+    );
+  }
+
+  private resetCurrent(newTimeEntry: TimeSession) {
+    const entry = this.current;
+    this.current = null;
+    this.deleteCurrentById(entry.id).subscribe(
+      next => {
+        entry.id = 0;
+        this.addFinished(entry).subscribe(
           next => {
-            this.current = null;
+            this.addCurrent(newTimeEntry).subscribe(
+              next => {
+                this.startTimer();
+                this.resetCurrentEvent.emit(next);
+              }
+            );
           }
         );
       }
@@ -91,25 +116,32 @@ export class TimeService {
 
   startTimeTracking(category: Category) {
     const entry = this.getNewCurrentEntry(category);
-    this.http.post<TimeSession>(`${this.url}/current`, entry).subscribe(
-      next => {
-        this.current = next;
-        this.startTimer();
-      }
-    )
+    this.addCurrent(entry).subscribe(
+      next => this.startTimer()
+    );
   }
 
   private startTimer() {
     this.timerSub = timer(60000, 60000).subscribe(
       it => {
-        this.current.endTime = this.dateToSecondsOfDay(new Date());
-        this.editCurrent(this.current).subscribe();
+        const now = this.dateToSecondsOfDay(new Date());
+        if (now < this.current.endTime) {
+          this.timerSub.unsubscribe();
+          this.current.endTime = this.SECONDS_IN_DAY - 1;
+          const newTimeEntry = this.getNewCurrentEntry(this.current.category);
+          newTimeEntry.startTime = 0;
+          this.resetCurrent(newTimeEntry);
+        } else {
+          this.current.endTime = now;
+          this.editCurrent().subscribe();
+        }
       }
     );
   }
 
   stopTimeTracking() {
     this.timerSub.unsubscribe();
+    this.current.endTime = this.dateToSecondsOfDay(new Date());
     this.endCurrent();
   }
 

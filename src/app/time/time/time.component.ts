@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Subscription, timer} from 'rxjs';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { TimeService } from '../service/time.service';
@@ -14,7 +14,7 @@ import { Category } from '../../category/category';
   templateUrl: './time.component.html',
   styleUrls: ['./time.component.css']
 })
-export class TimeComponent implements OnInit {
+export class TimeComponent implements OnInit, OnDestroy {
   isLoaded = false;
   isTrackingTime = false;
   timeDisplay = 0;
@@ -23,6 +23,8 @@ export class TimeComponent implements OnInit {
   displayTimeLog = false;
   displayCategories = false;
   private timerSub: Subscription;
+  private entryChangedSub: Subscription;
+  private entryResetSub: Subscription;
 
   constructor(
     private timeService: TimeService,
@@ -33,9 +35,10 @@ export class TimeComponent implements OnInit {
 
   ngOnInit(): void {
     this.fetchCurrent();
-    this.initTotalDuration();
+    this.loadTotalDuration();
     this.loadCategory();
     this.displayMsgWhenEntrySaved();
+    this.resetTimerOnMidnight();
   }
 
   private fetchCurrent() {
@@ -43,7 +46,8 @@ export class TimeComponent implements OnInit {
       next => {
         if (next.length > 0) {
           this.category = next[0].category;
-          const duration = this.timeService.dateToSecondsOfDay(new Date()) - next[0].startTime;
+          const now = this.timeService.dateToSecondsOfDay(new Date());
+          const duration = now - next[0].startTime;
           this.timeDisplay = duration;
           this.totalDuration += duration;
           this.startCounter();
@@ -54,7 +58,7 @@ export class TimeComponent implements OnInit {
     );
   }
 
-  private initTotalDuration() {
+  private loadTotalDuration() {
     this.timeService.getTotalFinishedDuration(new Date()).subscribe(
       next => {
         this.totalDuration += next;
@@ -126,6 +130,20 @@ export class TimeComponent implements OnInit {
     );
   }
 
+  private resetTimerOnMidnight() {
+    this.entryResetSub = this.timeService.resetCurrentEvent.subscribe(
+      next => {
+        this.timerSub.unsubscribe();
+        const now = this.timeService.dateToSecondsOfDay(new Date());
+        const duration = now - next.startTime;
+        this.timeDisplay = duration;
+        this.totalDuration = duration;
+        this.loadTotalDuration();
+        this.startCounter();
+      }
+    );
+  }
+
   onDisplayTimeLog() {
     this.displayTimeLog = !this.displayTimeLog;
   }
@@ -138,7 +156,7 @@ export class TimeComponent implements OnInit {
   }
 
   private displayMsgWhenEntrySaved() {
-    this.timeService.entrySavedEvent.subscribe(
+    this.entryChangedSub = this.timeService.entrySavedEvent.subscribe(
       next => {
         if (next === Intent.add) {
           this.displayMessage('Entry saved');
@@ -149,6 +167,11 @@ export class TimeComponent implements OnInit {
 
   displayMessage(msg: string) {
     this.snackBar.open(msg, '', {duration: 2000} );
+  }
+
+  ngOnDestroy() {
+    this.entryChangedSub.unsubscribe();
+    this.entryResetSub.unsubscribe();
   }
 
 }
