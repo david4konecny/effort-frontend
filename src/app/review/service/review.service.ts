@@ -26,7 +26,7 @@ export class ReviewService {
   }
 
   getNewReview(date: Date): Review {
-    return { id: 0, date: this.timeService.toDateString(date), description: '', rating: 3 } as Review;
+    return { id: 0, date: this.timeService.toDateString(date), description: '', rating: 0 } as Review;
   }
 
 }

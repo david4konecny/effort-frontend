@@ -15,11 +15,9 @@
 
     <div>
       <h4>Rate your day</h4>
-      <button mat-button (click)="onDisplayForm()">
+      <button mat-button (click)="onDisplayForm()" style="margin-top: 5px;">
         <span><small>Bad</small></span>
-        <mat-slider disabled min="1" max="5" [value]="review.rating"
-                    thumbLabel
-                    style="width: 200px; padding: 0; margin: 0;"></mat-slider>
+        <mat-progress-bar id="rating-progress-bar" [value]="review.rating * 10"></mat-progress-bar>
         <span><small>Great</small></span>
       </button>
     </div>
@@ -37,7 +35,7 @@
     <div>
       <h4>Rate your day</h4>
       <span><small>Bad</small></span>
-      <mat-slider min="1" max="5"
+      <mat-slider min="0" max="10" color="primary"
                   thumbLabel formControlName="rating"
                   style="width: 200px; padding: 0; margin: 0;"></mat-slider>
       <span><small>Great</small></span>
@@ -45,8 +43,8 @@
 
     <mat-form-field style="width: 400px; height: 200px;">
       <mat-label>How was your day?</mat-label>
-      <textarea style="height: 100%; width: 100%; padding: 0.5rem;" mat-autosize matAutosizeMinRows="12"
-                matInput formControlName="description"></textarea>
+      <textarea style="height: 100%; width: 100%; padding: 0.5rem; line-height: 1.4;" mat-autosize matAutosizeMinRows="12"
+                matInput formControlName="description" maxlength="255"></textarea>
     </mat-form-field>
     <br>
     <div class="mt-3">

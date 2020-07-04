@@ -1,3 +1,10 @@
+#rating-progress-bar {
+  display: inline-block;
+  width: 184px;
+  padding: 0;
+  margin: 0.5rem;
+}
+
 #review-description {
   box-sizing: border-box;
   text-align: left;
