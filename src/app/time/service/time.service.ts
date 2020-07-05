@@ -94,6 +94,18 @@ export class TimeService {
     );
   }
 
+  private endCurrentAfterMidnight(newTimeEntry: TimeSession) {
+    const entry = this.current;
+    this.current = null;
+    this.deleteCurrentById(entry.id).subscribe(
+      next => {
+        entry.id = 0;
+        this.addFinished(entry).subscribe();
+        this.addFinished(newTimeEntry).subscribe();
+      }
+    );
+  }
+
   private resetCurrent(newTimeEntry: TimeSession) {
     const entry = this.current;
     this.current = null;
@@ -141,8 +153,17 @@ export class TimeService {
 
   stopTimeTracking() {
     this.timerSub.unsubscribe();
-    this.current.endTime = this.dateToSecondsOfDay(new Date());
-    this.endCurrent();
+    const now = this.dateToSecondsOfDay(new Date());
+    if (now < this.current.endTime) {
+      this.current.endTime = this.SECONDS_IN_DAY - 1;
+      const newTimeEntry = this.getNewCurrentEntry(this.current.category);
+      newTimeEntry.startTime = 0;
+      newTimeEntry.endTime = now;
+      this.endCurrentAfterMidnight(newTimeEntry);
+    } else {
+      this.current.endTime = now;
+      this.endCurrent();
+    }
   }
 
   getTotalDuration(date: Date): Observable<number> {
