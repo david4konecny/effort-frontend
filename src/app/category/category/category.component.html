@@ -15,7 +15,7 @@
       </button>
       <mat-menu #menu style="flex: initial;">
         <button mat-menu-item (click)="onEditCategory(c)">Edit</button>
-        <button mat-menu-item (click)="onDeleteCategory(c)">Delete</button>
+        <button mat-menu-item (click)="onDeleteCategory(c)" [disabled]="c.id === selectedCategory.id">Delete</button>
       </mat-menu>
     </div>
     </mat-list-item>
