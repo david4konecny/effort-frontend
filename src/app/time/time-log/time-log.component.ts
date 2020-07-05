@@ -6,6 +6,7 @@ import { MatDatepickerInputEvent } from '@angular/material/datepicker';
 import { MatDialog } from '@angular/material/dialog';
 import { TimeDialogComponent } from '../time-dialog/time-dialog.component';
 import { Intent } from '../../intent.enum';
+import { TimeUtil } from '../time-util';
 
 @Component({
   selector: 'app-time-log',
@@ -58,12 +59,12 @@ export class TimeLogComponent implements OnInit, OnDestroy {
   }
 
   onNextDay() {
-    this.date = this.timeService.getNextDay(this.date);
+    this.date = TimeUtil.getNextDay(this.date);
     this.loadTimeEntries();
   }
 
   onPreviousDay() {
-    this.date = this.timeService.getPreviousDay(this.date);
+    this.date = TimeUtil.getPreviousDay(this.date);
     this.loadTimeEntries();
   }
 

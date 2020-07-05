@@ -4,6 +4,7 @@ import { StatsService } from '../service/stats.service';
 import { MatDatepickerInputEvent } from '@angular/material/datepicker';
 import { Chart } from 'chart.js';
 import { Subscription } from 'rxjs';
+import { TimeUtil } from 'src/app/time/time-util';
 
 @Component({
   selector: 'app-week-stats',
@@ -44,8 +45,8 @@ export class WeekStatsComponent implements OnInit, OnDestroy {
     } else {
       dayOfWeek = this.date.getDay() - 1;
     }
-    this.startDate = this.timeService.subtractDays(this.date, dayOfWeek);
-    this.endDate = this.timeService.addDays(this.date, 6 - dayOfWeek);
+    this.startDate = TimeUtil.subtractDays(this.date, dayOfWeek);
+    this.endDate = TimeUtil.addDays(this.date, 6 - dayOfWeek);
   }
 
   onDateChanged(change: MatDatepickerInputEvent<Date>) {
@@ -54,18 +55,18 @@ export class WeekStatsComponent implements OnInit, OnDestroy {
   }
 
   onPreviousPeriodClick() {
-    this.setDates(this.timeService.subtractDays(this.date, 7));
+    this.setDates(TimeUtil.subtractDays(this.date, 7));
     this.loadData();
   }
 
   onNextPeriodClick() {
-    this.setDates(this.timeService.addDays(this.date, 7));
+    this.setDates(TimeUtil.addDays(this.date, 7));
     this.loadData();
   }
 
   private loadData() {
-    const start = this.timeService.toDateString(this.startDate);
-    const end = this.timeService.toDateString(this.endDate);
+    const start = TimeUtil.toDateString(this.startDate);
+    const end = TimeUtil.toDateString(this.endDate);
     this.loadChartData(start, end);
     this.loadStatsData(start, end);
   }
@@ -121,7 +122,7 @@ export class WeekStatsComponent implements OnInit, OnDestroy {
               labelString: 'total time'
             },
             ticks: {
-              callback: (value) => this.timeService.secondsOfDayToString(value),
+              callback: (value) => TimeUtil.secondsOfDayToString(value),
               min: 0
             },
             gridLines: {
@@ -136,7 +137,7 @@ export class WeekStatsComponent implements OnInit, OnDestroy {
         },
         tooltips: {
           callbacks: {
-            label: (tooltipItem) => this.timeService.secondsOfDayToString(tooltipItem.yLabel)
+            label: (tooltipItem) => TimeUtil.secondsOfDayToStringWithLetters(tooltipItem.yLabel)
           },
           displayColors: false
         },

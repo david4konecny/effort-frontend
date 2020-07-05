@@ -5,6 +5,7 @@ import {Subscription} from 'rxjs';
 import {DateTotal} from '../../time/date-total';
 import { Chart } from 'chart.js';
 import { TimeService } from '../../time/service/time.service';
+import { TimeUtil } from 'src/app/time/time-util';
 
 @Component({
   selector: 'app-month-stats',
@@ -58,7 +59,7 @@ export class MonthStatsComponent implements OnInit, OnDestroy {
 
   private loadStatsData() {
     this.statsService.getStatsForPeriod(
-      this.timeService.toDateString(this.startDate), this.timeService.toDateString(this.endDate)
+      TimeUtil.toDateString(this.startDate), TimeUtil.toDateString(this.endDate)
     ).subscribe(
     next => {
       this.totalTime = next.totalTime;
@@ -155,7 +156,7 @@ export class MonthStatsComponent implements OnInit, OnDestroy {
               labelString: 'total time'
             },
             ticks: {
-              callback: (value) => this.timeService.secondsOfDayToString(value),
+              callback: (value) => TimeUtil.secondsOfDayToString(value),
               min: 0
             },
             gridLines: {
@@ -173,7 +174,7 @@ export class MonthStatsComponent implements OnInit, OnDestroy {
         },
         tooltips: {
           callbacks: {
-            label: (tooltipItem) => this.timeService.secondsOfDayToString(tooltipItem.yLabel)
+            label: (tooltipItem) => TimeUtil.secondsOfDayToStringWithLetters(tooltipItem.yLabel)
           },
           displayColors: false
         },

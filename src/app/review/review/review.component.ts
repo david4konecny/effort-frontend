@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ReviewService } from '../service/review.service';
 import { TimeService } from '../../time/service/time.service';
 import { MatDatepickerInputEvent } from '@angular/material/datepicker';
+import { TimeUtil } from 'src/app/time/time-util';
 
 @Component({
   selector: 'app-review',
@@ -67,12 +68,12 @@ export class ReviewComponent implements OnInit {
   }
 
   onGetReviewForPreviousDay() {
-    this.date = this.timeService.getPreviousDay(this.date);
+    this.date = TimeUtil.getPreviousDay(this.date);
     this.loadReview();
   }
 
   onGetReviewForNextDay() {
-    this.date = this.timeService.getNextDay(this.date);
+    this.date = TimeUtil.getNextDay(this.date);
     this.loadReview();
   }
 

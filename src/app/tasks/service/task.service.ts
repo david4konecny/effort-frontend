@@ -3,6 +3,7 @@ import {Task} from '../task';
 import {Observable, of} from 'rxjs';
 import {HttpClient, HttpParams} from '@angular/common/http';
 import {TimeService} from '../../time/service/time.service';
+import { TimeUtil } from 'src/app/time/time-util';
 
 @Injectable({
   providedIn: 'root'
@@ -16,7 +17,7 @@ export class TaskService {
   }
 
   getTasks(date: Date): Observable<Task[]> {
-    const options = { params: new HttpParams().set('date', this.timeService.toDateString(date)) };
+    const options = { params: new HttpParams().set('date', TimeUtil.toDateString(date)) };
     return this.http.get<Task[]>(this.url, options);
   }
 

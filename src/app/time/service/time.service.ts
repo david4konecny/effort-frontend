@@ -5,6 +5,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { tap } from 'rxjs/operators';
 import { Category } from '../../category/category';
 import { Intent } from 'src/app/intent.enum';
+import { TimeUtil } from '../time-util';
 
 @Injectable({
   providedIn: 'root'
@@ -13,7 +14,6 @@ export class TimeService {
   private url = '//localhost:8080/api/time';
   private timerSub: Subscription;
   private current: TimeSession;
-  private ONE_DAY_IN_MILLIS = 24 * 60 * 60 * 1000;
   private SECONDS_IN_DAY = 24 * 60 * 60;
   entrySavedEvent = new EventEmitter<Intent>();
   resetCurrentEvent = new EventEmitter<TimeSession>();
@@ -32,7 +32,7 @@ export class TimeService {
       tap(next => {
         if (next.length > 0) {
           this.current = next[0];
-          this.current.endTime = this.dateToSecondsOfDay(new Date());
+          this.current.endTime = TimeUtil.dateToSecondsOfDay(new Date());
           this.startTimer();
         }
       })
@@ -40,7 +40,7 @@ export class TimeService {
   }
 
   getEntriesByDate(date: Date): Observable<TimeSession[]> {
-    const options = { params: new HttpParams().set('date', this.toDateString(date)) };
+    const options = { params: new HttpParams().set('date', TimeUtil.toDateString(date)) };
     return this.http.get<TimeSession[]>(`${this.url}/finished`, options);
   }
 
@@ -136,7 +136,7 @@ export class TimeService {
   private startTimer() {
     this.timerSub = timer(60000, 60000).subscribe(
       it => {
-        const now = this.dateToSecondsOfDay(new Date());
+        const now = TimeUtil.dateToSecondsOfDay(new Date());
         if (now < this.current.endTime) {
           this.timerSub.unsubscribe();
           this.current.endTime = this.SECONDS_IN_DAY - 1;
@@ -153,7 +153,7 @@ export class TimeService {
 
   stopTimeTracking() {
     this.timerSub.unsubscribe();
-    const now = this.dateToSecondsOfDay(new Date());
+    const now = TimeUtil.dateToSecondsOfDay(new Date());
     if (now < this.current.endTime) {
       this.current.endTime = this.SECONDS_IN_DAY - 1;
       const newTimeEntry = this.getNewCurrentEntry(this.current.category);
@@ -167,68 +167,25 @@ export class TimeService {
   }
 
   getTotalDuration(date: Date): Observable<number> {
-    const options = { params: new HttpParams().set('date', this.toDateString(date)) };
+    const options = { params: new HttpParams().set('date', TimeUtil.toDateString(date)) };
     return this.http.get<number>(`${this.url}/total`, options);
   }
 
   getTotalFinishedDuration(date: Date): Observable<number> {
-    const options = { params: new HttpParams().set('date', this.toDateString(date)) };
+    const options = { params: new HttpParams().set('date', TimeUtil.toDateString(date)) };
     return this.http.get<number>(`${this.url}/finished/total`, options);
   }
 
   private getNewCurrentEntry(category: Category): TimeSession {
     const d = new Date();
-    const placeholderTime = this.dateToSecondsOfDay(d);
-    return { id: 0, date: this.toDateString(d), category, startTime: placeholderTime, endTime: placeholderTime } as TimeSession;
+    const placeholderTime = TimeUtil.dateToSecondsOfDay(d);
+    return { id: 0, date: TimeUtil.toDateString(d), category, startTime: placeholderTime, endTime: placeholderTime } as TimeSession;
   }
 
   getNewTimeSession(category: Category): TimeSession {
     const d = new Date();
-    const placeholderTime = TimeService.toSecondsOfDay(`${d.getHours()}-${d.getMinutes()}`);
-    return { id: 0, date: this.toDateString(d), category, startTime: placeholderTime, endTime: placeholderTime } as TimeSession;
-  }
-
-  toDateString(date: Date): string {
-    const year = date.getFullYear();
-    const month = `${date.getMonth() + 1}`.padStart(2, '0');
-    const day = `${date.getDate()}`.padStart(2, '0');
-    return `${year}-${month}-${day}`;
-  }
-
-  secondsOfDayToString(seconds: number) {
-    const h = `${Math.floor(seconds / 3600)}`.padStart(2, '0');
-    const m = `${Math.floor(seconds / 60) % 60}`.padStart(2, '0');
-    return `${h}:${m}`;
-  }
-
-  static toSecondsOfDay(time: string) {
-    const h = +time.slice(0, 2);
-    const m = +time.slice(3);
-    return h * 3600 + m * 60;
-  }
-
-  dateToSecondsOfDay(date: Date) {
-    return (date.getHours() * 3600) + (date.getMinutes() * 60) + date.getSeconds();
-  }
-
-  getNextDay(date: Date) {
-    const dateInMillis = date.getTime();
-    return new Date(dateInMillis + this.ONE_DAY_IN_MILLIS);
-  }
-
-  getPreviousDay(date: Date) {
-    const dateInMillis = date.getTime();
-    return new Date(dateInMillis - this.ONE_DAY_IN_MILLIS);
-  }
-
-  addDays(date: Date, days: number) {
-    const dateInMillis = date.getTime();
-    return new Date(dateInMillis + (this.ONE_DAY_IN_MILLIS * days));
-  }
-
-  subtractDays(date: Date, days: number) {
-    const dateInMillis = date.getTime();
-    return new Date(dateInMillis - (this.ONE_DAY_IN_MILLIS * days));
+    const placeholderTime = TimeUtil.toSecondsOfDay(`${d.getHours()}-${d.getMinutes()}`);
+    return { id: 0, date: TimeUtil.toDateString(d), category, startTime: placeholderTime, endTime: placeholderTime } as TimeSession;
   }
 
 }

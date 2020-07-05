@@ -9,6 +9,7 @@ import {TimeService} from '../../time/service/time.service';
 import {Intent} from '../../intent.enum';
 import {MatDatepickerInputEvent} from '@angular/material/datepicker';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
+import { TimeUtil } from 'src/app/time/time-util';
 
 @Component({
   selector: 'app-tasks',
@@ -45,7 +46,7 @@ export class TasksComponent implements OnInit, OnDestroy {
 
   openDialog(action: Intent, task?: Task) {
     if (!task) {
-      task = { id: 0, date: this.timeService.toDateString(this.date), description: '', finished: false} as Task;
+      task = { id: 0, date: TimeUtil.toDateString(this.date), description: '', finished: false} as Task;
     }
     const dialogRef = this.dialog.open(
       TaskDialogComponent,
@@ -97,7 +98,7 @@ export class TasksComponent implements OnInit, OnDestroy {
     }
     this.taskService.addTask(task).subscribe(
       next => {
-        if (task.date === this.timeService.toDateString(this.date)) {
+        if (task.date === TimeUtil.toDateString(this.date)) {
           this.tasks.push(next);
         }
       }
@@ -107,7 +108,7 @@ export class TasksComponent implements OnInit, OnDestroy {
   private editTask(task: Task) {
     this.taskService.editTask(task).subscribe(
       next => {
-        if (task.date !== this.timeService.toDateString(new Date())) {
+        if (task.date !== TimeUtil.toDateString(new Date())) {
           this.removeTaskFromList(task);
         }
       }
@@ -125,12 +126,12 @@ export class TasksComponent implements OnInit, OnDestroy {
   }
 
   getTasksForNextDay() {
-    this.date = this.timeService.getNextDay(this.date);
+    this.date = TimeUtil.getNextDay(this.date);
     this.reloadTasks();
   }
 
   getTasksForPreviousDay() {
-    this.date = this.timeService.getPreviousDay(this.date);
+    this.date = TimeUtil.getPreviousDay(this.date);
     this.reloadTasks();
   }
 

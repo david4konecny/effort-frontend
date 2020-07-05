@@ -3,6 +3,7 @@ import { Review } from '../review';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { TimeService } from '../../time/service/time.service';
 import { Observable } from 'rxjs';
+import { TimeUtil } from 'src/app/time/time-util';
 
 @Injectable({
   providedIn: 'root'
@@ -17,7 +18,7 @@ export class ReviewService {
   }
 
   getReview(date: Date): Observable<Review[]> {
-    const options = { params: new HttpParams().set('date', this.timeService.toDateString(date)) };
+    const options = { params: new HttpParams().set('date', TimeUtil.toDateString(date)) };
     return this.http.get<Review[]>(this.url, options);
   }
 
@@ -26,7 +27,7 @@ export class ReviewService {
   }
 
   getNewReview(date: Date): Review {
-    return { id: 0, date: this.timeService.toDateString(date), description: '', rating: 0 } as Review;
+    return { id: 0, date: TimeUtil.toDateString(date), description: '', rating: 0 } as Review;
   }
 
 }

@@ -3,6 +3,7 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { TimeService } from '../../time/service/time.service';
 import {Intent} from '../../intent.enum';
+import { TimeUtil } from 'src/app/time/time-util';
 
 @Component({
   selector: 'app-task-dialog',
@@ -34,7 +35,7 @@ export class TaskDialogComponent implements OnInit {
 
   onSubmit() {
     if (typeof this.taskForm.value.date === 'object') {
-      this.data.task.date = this.timeService.toDateString(this.taskForm.value.date);
+      this.data.task.date = TimeUtil.toDateString(this.taskForm.value.date);
     }
     this.data.task.description = this.taskForm.value.description;
     this.dialogRef.close(this.data.task);

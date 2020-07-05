@@ -8,6 +8,7 @@ import { Intent } from '../../intent.enum';
 import { TimeSession } from '../time-session';
 import { CategoryService } from '../../category/service/category.service';
 import { Category } from '../../category/category';
+import { TimeUtil } from '../time-util';
 
 @Component({
   selector: 'app-time',
@@ -46,7 +47,7 @@ export class TimeComponent implements OnInit, OnDestroy {
       next => {
         if (next.length > 0) {
           this.category = next[0].category;
-          const now = this.timeService.dateToSecondsOfDay(new Date());
+          const now = TimeUtil.dateToSecondsOfDay(new Date());
           const duration = now - next[0].startTime;
           this.timeDisplay = duration;
           this.totalDuration += duration;
@@ -123,7 +124,7 @@ export class TimeComponent implements OnInit, OnDestroy {
   private addNewTimeEntry(entry: TimeSession) {
     this.timeService.addFinished(entry).subscribe(
       next => {
-        if (next.date === this.timeService.toDateString(new Date())) {
+        if (next.date === TimeUtil.toDateString(new Date())) {
           this.totalDuration += next.duration;
         }
       }
@@ -134,7 +135,7 @@ export class TimeComponent implements OnInit, OnDestroy {
     this.entryResetSub = this.timeService.resetCurrentEvent.subscribe(
       next => {
         this.timerSub.unsubscribe();
-        const now = this.timeService.dateToSecondsOfDay(new Date());
+        const now = TimeUtil.dateToSecondsOfDay(new Date());
         const duration = now - next.startTime;
         this.timeDisplay = duration;
         this.totalDuration = duration;
