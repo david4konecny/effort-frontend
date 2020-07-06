@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ReviewService } from '../service/review.service';
-import { TimeService } from '../../time/service/time.service';
 import { MatDatepickerInputEvent } from '@angular/material/datepicker';
 import { TimeUtil } from 'src/app/time/time-util';
 
@@ -18,7 +17,6 @@ export class ReviewComponent implements OnInit {
 
   constructor(
     private reviewService: ReviewService,
-    private timeService: TimeService,
     private formBuilder: FormBuilder
   ) { }
 
@@ -59,9 +57,25 @@ export class ReviewComponent implements OnInit {
   onSubmit() {
     this.review.rating = this.reviewForm.value.rating;
     this.review.description = this.reviewForm.value.description;
-    this.reviewService.saveReview(this.review).subscribe(
+    if (this.review.id === 0) {
+      this.addReview();
+    } else {
+      this.editReview();
+    }
+  }
+
+  private addReview() {
+    this.reviewService.addReview(this.review).subscribe(
       next => {
         this.review = next;
+        this.isEditingForm = false;
+      }
+    );
+  }
+
+  private editReview() {
+    this.reviewService.editReview(this.review).subscribe(
+      next => {
         this.isEditingForm = false;
       }
     );
