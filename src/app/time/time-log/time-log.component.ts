@@ -52,9 +52,9 @@ export class TimeLogComponent implements OnInit, OnDestroy {
   private editTimeEntry(entry: TimeSession, oldDuration: number) {
     this.timeService.editFinished(entry).subscribe(
       next => {
-        entry.duration = next.duration;
-        if (next.date === TimeUtil.toDateString(new Date())) {
-          this.durationChangeEvent.emit(next.duration - oldDuration);
+        entry.duration = entry.endTime - entry.startTime;
+        if (entry.date === TimeUtil.toDateString(new Date())) {
+          this.durationChangeEvent.emit(entry.duration - oldDuration);
         }
       }
     );

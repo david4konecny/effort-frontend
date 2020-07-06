@@ -56,14 +56,14 @@ export class TimeService {
     );
   }
 
-  editFinished(entry: TimeSession): Observable<TimeSession> {
-    return this.http.put<TimeSession>(`${this.url}/finished`, entry).pipe(
+  editFinished(entry: TimeSession): Observable<void> {
+    return this.http.put<void>(`${this.url}/finished`, entry).pipe(
       tap(_ => this.entrySavedEvent.emit(Intent.edit))
     );
   }
 
-  private editCurrent(): Observable<TimeSession> {
-    return this.http.put<TimeSession>(`${this.url}/current`, this.current).pipe(
+  private editCurrent(): Observable<void> {
+    return this.http.put<void>(`${this.url}/current`, this.current).pipe(
       tap(_ => this.entrySavedEvent.emit(Intent.edit))
     );
   }
@@ -75,12 +75,12 @@ export class TimeService {
     }
   }
 
-  deleteFinishedById(id: number): Observable<any> {
-    return this.http.delete(`${this.url}/finished/${id}`);
+  deleteFinishedById(id: number): Observable<void> {
+    return this.http.delete<void>(`${this.url}/finished/${id}`);
   }
 
-  deleteCurrentById(id: number): Observable<any> {
-    return this.http.delete(`${this.url}/current/${id}`);
+  deleteCurrentById(id: number): Observable<void> {
+    return this.http.delete<void>(`${this.url}/current/${id}`);
   }
 
   private endCurrent() {
