@@ -7,6 +7,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { TimeDialogComponent } from '../time-dialog/time-dialog.component';
 import { Intent } from '../../intent.enum';
 import { TimeUtil } from '../time-util';
+import { CategoryService } from 'src/app/category/service/category.service';
 
 @Component({
   selector: 'app-time-log',
@@ -19,8 +20,10 @@ export class TimeLogComponent implements OnInit, OnDestroy {
   @Output()
   durationChangeEvent = new EventEmitter<number>();
   private entryChangedSub: Subscription;
+  private categoryChangedSub: Subscription;
 
   constructor(
+    private categoryService: CategoryService,
     private timeService: TimeService,
     public dialog: MatDialog
   ) { }
@@ -28,6 +31,7 @@ export class TimeLogComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.loadTimeEntries();
     this.reloadEntriesOnChange();
+    this.reloadOnCategoryChange();
   }
 
   private loadTimeEntries() {
@@ -90,6 +94,12 @@ export class TimeLogComponent implements OnInit, OnDestroy {
     );
   }
 
+  private reloadOnCategoryChange() {
+    this.categoryChangedSub = this.categoryService.categoryChanged.subscribe(
+      _ => this.loadTimeEntries()
+    );
+  }
+
   getStyleObject(color: string) {
     return {
       'border-color': color,
@@ -107,6 +117,9 @@ export class TimeLogComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     if (this.entryChangedSub) {
       this.entryChangedSub.unsubscribe();
+    }
+    if (this.categoryChangedSub) {
+      this.categoryChangedSub.unsubscribe();
     }
   }
 

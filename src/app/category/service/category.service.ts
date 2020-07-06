@@ -1,13 +1,15 @@
-import {Injectable} from '@angular/core';
-import {HttpClient} from '@angular/common/http';
-import {Observable} from 'rxjs';
-import {Category} from '../category';
+import { Injectable, EventEmitter } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import { Category } from '../category';
+import { tap } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
 })
 export class CategoryService {
   private url = '//localhost:8080/api/categories';
+  categoryChanged = new EventEmitter();
 
   constructor(
     private http: HttpClient
@@ -22,7 +24,11 @@ export class CategoryService {
   }
 
   edit(category: Category): Observable<void> {
-    return this.http.put<void>(this.url, category);
+    return this.http.put<void>(this.url, category).pipe(
+      tap(
+        next => this.categoryChanged.emit()
+      )
+    );
   }
 
   deleteById(id: number): Observable<void> {
