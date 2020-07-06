@@ -21,6 +21,6 @@
   <br>
   <p>Today total: {{totalDuration | time:true}}</p>
   <div *ngIf="displayTimeLog" class="mb-3 mx-auto mat-elevation-z5 p-3 popup">
-    <app-time-log></app-time-log>
+    <app-time-log (durationChangeEvent)="onDurationChange($event)"></app-time-log>
   </div>
 </div>

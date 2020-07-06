@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, Output, EventEmitter } from '@angular/core';
 import { TimeService } from '../service/time.service';
 import { TimeSession } from '../time-session';
 import { Subscription } from 'rxjs';
@@ -16,6 +16,8 @@ import { TimeUtil } from '../time-util';
 export class TimeLogComponent implements OnInit, OnDestroy {
   timeEntries: TimeSession[];
   date = new Date();
+  @Output()
+  durationChangeEvent = new EventEmitter<number>();
   private entryChangedSub: Subscription;
 
   constructor(
@@ -34,22 +36,26 @@ export class TimeLogComponent implements OnInit, OnDestroy {
     );
   }
 
-  onOpenEditDialog(timeEntry: TimeSession) {
+  onOpenEditDialog(entry: TimeSession) {
+    const oldDuration = entry.duration;
     const dialogRef = this.dialog.open(
       TimeDialogComponent,
-      { height: '350', width: '400px', data: { action: Intent.edit , timeSession: timeEntry }});
+      { height: '350', width: '400px', data: { action: Intent.edit , timeSession: entry }});
     dialogRef.afterClosed().subscribe(
       result => {
         if (result) {
-          this.editTimeEntry(result);
+          this.editTimeEntry(result, oldDuration);
         }
       });
   }
 
-  private editTimeEntry(entry: TimeSession) {
+  private editTimeEntry(entry: TimeSession, oldDuration: number) {
     this.timeService.editFinished(entry).subscribe(
       next => {
         entry.duration = next.duration;
+        if (next.date === TimeUtil.toDateString(new Date())) {
+          this.durationChangeEvent.emit(next.duration - oldDuration);
+        }
       }
     );
   }
@@ -77,6 +83,9 @@ export class TimeLogComponent implements OnInit, OnDestroy {
     this.timeService.deleteFinishedById(entry.id).subscribe(
       next => {
         this.loadTimeEntries();
+        if (entry.date === TimeUtil.toDateString(new Date())) {
+          this.durationChangeEvent.emit(-entry.duration);
+        }
       }
     );
   }

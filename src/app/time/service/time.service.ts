@@ -184,7 +184,8 @@ export class TimeService {
 
   getNewTimeSession(category: Category): TimeSession {
     const d = new Date();
-    const placeholderTime = TimeUtil.toSecondsOfDay(`${d.getHours()}-${d.getMinutes()}`);
+    const hours = `${d.getHours()}`.padStart(2, '0');
+    const placeholderTime = TimeUtil.toSecondsOfDay(`${hours}-${d.getMinutes()}`);
     return { id: 0, date: TimeUtil.toDateString(d), category, startTime: placeholderTime, endTime: placeholderTime } as TimeSession;
   }
 

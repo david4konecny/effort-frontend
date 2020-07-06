@@ -156,6 +156,14 @@ export class TimeComponent implements OnInit, OnDestroy {
     this.category = category;
   }
 
+  onDurationChange(change: number) {
+    if (-change > this.totalDuration) {
+      this.totalDuration = 0;
+    } else {
+      this.totalDuration += change;
+    }
+  }
+
   private displayMsgWhenEntrySaved() {
     this.entryChangedSub = this.timeService.entrySavedEvent.subscribe(
       next => {
