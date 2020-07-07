@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy, Output, EventEmitter } from '@angular/core';
 import { TimeService } from '../service/time.service';
-import { TimeSession } from '../time-session';
+import { TimeEntry } from '../time-entry';
 import { Subscription } from 'rxjs';
 import { MatDatepickerInputEvent } from '@angular/material/datepicker';
 import { MatDialog } from '@angular/material/dialog';
@@ -15,7 +15,7 @@ import { CategoryService } from 'src/app/category/service/category.service';
   styleUrls: ['./time-log.component.css']
 })
 export class TimeLogComponent implements OnInit, OnDestroy {
-  timeEntries: TimeSession[];
+  timeEntries: TimeEntry[];
   date = new Date();
   @Output()
   durationChangeEvent = new EventEmitter<number>();
@@ -40,7 +40,7 @@ export class TimeLogComponent implements OnInit, OnDestroy {
     );
   }
 
-  onOpenEditDialog(entry: TimeSession) {
+  onOpenEditDialog(entry: TimeEntry) {
     const oldDuration = entry.duration;
     const dialogRef = this.dialog.open(
       TimeDialogComponent,
@@ -53,7 +53,7 @@ export class TimeLogComponent implements OnInit, OnDestroy {
       });
   }
 
-  private editTimeEntry(entry: TimeSession, oldDuration: number) {
+  private editTimeEntry(entry: TimeEntry, oldDuration: number) {
     this.timeService.editFinished(entry).subscribe(
       next => {
         entry.duration = entry.endTime - entry.startTime;
@@ -83,7 +83,7 @@ export class TimeLogComponent implements OnInit, OnDestroy {
     this.loadTimeEntries();
   }
 
-  onDeleteEntry(entry: TimeSession) {
+  onDeleteEntry(entry: TimeEntry) {
     this.timeService.deleteFinishedById(entry.id).subscribe(
       next => {
         this.loadTimeEntries();

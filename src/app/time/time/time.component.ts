@@ -5,7 +5,7 @@ import { TimeService } from '../service/time.service';
 import { MatDialog } from '@angular/material/dialog';
 import { TimeDialogComponent } from '../time-dialog/time-dialog.component';
 import { Intent } from '../../intent.enum';
-import { TimeSession } from '../time-session';
+import { TimeEntry } from '../time-entry';
 import { CategoryService } from '../../category/service/category.service';
 import { Category } from '../../category/category';
 import { TimeUtil } from '../time-util';
@@ -62,7 +62,7 @@ export class TimeComponent implements OnInit, OnDestroy {
     );
   }
 
-  private resumeCurrentEntry(entry: TimeSession) {
+  private resumeCurrentEntry(entry: TimeEntry) {
     this.category = entry.category;
     const now = TimeUtil.dateToSecondsOfDay(new Date());
     const duration = now - entry.startTime;
@@ -79,14 +79,14 @@ export class TimeComponent implements OnInit, OnDestroy {
     });
   }
 
-  private openCurrentEntryRecoveryDialog(entry: TimeSession) {
+  private openCurrentEntryRecoveryDialog(entry: TimeEntry) {
     const dialog = this.dialog.open(ConfirmationDialogComponent, this.getRecoveryDialogConfig(entry));
     dialog.afterClosed().subscribe(
       result => this.onCurrentDialogClosed(result, entry)
     );
   }
 
-  private onCurrentDialogClosed(editEntry: boolean, entry: TimeSession) {
+  private onCurrentDialogClosed(editEntry: boolean, entry: TimeEntry) {
     if (editEntry) {
       this.openEditDialog(entry);
     } else {
@@ -130,10 +130,10 @@ export class TimeComponent implements OnInit, OnDestroy {
     this.timerSub.unsubscribe();
   }
 
-  openEditDialog(entry?: TimeSession) {
+  openEditDialog(entry?: TimeEntry) {
     const intent = entry ? Intent.edit : Intent.add;
     if (!entry) {
-      entry = this.timeService.getNewTimeSession(this.category);
+      entry = this.timeService.getNewTimeEntry(this.category);
     }
     const dialog = this.dialog.open(TimeDialogComponent, this.getEditDialogConfig(entry, intent));
     dialog.afterClosed().subscribe(
@@ -141,7 +141,7 @@ export class TimeComponent implements OnInit, OnDestroy {
     );
   }
 
-  private onEditDialogClosed(result: TimeSession, intent: Intent) {
+  private onEditDialogClosed(result: TimeEntry, intent: Intent) {
     if (result) {
       if (intent === Intent.add) {
         this.addNewTimeEntry(result);
@@ -151,7 +151,7 @@ export class TimeComponent implements OnInit, OnDestroy {
     }
   }
 
-  private addNewTimeEntry(entry: TimeSession) {
+  private addNewTimeEntry(entry: TimeEntry) {
     this.timeService.addFinished(entry).subscribe(
       next => {
         if (next.date === TimeUtil.toDateString(new Date())) {
@@ -161,7 +161,7 @@ export class TimeComponent implements OnInit, OnDestroy {
     );
   }
 
-  private endCurrent(entry: TimeSession) {
+  private endCurrent(entry: TimeEntry) {
     this.timeService.deleteCurrentById(entry.id).subscribe(
       next => {
         entry.id = 0;
@@ -226,7 +226,7 @@ export class TimeComponent implements OnInit, OnDestroy {
     this.snackBar.open(msg, '', {duration: 2000} );
   }
 
-  private getRecoveryDialogConfig(entry: TimeSession) {
+  private getRecoveryDialogConfig(entry: TimeEntry) {
     return {
       height: '200px', width: '400px',
       data: {
@@ -238,8 +238,8 @@ export class TimeComponent implements OnInit, OnDestroy {
     };
   }
 
-  private getEditDialogConfig(entry: TimeSession, intent: Intent) {
-    return { height: '350px', width: '400px', data: { action: intent, timeSession: entry }};
+  private getEditDialogConfig(entry: TimeEntry, intent: Intent) {
+    return { height: '350px', width: '400px', data: { action: intent, timeEntry: entry }};
   }
 
   ngOnDestroy() {

@@ -40,15 +40,15 @@ export class TimeDialogComponent implements OnInit {
 
   private setUpForm() {
     this.form = this.formBuilder.group({
-      date: [this.data.timeSession.date, Validators.required],
+      date: [this.data.timeEntry.date, Validators.required],
       category: [this.findInitialCategoryFromOptions(), Validators.required],
-      startTime: [TimeUtil.secondsOfDayToString(this.data.timeSession.startTime), Validators.required],
-      endTime: [TimeUtil.secondsOfDayToString(this.data.timeSession.endTime), Validators.required]
+      startTime: [TimeUtil.secondsOfDayToString(this.data.timeEntry.startTime), Validators.required],
+      endTime: [TimeUtil.secondsOfDayToString(this.data.timeEntry.endTime), Validators.required]
     }, { validators: timeValidator });
   }
 
   onSubmit() {
-    const result = this.data.timeSession;
+    const result = this.data.timeEntry;
     if (typeof this.form.value.date === 'string') {
       result.date = this.form.value.date;
     } else {
@@ -61,7 +61,7 @@ export class TimeDialogComponent implements OnInit {
   }
 
   private findInitialCategoryFromOptions(): Category {
-    return this.categories.find(it => it.id === this.data.timeSession.category.id);
+    return this.categories.find(it => it.id === this.data.timeEntry.category.id);
   }
 
 }

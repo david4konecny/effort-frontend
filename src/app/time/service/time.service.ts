@@ -1,5 +1,5 @@
 import { Injectable, EventEmitter } from '@angular/core';
-import { TimeSession } from '../time-session';
+import { TimeEntry } from '../time-entry';
 import { Observable, timer, Subscription, of } from 'rxjs';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { tap } from 'rxjs/operators';
@@ -13,67 +13,64 @@ import { TimeUtil } from '../time-util';
 export class TimeService {
   private url = '//localhost:8080/api/time';
   private timerSub: Subscription;
-  private current: TimeSession;
+  private current: TimeEntry;
   private SECONDS_IN_DAY = 86400;
   entrySavedEvent = new EventEmitter<Intent>();
-  resetCurrentEvent = new EventEmitter<TimeSession>();
+  resetCurrentEvent = new EventEmitter<TimeEntry>();
 
   constructor(
     private http: HttpClient
   ) { }
 
-  getCurrent(): Observable<TimeSession[]> {
+  getCurrent(): Observable<TimeEntry[]> {
     if (this.current) {
-      const res = new Array<TimeSession>();
-      res.push(this.current);
-      return of(res);
+      return of([this.current]);
     }
-    return this.http.get<TimeSession[]>(`${this.url}/current`).pipe(
+    return this.http.get<TimeEntry[]>(`${this.url}/current`).pipe(
       tap(next => {
         if (next.length) {
-          const entry = next[0];
-          const today = new Date();
-          if (entry.date === TimeUtil.toDateString(today)) {
-            this.resumeEntryFromToday(entry);
-          } else {
-            const yesterday = TimeUtil.getPreviousDay(today);
-            if (entry.date === TimeUtil.toDateString(yesterday)) {
-              this.current = entry;
-              this.current.endTime = this.SECONDS_IN_DAY - 1;
-              const newTimeEntry = this.getNewCurrentEntry(this.current.category);
-              newTimeEntry.startTime = 0;
-              this.resumeFromPreviousDay(newTimeEntry);
-            }
-          }
+          this.resumeCurrentEntry(next[0]);
         }
       })
     );
   }
 
-  private resumeEntryFromToday(entry: TimeSession) {
+  private resumeCurrentEntry(entry: TimeEntry) {
+    const today = new Date();
+    if (entry.date === TimeUtil.toDateString(today)) {
+      this.resumeEntryFromToday(entry);
+    } else {
+      const yesterday = TimeUtil.getPreviousDay(today);
+      if (entry.date === TimeUtil.toDateString(yesterday)) {
+        this.resumeFromYesterday(entry);
+      }
+    }
+  }
+
+  private resumeEntryFromToday(entry: TimeEntry) {
     this.current = entry;
     this.current.endTime = TimeUtil.dateToSecondsOfDay(new Date());
     this.startTimer();
   }
 
-  getEntriesByDate(date: Date): Observable<TimeSession[]> {
+  getEntriesByDate(date: Date): Observable<TimeEntry[]> {
     const options = { params: new HttpParams().set('date', TimeUtil.toDateString(date)) };
-    return this.http.get<TimeSession[]>(`${this.url}/finished`, options);
+    return this.http.get<TimeEntry[]>(`${this.url}/finished`, options);
   }
 
-  private addCurrent(entry: TimeSession): Observable<TimeSession> {
-    return this.http.post<TimeSession>(`${this.url}/current`, entry).pipe(
+  private addCurrent(entry: TimeEntry): Observable<TimeEntry> {
+    return this.http.post<TimeEntry>(`${this.url}/current`, entry).pipe(
       tap(next => this.current = next)
     );
   }
 
-  addFinished(entry: TimeSession): Observable<TimeSession> {
-    return this.http.post<TimeSession>(`${this.url}/finished`, entry).pipe(
+  addFinished(entry: TimeEntry): Observable<TimeEntry> {
+    return this.http.post<TimeEntry>(`${this.url}/finished`, entry).pipe(
       tap(_ => this.entrySavedEvent.emit(Intent.add))
     );
   }
 
-  editFinished(entry: TimeSession): Observable<void> {
+  editFinished(entry: TimeEntry): Observable<void> {
     return this.http.put<void>(`${this.url}/finished`, entry).pipe(
       tap(_ => this.entrySavedEvent.emit(Intent.edit))
     );
@@ -100,7 +97,7 @@ export class TimeService {
     return this.http.delete<void>(`${this.url}/current/${id}`);
   }
 
-  private endCurrent() {
+  private stopCurrentEntry() {
     const entry = this.current;
     this.current = null;
     this.deleteCurrentById(entry.id).subscribe(
@@ -111,27 +108,33 @@ export class TimeService {
     );
   }
 
-  private endCurrentAfterMidnight(newTimeEntry: TimeSession) {
-    const entry = this.current;
+  private stopCurrentEntryAfterMidnight(todayEntry: TimeEntry) {
+    const yesterdayEntry = this.current;
     this.current = null;
-    this.deleteCurrentById(entry.id).subscribe(
+    this.deleteCurrentById(yesterdayEntry.id).subscribe(
       next => {
-        entry.id = 0;
-        this.addFinished(entry).subscribe();
-        this.addFinished(newTimeEntry).subscribe();
+        yesterdayEntry.id = 0;
+        this.addFinished(yesterdayEntry).subscribe();
+        this.addFinished(todayEntry).subscribe();
       }
     );
   }
 
-  private resumeFromPreviousDay(newTimeEntry: TimeSession) {
-    const entry = this.current;
+  private resumeFromYesterday(yesterdayEntry: TimeEntry) {
+    yesterdayEntry.endTime = this.SECONDS_IN_DAY - 1;
+    const todayEntry = this.getNewCurrentEntry(this.current.category);
+    todayEntry.startTime = 0;
     this.current = null;
+    this.startNewEntry(yesterdayEntry, todayEntry);
+  }
+
+  private startNewEntry(entry: TimeEntry, newEntry: TimeEntry) {
     this.deleteCurrentById(entry.id).subscribe(
       next => {
         entry.id = 0;
         this.addFinished(entry).subscribe(
           next => {
-            this.addCurrent(newTimeEntry).subscribe(
+            this.addCurrent(newEntry).subscribe(
               next => {
                 this.startTimer();
                 this.resetCurrentEvent.emit(next);
@@ -154,12 +157,10 @@ export class TimeService {
     this.timerSub = timer(60000, 60000).subscribe(
       it => {
         const now = TimeUtil.dateToSecondsOfDay(new Date());
-        if (now < this.current.endTime) {
+        const isNewDay = now < this.current.endTime;
+        if (isNewDay) {
           this.timerSub.unsubscribe();
-          this.current.endTime = this.SECONDS_IN_DAY - 1;
-          const newTimeEntry = this.getNewCurrentEntry(this.current.category);
-          newTimeEntry.startTime = 0;
-          this.resumeFromPreviousDay(newTimeEntry);
+          this.resumeFromYesterday(this.current);
         } else {
           this.current.endTime = now;
           this.editCurrent().subscribe();
@@ -176,10 +177,10 @@ export class TimeService {
       const newTimeEntry = this.getNewCurrentEntry(this.current.category);
       newTimeEntry.startTime = 0;
       newTimeEntry.endTime = now;
-      this.endCurrentAfterMidnight(newTimeEntry);
+      this.stopCurrentEntryAfterMidnight(newTimeEntry);
     } else {
       this.current.endTime = now;
-      this.endCurrent();
+      this.stopCurrentEntry();
     }
   }
 
@@ -193,17 +194,15 @@ export class TimeService {
     return this.http.get<number>(`${this.url}/finished/total`, options);
   }
 
-  private getNewCurrentEntry(category: Category): TimeSession {
-    const d = new Date();
-    const placeholderTime = TimeUtil.dateToSecondsOfDay(d);
-    return { id: 0, date: TimeUtil.toDateString(d), category, startTime: placeholderTime, endTime: placeholderTime } as TimeSession;
+  private getNewCurrentEntry(category: Category): TimeEntry {
+    return this.getNewTimeEntry(category, true);
   }
 
-  getNewTimeSession(category: Category): TimeSession {
+  getNewTimeEntry(category: Category, includeSeconds?: boolean): TimeEntry {
     const d = new Date();
-    const hours = `${d.getHours()}`.padStart(2, '0');
-    const placeholderTime = TimeUtil.toSecondsOfDay(`${hours}-${d.getMinutes()}`);
-    return { id: 0, date: TimeUtil.toDateString(d), category, startTime: placeholderTime, endTime: placeholderTime } as TimeSession;
+    let time: number;
+    time = includeSeconds ? TimeUtil.dateToSecondsOfDay(d) : (d.getHours() * 3600 + d.getMinutes() * 60);
+    return { id: 0, date: TimeUtil.toDateString(d), category, startTime: time, endTime: time } as TimeEntry;
   }
 
 }

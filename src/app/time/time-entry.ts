@@ -1,6 +1,6 @@
-import {Category} from '../category/category';
+import { Category } from '../category/category';
 
-export interface TimeSession {
+export interface TimeEntry {
   id: number;
   date: string;
   category: Category;
