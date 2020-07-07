@@ -10,6 +10,7 @@ export class ConfirmationDialogComponent implements OnInit {
   title = 'Are you sure?';
   content = '';
   action = 'Confirm';
+  discard = 'Cancel';
 
   constructor(
     @Inject(MAT_DIALOG_DATA) private data: any
@@ -28,6 +29,9 @@ export class ConfirmationDialogComponent implements OnInit {
     }
     if (this.data.action) {
       this.action = this.data.action;
+    }
+    if (this.data.discard) {
+      this.discard = this.data.discard;
     }
   }
 

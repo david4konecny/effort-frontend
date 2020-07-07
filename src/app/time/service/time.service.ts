@@ -14,7 +14,7 @@ export class TimeService {
   private url = '//localhost:8080/api/time';
   private timerSub: Subscription;
   private current: TimeSession;
-  private SECONDS_IN_DAY = 24 * 60 * 60;
+  private SECONDS_IN_DAY = 86400;
   entrySavedEvent = new EventEmitter<Intent>();
   resetCurrentEvent = new EventEmitter<TimeSession>();
 
@@ -30,13 +30,30 @@ export class TimeService {
     }
     return this.http.get<TimeSession[]>(`${this.url}/current`).pipe(
       tap(next => {
-        if (next.length > 0) {
-          this.current = next[0];
-          this.current.endTime = TimeUtil.dateToSecondsOfDay(new Date());
-          this.startTimer();
+        if (next.length) {
+          const entry = next[0];
+          const today = new Date();
+          if (entry.date === TimeUtil.toDateString(today)) {
+            this.resumeEntryFromToday(entry);
+          } else {
+            const yesterday = TimeUtil.getPreviousDay(today);
+            if (entry.date === TimeUtil.toDateString(yesterday)) {
+              this.current = entry;
+              this.current.endTime = this.SECONDS_IN_DAY - 1;
+              const newTimeEntry = this.getNewCurrentEntry(this.current.category);
+              newTimeEntry.startTime = 0;
+              this.resumeFromPreviousDay(newTimeEntry);
+            }
+          }
         }
       })
     );
+  }
+
+  private resumeEntryFromToday(entry: TimeSession) {
+    this.current = entry;
+    this.current.endTime = TimeUtil.dateToSecondsOfDay(new Date());
+    this.startTimer();
   }
 
   getEntriesByDate(date: Date): Observable<TimeSession[]> {
@@ -106,7 +123,7 @@ export class TimeService {
     );
   }
 
-  private resetCurrent(newTimeEntry: TimeSession) {
+  private resumeFromPreviousDay(newTimeEntry: TimeSession) {
     const entry = this.current;
     this.current = null;
     this.deleteCurrentById(entry.id).subscribe(
@@ -142,7 +159,7 @@ export class TimeService {
           this.current.endTime = this.SECONDS_IN_DAY - 1;
           const newTimeEntry = this.getNewCurrentEntry(this.current.category);
           newTimeEntry.startTime = 0;
-          this.resetCurrent(newTimeEntry);
+          this.resumeFromPreviousDay(newTimeEntry);
         } else {
           this.current.endTime = now;
           this.editCurrent().subscribe();

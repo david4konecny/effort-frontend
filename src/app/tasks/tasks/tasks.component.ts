@@ -91,7 +91,7 @@ export class TasksComponent implements OnInit, OnDestroy {
 
   private addTask(task: Task) {
     if (this.tasks.length === 0) {
-      task.position = 10000.0;
+      task.position = 100000.0;
     } else {
       const lastPosition = this.tasks[this.tasks.length - 1].position;
       task.position = lastPosition + 10000.0;
@@ -152,7 +152,7 @@ export class TasksComponent implements OnInit, OnDestroy {
     const movedTask = this.tasks[newIdx];
     switch (newIdx) {
       case 0:
-        movedTask.position = 0.9 * this.tasks[1].position;
+        movedTask.position = 0.5 * this.tasks[1].position;
         break;
       case this.tasks.length - 1:
         movedTask.position = this.tasks[this.tasks.length - 2].position + 10000.0;

@@ -1,7 +1,6 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { TimeService } from '../service/time.service';
 import { Intent } from '../../intent.enum';
 import { Category } from '../../category/category';
 import { CategoryService } from '../../category/service/category.service';
@@ -23,7 +22,6 @@ export class TimeDialogComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) public data: any,
     private formBuilder: FormBuilder,
     private dialogRef: MatDialogRef<TimeDialogComponent>,
-    private timeService: TimeService,
     private categoryService: CategoryService
   ) { }
 

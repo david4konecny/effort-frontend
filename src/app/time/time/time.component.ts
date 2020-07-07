@@ -9,6 +9,7 @@ import { TimeSession } from '../time-session';
 import { CategoryService } from '../../category/service/category.service';
 import { Category } from '../../category/category';
 import { TimeUtil } from '../time-util';
+import { ConfirmationDialogComponent } from 'src/app/dialog/confirmation-dialog/confirmation-dialog.component';
 
 @Component({
   selector: 'app-time',
@@ -35,62 +36,40 @@ export class TimeComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit(): void {
-    this.fetchCurrent();
+    this.loadCurrentEntry();
     this.loadTotalDuration();
     this.loadCategory();
-    this.displayMsgWhenEntrySaved();
+    this.showMessageWhenEntrySaved();
     this.resetTimerOnMidnight();
   }
 
-  private fetchCurrent() {
+  private loadCurrentEntry() {
     this.timeService.getCurrent().subscribe(
       next => {
-        if (next.length > 0) {
-          this.category = next[0].category;
-          const now = TimeUtil.dateToSecondsOfDay(new Date());
-          const duration = now - next[0].startTime;
-          this.timeDisplay = duration;
-          this.totalDuration += duration;
-          this.startCounter();
-          this.isTrackingTime = true;
+        if (next.length) {
+          const today = new Date();
+          if (next[0].date === TimeUtil.toDateString(today)) {
+            this.resumeCurrentEntry(next[0]);
+          } else {
+            const yesterday = TimeUtil.getPreviousDay(today);
+            if (next[0].date !== TimeUtil.toDateString(yesterday)) {
+              this.openCurrentEntryRecoveryDialog(next[0]);
+            }
+          }
         }
         this.isLoaded = true;
       }
     );
   }
 
-  private loadTotalDuration() {
-    this.timeService.getTotalFinishedDuration(new Date()).subscribe(
-      next => {
-        this.totalDuration += next;
-      }
-    );
-  }
-
-  private loadCategory() {
-    this.categoryService.getCategories().subscribe(
-      next => {
-        this.category = next[0];
-      }
-    );
-  }
-
-  onTimeClick() {
-    if (this.isTrackingTime) {
-      this.stopTimeTracking();
-    } else {
-      this.startTimeTracking();
-    }
-    this.isTrackingTime = !this.isTrackingTime;
-  }
-
-  onCategoryClick() {
-    this.displayCategories = !this.displayCategories;
-  }
-
-  startTimeTracking() {
-    this.timeService.startTimeTracking(this.category);
+  private resumeCurrentEntry(entry: TimeSession) {
+    this.category = entry.category;
+    const now = TimeUtil.dateToSecondsOfDay(new Date());
+    const duration = now - entry.startTime;
+    this.timeDisplay = duration;
+    this.totalDuration += duration;
     this.startCounter();
+    this.isTrackingTime = true;
   }
 
   private startCounter() {
@@ -100,25 +79,76 @@ export class TimeComponent implements OnInit, OnDestroy {
     });
   }
 
+  private openCurrentEntryRecoveryDialog(entry: TimeSession) {
+    const dialog = this.dialog.open(ConfirmationDialogComponent, this.getRecoveryDialogConfig(entry));
+    dialog.afterClosed().subscribe(
+      result => this.onCurrentDialogClosed(result, entry)
+    );
+  }
+
+  private onCurrentDialogClosed(editEntry: boolean, entry: TimeSession) {
+    if (editEntry) {
+      this.openEditDialog(entry);
+    } else {
+      this.timeService.deleteCurrentById(entry.id).subscribe();
+    }
+  }
+
+  private loadTotalDuration() {
+    this.timeService.getTotalFinishedDuration(new Date()).subscribe(
+      next => this.totalDuration += next
+    );
+  }
+
+  private loadCategory() {
+    this.categoryService.getCategories().subscribe(
+      next => this.category = next[0]
+    );
+  }
+
+  onTimeButtonClick() {
+    if (this.isTrackingTime) {
+      this.stopTimeTracking();
+    } else {
+      this.startTimeTracking();
+    }
+    this.isTrackingTime = !this.isTrackingTime;
+  }
+
+  onDisplayCategories() {
+    this.displayCategories = !this.displayCategories;
+  }
+
+  startTimeTracking() {
+    this.timeService.startTimeTracking(this.category);
+    this.startCounter();
+  }
+
   stopTimeTracking() {
     this.timeService.stopTimeTracking();
     this.timeDisplay = 0;
     this.timerSub.unsubscribe();
   }
 
-  onOpenDialog() {
-    const timeSession = this.timeService.getNewTimeSession(this.category);
-    const dialog = this.dialog.open(
-      TimeDialogComponent,
-      { height: '350px', width: '400px', data: { action: Intent.add, timeSession }}
-    );
+  openEditDialog(entry?: TimeSession) {
+    const intent = entry ? Intent.edit : Intent.add;
+    if (!entry) {
+      entry = this.timeService.getNewTimeSession(this.category);
+    }
+    const dialog = this.dialog.open(TimeDialogComponent, this.getEditDialogConfig(entry, intent));
     dialog.afterClosed().subscribe(
-      result => {
-        if (result) {
-          this.addNewTimeEntry(result);
-        }
-      }
+      result => this.onEditDialogClosed(result, intent)
     );
+  }
+
+  private onEditDialogClosed(result: TimeSession, intent: Intent) {
+    if (result) {
+      if (intent === Intent.add) {
+        this.addNewTimeEntry(result);
+      } else {
+        this.endCurrent(result);
+      }
+    }
   }
 
   private addNewTimeEntry(entry: TimeSession) {
@@ -131,16 +161,34 @@ export class TimeComponent implements OnInit, OnDestroy {
     );
   }
 
+  private endCurrent(entry: TimeSession) {
+    this.timeService.deleteCurrentById(entry.id).subscribe(
+      next => {
+        entry.id = 0;
+        this.timeService.addFinished(entry).subscribe(
+          next => {
+            if (next.date === TimeUtil.toDateString(new Date())) {
+              this.totalDuration += next.duration;
+            }
+          }
+        );
+      }
+    );
+  }
+
   private resetTimerOnMidnight() {
     this.entryResetSub = this.timeService.resetCurrentEvent.subscribe(
       next => {
-        this.timerSub.unsubscribe();
+        if (this.timerSub) {
+          this.timerSub.unsubscribe();
+        }
         const now = TimeUtil.dateToSecondsOfDay(new Date());
         const duration = now - next.startTime;
         this.timeDisplay = duration;
         this.totalDuration = duration;
         this.loadTotalDuration();
         this.startCounter();
+        this.isTrackingTime = true;
       }
     );
   }
@@ -164,7 +212,7 @@ export class TimeComponent implements OnInit, OnDestroy {
     }
   }
 
-  private displayMsgWhenEntrySaved() {
+  private showMessageWhenEntrySaved() {
     this.entryChangedSub = this.timeService.entrySavedEvent.subscribe(
       next => {
         if (next === Intent.add) {
@@ -174,8 +222,24 @@ export class TimeComponent implements OnInit, OnDestroy {
     );
   }
 
-  displayMessage(msg: string) {
+  private displayMessage(msg: string) {
     this.snackBar.open(msg, '', {duration: 2000} );
+  }
+
+  private getRecoveryDialogConfig(entry: TimeSession) {
+    return {
+      height: '200px', width: '400px',
+      data: {
+        title: 'Recover old time entry?',
+        content: `You have started tracking time on ${entry.date}, ${TimeUtil.secondsOfDayToString(entry.startTime)}`,
+        action: 'Edit',
+        discard: 'Discard'
+      }
+    };
+  }
+
+  private getEditDialogConfig(entry: TimeSession, intent: Intent) {
+    return { height: '350px', width: '400px', data: { action: intent, timeSession: entry }};
   }
 
   ngOnDestroy() {
