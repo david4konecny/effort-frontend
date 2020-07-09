@@ -102,7 +102,11 @@ export class TimeComponent implements OnInit, OnDestroy {
 
   private loadCategory() {
     this.categoryService.getCategories().subscribe(
-      next => this.category = next[0]
+      next => {
+        if (!this.category) {
+          this.category = next[0];
+        }
+      }
     );
   }
 
@@ -239,7 +243,7 @@ export class TimeComponent implements OnInit, OnDestroy {
   }
 
   private getEditDialogConfig(entry: TimeEntry, intent: Intent) {
-    return { height: '350px', width: '400px', data: { action: intent, timeEntry: entry }};
+    return { height: '375px', width: '400px', data: { action: intent, timeEntry: entry }};
   }
 
   ngOnDestroy() {

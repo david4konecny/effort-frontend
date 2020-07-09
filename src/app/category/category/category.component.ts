@@ -95,7 +95,7 @@ export class CategoryComponent implements OnInit {
   openCategoryDialog(action: Intent, category: Category) {
     const dialog = this.dialog.open(
       CategoryDialogComponent,
-      { height: '350px', width: '400px', data: { action, category }}
+      { height: '300px', width: '400px', data: { action, category }}
     );
     dialog.afterClosed().subscribe(
       result => this.onDialogClosed(action, result)

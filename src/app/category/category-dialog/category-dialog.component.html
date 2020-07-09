@@ -27,8 +27,8 @@
     </div>
 
     <mat-dialog-actions align="center">
+      <button mat-button mat-dialog-close>Cancel</button>
       <button type="submit" [disabled]="!form.valid" (click)="onSubmit()" mat-button color="primary">Save</button>
-      <button mat-button mat-dialog-close color="warn">Cancel</button>
     </mat-dialog-actions>
 
   </form>

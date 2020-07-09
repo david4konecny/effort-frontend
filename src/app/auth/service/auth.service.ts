@@ -8,7 +8,7 @@ import { User } from 'src/app/user/user';
   providedIn: 'root'
 })
 export class AuthService {
-  private url = '//localhost:8080/api/users';
+  private url = '//localhost:8080/api';
   isAuthenticated = false;
   username = '';
   targetUrl = 'dashboard';
@@ -20,7 +20,7 @@ export class AuthService {
   login(username: string, password: string): Observable<any> {
     const encodedData = btoa(`${username}:${password}`);
     const headers = new HttpHeaders({Authorization: `Basic ${encodedData}`});
-    return this.http.get(`${this.url}/login`, { headers }).pipe(
+    return this.http.get(`${this.url}/auth/login`, { headers }).pipe(
       tap(next => {
         this.isAuthenticated = true;
         this.username = next.username;
@@ -31,7 +31,7 @@ export class AuthService {
 
   verifyAuthentication(): Observable<void> {
     const headers = new HttpHeaders().append("X-Requested-With", "XMLHttpRequest");
-    return this.http.get<void>(`${this.url}/login/test`, { headers }).pipe(
+    return this.http.get<void>(`${this.url}/users`, { headers }).pipe(
       tap(next => this.isAuthenticated = true)
     );
   }
@@ -41,7 +41,7 @@ export class AuthService {
   }
 
   getUsername(): Observable<string> {
-    return this.http.get<any>(this.url).pipe(
+    return this.http.get<any>(`${this.url}/users`).pipe(
       tap(next => this.username = next.username),
       map(next => next.username)
     );
@@ -49,23 +49,23 @@ export class AuthService {
 
   signup(user: User): Observable<User> {
     const headers = new HttpHeaders().append("X-Requested-With", "XMLHttpRequest");
-    return this.http.post<User>(this.url, user, { headers }).pipe(
+    return this.http.post<User>(`${this.url}/users`, user, { headers }).pipe(
       retry(1)
     )
   }
 
   editUsername(newUsername: string): Observable<void> {
-    return this.http.put<void>(`${this.url}/username`, newUsername).pipe(
+    return this.http.put<void>(`${this.url}/users/username`, newUsername).pipe(
       tap(next => this.username = newUsername)
     );
   }
 
   editPassword(oldPassword: string, newPassword: string) {
-    return this.http.put<void>(`${this.url}/password`, { oldPassword, newPassword });
+    return this.http.put<void>(`${this.url}/users/password`, { oldPassword, newPassword });
   }
 
   deleteUser(): Observable<void> {
-    return this.http.delete<void>(this.url).pipe(
+    return this.http.delete<void>(`${this.url}/users`).pipe(
       tap(next => {
         this.username = '';
         this.isAuthenticated = false;
@@ -74,7 +74,7 @@ export class AuthService {
   }
 
   logout(): Observable<void> {
-    return this.http.post<void>(`${this.url}/logout`, null).pipe(
+    return this.http.post<void>(`${this.url}/auth/logout`, null).pipe(
       tap(next => {
         this.isAuthenticated = false;
         this.username = '';

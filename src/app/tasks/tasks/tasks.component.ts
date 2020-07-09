@@ -50,7 +50,7 @@ export class TasksComponent implements OnInit, OnDestroy {
     }
     const dialogRef = this.dialog.open(
       TaskDialogComponent,
-      { height: '300px', width: '350px', data: { action, task }});
+      { height: '275px', width: '350px', data: { action, task }});
     dialogRef.afterClosed().subscribe(result => this.onDialogClosed(result, action, task));
   }
 
