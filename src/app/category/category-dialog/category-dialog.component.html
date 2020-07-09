@@ -12,10 +12,11 @@
     </div>
 
     <div class="mb-2">
-      <button mat-flat-button (click)="onDisplayColorOptions()">
-        Color <mat-icon>{{displayColorOptions ? 'arrow_drop_up' : 'arrow_drop_down'}}</mat-icon>
+      <span>Color: </span>
+      <button mat-button (click)="onDisplayColorOptions()" disableRipple="true">
+        <div id="selected-color" [ngStyle]="{'background': selectedColor}"></div>
+        <mat-icon>{{displayColorOptions ? 'arrow_drop_up' : 'arrow_drop_down'}}</mat-icon>
       </button>
-      <div id="selected-color" [ngStyle]="{'background': selectedColor}"></div>
       <input matInput formControlName="color" hidden>
     </div>
 

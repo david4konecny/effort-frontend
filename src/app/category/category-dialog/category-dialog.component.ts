@@ -55,11 +55,11 @@ export class CategoryDialogComponent implements OnInit {
 
   loadColorOptions() {
     this.colors.push(
+      '#a64ea6',
       '#3700b3',
-      '#00897b',
       '#03dac5',
+      '#00897b',
       '#cddc39',
-      '#795548',
       '#b00020',
     );
   }

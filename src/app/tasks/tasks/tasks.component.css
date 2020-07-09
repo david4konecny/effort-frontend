@@ -13,10 +13,6 @@
   padding-left: 1rem;
 }
 
-.button-icon {
-  color: white;
-}
-
 .item-button {
   height: 40px;
 }
@@ -44,4 +40,10 @@
 
 .cdk-drag-preview .button-icon {
   color: black;
+}
+
+@media (min-width: 768px) {
+  .button-icon {
+    color: white;
+  }
 }
