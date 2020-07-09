@@ -50,7 +50,7 @@ export class AuthService {
   signup(user: User): Observable<User> {
     const headers = new HttpHeaders().append("X-Requested-With", "XMLHttpRequest");
     return this.http.post<User>(this.url, user, { headers }).pipe(
-      retry(2)
+      retry(1)
     )
   }
 

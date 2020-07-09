@@ -44,7 +44,7 @@ export class TimeLogComponent implements OnInit, OnDestroy {
     const oldDuration = entry.duration;
     const dialogRef = this.dialog.open(
       TimeDialogComponent,
-      { height: '350', width: '400px', data: { action: Intent.edit , timeSession: entry }});
+      { height: '350', width: '400px', data: { action: Intent.edit , timeEntry: entry }});
     dialogRef.afterClosed().subscribe(
       result => {
         if (result) {

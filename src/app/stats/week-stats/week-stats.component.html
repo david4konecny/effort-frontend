@@ -19,8 +19,17 @@
 
 <div class="text-center">
   <div id="stats" class="mt-3 mb-3">
-    <p>Total time: {{ totalTime | time: false: true }}</p>
-    <p>Tasks: {{ finishedTasks }} / {{ totalTasks }}</p>
-    <p>Average rating: {{ (averageRating) ? averageRating : '-' }}</p>
+    <div style="display: flex;">
+      <span class="stats-category">Total time:</span>
+      <span class="stats-value">{{ totalTime | time: false: true }}</span>
+    </div>
+    <div style="display: flex;">
+      <span class="stats-category">Tasks:</span>
+      <span class="stats-value">{{ finishedTasks }} / {{ totalTasks }}</span>
+    </div>
+    <div style="display: flex;">
+      <span class="stats-category">Average rating:</span>
+      <span class="stats-value">{{ (averageRating) ? averageRating : '-' }}</span>
+    </div>
   </div>
 </div>

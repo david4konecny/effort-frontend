@@ -15,6 +15,21 @@
 }
 
 #stats {
-    display: inline-block;
-    text-align: left;
+  display: inline-block;
+  box-sizing: border-box;
+  width: 250px;
+  padding: 1rem 1.5rem;
+  line-height: 1.5rem;
+  text-align: left;
+  border: 1px solid #009688;
+  border-radius: 6px;
+  }
+
+  .stats-category {
+    flex: auto;
+  }
+
+  .stats-value {
+    width: 60px;
+    flex: initial;
   }
