@@ -3,12 +3,13 @@ import { Review } from '../review';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { TimeUtil } from 'src/app/time/time-util';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ReviewService {
-  private url = '//localhost:8080/api/reviews';
+  private url = `${environment.apiUrl}/reviews`;
 
   constructor(
     private http: HttpClient

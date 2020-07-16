@@ -6,12 +6,13 @@ import { tap } from 'rxjs/operators';
 import { Category } from '../../category/category';
 import { Intent } from 'src/app/intent.enum';
 import { TimeUtil } from '../time-util';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class TimeService {
-  private url = '//localhost:8080/api/time';
+  private url = `${environment.apiUrl}/time`;
   private timerSub: Subscription;
   private current: TimeEntry;
   private SECONDS_IN_DAY = 86400;

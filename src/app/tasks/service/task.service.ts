@@ -1,15 +1,16 @@
 import { Injectable } from '@angular/core';
-import {Task} from '../task';
-import {Observable, of} from 'rxjs';
-import {HttpClient, HttpParams} from '@angular/common/http';
-import {TimeService} from '../../time/service/time.service';
+import { Task } from '../task';
+import { Observable } from 'rxjs';
+import { HttpClient, HttpParams } from '@angular/common/http';
+import { TimeService } from '../../time/service/time.service';
 import { TimeUtil } from 'src/app/time/time-util';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class TaskService {
-  private url = '//localhost:8080/api/tasks';
+  private url = `${environment.apiUrl}/tasks`;
 
   constructor(
     private http: HttpClient,

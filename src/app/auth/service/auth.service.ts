@@ -3,12 +3,13 @@ import { Observable } from 'rxjs';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { tap, map, retry } from 'rxjs/operators';
 import { User } from 'src/app/user/user';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
-  private url = '//localhost:8080/api';
+  private url = environment.apiUrl;
   isAuthenticated = false;
   username = '';
   targetUrl = 'dashboard';

@@ -1,13 +1,14 @@
 import { Injectable } from '@angular/core';
-import {HttpClient, HttpParams} from '@angular/common/http';
-import {Observable} from 'rxjs';
-import {DateTotal} from '../../time/date-total';
+import { HttpClient, HttpParams } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import { DateTotal } from '../../time/date-total';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class StatsService {
-  private url = 'http://localhost:8080/api';
+  private url = environment.apiUrl;
 
   constructor(
     private http: HttpClient

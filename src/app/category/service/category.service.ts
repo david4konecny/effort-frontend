@@ -3,12 +3,13 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Category } from '../category';
 import { tap } from 'rxjs/operators';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class CategoryService {
-  private url = '//localhost:8080/api/categories';
+  private url = `${environment.apiUrl}/categories`;
   categoryChanged = new EventEmitter();
 
   constructor(
