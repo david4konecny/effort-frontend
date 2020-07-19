@@ -21,7 +21,7 @@ export class AuthService {
   login(username: string, password: string): Observable<any> {
     const encodedData = btoa(`${username}:${password}`);
     const headers = new HttpHeaders({Authorization: `Basic ${encodedData}`});
-    return this.http.get(`${this.url}/auth/login`, { headers }).pipe(
+    return this.http.post(`${this.url}/auth/login`, undefined, { headers }).pipe(
       tap(next => {
         this.isAuthenticated = true;
         this.username = next.username;
